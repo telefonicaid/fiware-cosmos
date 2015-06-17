@@ -1,0 +1,12 @@
+{
+  "cosmos_gui": {
+    "port": 8060
+  },
+  "mysql": {
+    "host": "130.206.80.46",
+    "port": 3306,
+    "user": "root",
+    "password": "1qaz3edcxsw2",
+    "database": "cosmos_gui"
+  }
+}

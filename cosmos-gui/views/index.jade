@@ -1,0 +1,34 @@
+extend layout
+
+block content
+  p
+    | Please, login with your FIWARE LAB
+    | credentials:
+
+  form(name="login", method="post")
+    div.input
+      span.label Username
+      input(type="text", name="username")
+    div.input
+      span.label Password
+      input(type="text", name="password")
+    div.actions
+      input(type="submit", value="Create account")
+
+  br
+
+  p
+    | If you still do not have FIWARE LAB
+    | credentials, please click <a href='https://account.lab.fiware.org/users/sign_up'>here</a>.
+
+block sidebar
+  .widget
+    h1 What is Cosmos
+
+    p
+      | Cosmos is the Reference Implementation
+      | of the BigData Generic Enabler.
+
+    p
+      | Vivamus hendrerit arcu sed erat molestie
+      | vehicula.

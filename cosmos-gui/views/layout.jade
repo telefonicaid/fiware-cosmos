@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title #{title} - Cosmos GUI
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    header
+      h1 Cosmos GUI
+    .container
+      .main-content
+        block content
+      .sidebar
+        block sidebar
+    footer
+      p Running on Node.js with Express, Jade and Stylus
