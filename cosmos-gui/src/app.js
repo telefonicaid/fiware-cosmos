@@ -29,7 +29,7 @@ var stylus = require('stylus');
 var nib = require('nib');
 var bodyParser = require('body-parser');
 var config = require('../conf/cosmos-gui.json');
-var mysql = require('./mysql.js');
+var tidoopMysql = require('./mysql_driver.js');
 var OAuth2 = require('./oauth2').OAuth2;
 
 // Express configuration
@@ -50,7 +50,7 @@ app.configure(function () {
 });
 
 // Create a permanent connection to MySQL
-var connection = mysql.connect();
+tidoopMysql.connect();
 /*
 function compile(str, path) {
     return stylus(str)

@@ -25,11 +25,11 @@
 
 // module dependencies
 var mysql = require('mysql');
-var host = require('../conf/tidoop-mr-lib-api.json').mysql.host;
-var port = require('../conf/tidoop-mr-lib-api.json').mysql.port;
-var user = require('../conf/tidoop-mr-lib-api.json').mysql.user;
-var password = require('../conf/tidoop-mr-lib-api.json').mysql.password;
-var database = require('../conf/tidoop-mr-lib-api.json').mysql.database;
+var host = require('../conf/cosmos-gui.json').mysql.host;
+var port = require('../conf/cosmos-gui.json').mysql.port;
+var user = require('../conf/cosmos-gui.json').mysql.user;
+var password = require('../conf/cosmos-gui.json').mysql.password;
+var database = require('../conf/cosmos-gui.json').mysql.database;
 
 var connection = mysql.createConnection({
     host: host,

@@ -10,10 +10,10 @@
     "response_type": "code"
   },
   "mysql": {
-    "host": "",
+    "host": "130.206.81.225",
     "port": 3306,
-    "user": "",
-    "password": "",
+    "user": "cb",
+    "password": "cbpass",
     "database": "cosmos_gui"
   }
 }
