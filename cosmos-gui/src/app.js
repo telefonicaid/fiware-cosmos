@@ -50,7 +50,7 @@ app.configure(function () {
 });
 
 // Create a permanent connection to MySQL
-var connection = mysql.createConnection();
+var connection = mysql.connect();
 /*
 function compile(str, path) {
     return stylus(str)
@@ -70,7 +70,12 @@ app.use(express.static(__dirname + '/../public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 */
 // session
-var sess;
+var port = config.gui.port;
+var client_id = config.oauth2.client_id;
+var client_secret = config.oauth2.client_secret;
+var idmURL = config.oauth2.idmURL;
+var response_type = config.oauth2.response_type;
+var callbackURL = config.oauth2.callbackURL;
 
 // Creates oauth library object with the config data
 var oa = new OAuth2(client_id,
@@ -82,11 +87,22 @@ var oa = new OAuth2(client_id,
 
 // Handles requests to the main page
 app.get('/', function (req, res) {
-    sess = req.session;
+    var access_token = req.session.access_token;
 
-    // check if the user had a session
-    if (sess.access_token) {
-        res.redirect('dashboard');
+    // Check if the user had a session
+    if (access_token) {
+        // Get user information given its access token
+        oa.get(config.idmURL + '/user/', access_token, function (error, response) {
+            // Get the user's IdM email (username)
+            var idm_username = JSON.parse(response).email;
+
+            // Check if the user, given its IdM username, has a Cosmos account
+            if (mysql.getUser(idm_username)) {
+                res.render('dashboard');
+            } else {
+                res.render('new_account');
+            } // if else
+        });
     } else {
         res.redirect('/auth');
     } // if else
@@ -108,35 +124,12 @@ app.get('/login', function(req, res){
     });
 });
 
-// Ask IDM for user info
-app.get('/user_info', function(req, res){
-    var url = config.idmURL + '/user/';
-// Using the access token asks the IDM for the user info
-    oa.get(url, req.session.access_token, function (e, response) {
-        var user = JSON.parse(response);
-        res.send("Welcome " + user.displayName + "<br> Your email address is " + user.email + "<br><br><button onclick='window.location.href=\"/logout\"'>Log out</button>");
-    });
-});
-
 // Handles logout requests to remove access_token from the session cookie
 app.get('/logout', function(req, res){
     req.session.access_token = undefined;
     res.redirect('/');
 });
 
-/*
-app.get('/callback', function(req, res) {
-    var username = req.body.username;
-    var password = req.body.password;
-
-    if (mysql.exists(connection, username, password)) {
-        res.render('dashboard');
-    } else {
-        res.render('new_account');
-    } // if else
-});
-*/
-
 // start the application, listening at the configured port
 console.log("cosmos-gui running at http://localhost:" + port);
-app.listen(config.cosmos_gui.port);
+app.listen(port);
