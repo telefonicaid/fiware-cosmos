@@ -25,50 +25,63 @@
 
 // module dependencies
 var mysql = require('mysql');
-var config = require('../conf/cosmos-gui.json');
+var host = require('../conf/tidoop-mr-lib-api.json').mysql.host;
+var port = require('../conf/tidoop-mr-lib-api.json').mysql.port;
+var user = require('../conf/tidoop-mr-lib-api.json').mysql.user;
+var password = require('../conf/tidoop-mr-lib-api.json').mysql.password;
+var database = require('../conf/tidoop-mr-lib-api.json').mysql.database;
+
+var connection = mysql.createConnection({
+    host: host,
+    port: port,
+    user: user,
+    password: password,
+    database: database
+});
 
 module.exports = {
-    createConnection: function() {
-        return mysql.createConnection({
-            host: config.host,
-            port: config.port,
-            user: config.user,
-            password: config.password,
-            database: config.database
-        });
-    }, // createConnection
-
-    connect: function(connection) {
+    connect: function() {
         connection.connect(function (error) {
             if (error) {
                 throw error;
             } else {
-                console.log('Conexion correcta.');
-            }
+                console.log('Connected to http://' + host + ':' + port + '/' + database);
+                return connection;
+            } // if else
         });
     }, // connect
 
-    exists: function(connection, username, password) {
+    addUser: function (jobId, jobType, callback) {
         var query = connection.query(
-            'SELECT count(*) FROM user where fiware_username=? and fiware_password=?',
-            [username, password],
+            'INSERT INTO tidoop_job (jobId, jobType, startTime, mapProgress, reduceProgress) ' +
+            'VALUES (?, ?, NOW(), ?, ?)',
+            [jobId, jobType, 0, 0],
             function (error, result) {
                 if (error) {
-                    throw error;
+                    callback(error)
                 } else {
-                    if (result.length > 0) {
-                        console.log("Cosmos user already stored in the database");
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
+                    console.log('Successful insert: \'INSERT INTO tidoop_job ' +
+                        '(jobId, jobType, startTime, mapProgress, reduceProgress) VALUES' +
+                        '(' + jobId + ', ' + jobType + ', NOW(), 0, 0)\'');
+                    callback(null, result);
+                } // if else
             }
         );
-    }, // exists
+    }, // addJob
 
-    add: function(connection, username, password) {
-    },
+    getUser: function (idm_username, callback) {
+        var query = connection.query(
+            'SELECT * from tidoop_job WHERE jobId=\'' + jobId + '\'',
+            function (error, result) {
+                if (error) {
+                    callback(error);
+                } else {
+                    console.log('Successful select: \'SELECT * from tidoop_job WHERE jobId=\'' + jobId + '\'\'');
+                    callback(null, result);
+                } // if else
+            }
+        );
+    }, // getJobStatus
 
     close: function(connection) {
         connection.end();
