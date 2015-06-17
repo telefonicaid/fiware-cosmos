@@ -51,32 +51,33 @@ module.exports = {
         });
     }, // connect
 
-    addUser: function (jobId, jobType, callback) {
+    addUser: function (idm_username, username, password, callback) {
         var query = connection.query(
-            'INSERT INTO tidoop_job (jobId, jobType, startTime, mapProgress, reduceProgress) ' +
-            'VALUES (?, ?, NOW(), ?, ?)',
-            [jobId, jobType, 0, 0],
+            'INSERT INTO cosmos_user (idm_username, username, password) ' +
+            'VALUES (?, ?, ?)',
+            [idm_username, username, password],
             function (error, result) {
                 if (error) {
                     callback(error)
                 } else {
-                    console.log('Successful insert: \'INSERT INTO tidoop_job ' +
-                        '(jobId, jobType, startTime, mapProgress, reduceProgress) VALUES' +
-                        '(' + jobId + ', ' + jobType + ', NOW(), 0, 0)\'');
+                    console.log('Successful insert: \'INSERT INTO cosmos_user ' +
+                        '(idm_username, username, password) VALUES' +
+                        '(' + idm_username + ', ' + username + ', ' + password + ')\'');
                     callback(null, result);
                 } // if else
             }
         );
-    }, // addJob
+    }, // addUser
 
     getUser: function (idm_username, callback) {
         var query = connection.query(
-            'SELECT * from tidoop_job WHERE jobId=\'' + jobId + '\'',
+            'SELECT * from cosmos_user WHERE idm_username=\'' + idm_username + '\'',
             function (error, result) {
                 if (error) {
                     callback(error);
                 } else {
-                    console.log('Successful select: \'SELECT * from tidoop_job WHERE jobId=\'' + jobId + '\'\'');
+                    console.log('Successful select: \'SELECT * from cosmos_user WHERE idm_username=\'' +
+                        idm_username + '\'\'');
                     callback(null, result);
                 } // if else
             }
