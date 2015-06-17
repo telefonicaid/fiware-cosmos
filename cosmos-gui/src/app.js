@@ -29,47 +29,36 @@ var stylus = require('stylus');
 var nib = require('nib');
 var bodyParser = require('body-parser');
 var config = require('../conf/cosmos-gui.json');
-var tidoopMysql = require('./mysql_driver.js');
+var mysqlDriver = require('./mysql_driver.js');
 var OAuth2 = require('./oauth2').OAuth2;
 
 // Express configuration
 var app = express();
-/*
+
 app.set('views', __dirname + '/../views');
 app.set('view engine', 'jade');
-*/
 app.use(express.logger());
+app.use(stylus.middleware(
+    { src: __dirname + '/../public',
+        compile: compile
+    }
+));
 app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({secret: "skjghskdjfhbqigohqdiouk"}));
 app.configure(function () {
     "use strict";
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-    //app.use(express.logger());
-    app.use(express.static(__dirname + '/public'));
+    app.use(express.static(__dirname + '/../public'));
 });
 
-// Create a permanent connection to MySQL
-tidoopMysql.connect();
-/*
 function compile(str, path) {
     return stylus(str)
         .set('filename', path)
         .use(nib());
 }
 
-// Set the chain of Express middlewares
-app.use(session({secret: '8sjw74q91knnv7n23jjsd7k2flfka8a91k110'}));
-//app.use(express.logger('dev'));
-app.use(stylus.middleware(
-    { src: __dirname + '/../public',
-        compile: compile
-    }
-));
-app.use(express.static(__dirname + '/../public'));
-app.use(bodyParser.urlencoded({ extended: false }));
-*/
-// session
+// Global variables
 var port = config.gui.port;
 var client_id = config.oauth2.client_id;
 var client_secret = config.oauth2.client_secret;
@@ -85,6 +74,9 @@ var oa = new OAuth2(client_id,
     '/oauth2/token',
     callbackURL);
 
+// Create a permanent connection to MySQL
+mysqlDriver.connect();
+
 // Handles requests to the main page
 app.get('/', function (req, res) {
     var access_token = req.session.access_token;
@@ -92,15 +84,25 @@ app.get('/', function (req, res) {
     // Check if the user had a session
     if (access_token) {
         // Get user information given its access token
-        oa.get(config.idmURL + '/user/', access_token, function (error, response) {
-            // Get the user's IdM email (username)
-            var idm_username = JSON.parse(response).email;
-
-            // Check if the user, given its IdM username, has a Cosmos account
-            if (mysql.getUser(idm_username)) {
-                res.render('dashboard');
+        oa.get(idmURL + '/user/', access_token, function (error, response) {
+            if (error) {
+                throw error;
             } else {
-                res.render('new_account');
+                // Get the user's IdM email (username)
+                var idm_username = JSON.parse(response).email;
+                req.session.idm_username = idm_username;
+
+                // Check if the user, given its IdM username, has a Cosmos account
+                mysqlDriver.getUser(idm_username, function(error, result) {
+                    if (error) {
+                        throw error;
+                    } else if (result[0]) {
+                        res.render('dashboard');
+                    } else {
+                        res.render('new_account');
+                    }
+                     // if else
+                });
             } // if else
         });
     } else {
@@ -109,19 +111,38 @@ app.get('/', function (req, res) {
 });
 
 // Redirection to IDM authentication portal
-app.get('/auth', function(req, res){
+app.get('/auth', function(req, res) {
     var path = oa.getAuthorizeUrl(response_type);
     res.redirect(path);
 });
 
 // Handles requests from IDM with the access code
-app.get('/login', function(req, res){
+app.get('/login', function(req, res) {
     // Using the access code goes again to the IDM to obtain the access_token
     oa.getOAuthAccessToken(req.query.code, function (e, results){
     // Stores the access_token in a session cookie
         req.session.access_token = results.access_token;
         res.redirect('/');
     });
+});
+
+app.post('/new_account', function(req, res) {
+    var idm_username = req.session.idm_username;
+    var username = idm_username.split('@')[0];
+    var password1 = req.body.password1;
+    var password2 = req.body.password2;
+
+    if (password1 === password2) {
+        mysqlDriver.addUser(idm_username, username, password1, function(error, result) {
+            if (error) {
+                throw error;
+            } else {
+                res.redirect('/');
+            } // if else
+        });
+    } else {
+        res.redirect('/');
+    } // if else
 });
 
 // Handles logout requests to remove access_token from the session cookie
