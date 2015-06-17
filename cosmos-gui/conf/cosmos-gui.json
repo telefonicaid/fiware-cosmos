@@ -1,12 +1,19 @@
 {
-  "cosmos_gui": {
-    "port": 8060
+  "gui": {
+    "port": 9090
+  },
+  "oauth2": {
+    "idmURL": "",
+    "client_id": "",
+    "client_secret": "",
+    "callbackURL": "http://localhost/login",
+    "response_type": "code"
   },
   "mysql": {
-    "host": "130.206.80.46",
+    "host": "",
     "port": 3306,
-    "user": "root",
-    "password": "1qaz3edcxsw2",
+    "user": "",
+    "password": "",
     "database": "cosmos_gui"
   }
 }
