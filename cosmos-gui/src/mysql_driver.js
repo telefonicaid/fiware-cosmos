@@ -25,66 +25,84 @@
 
 // module dependencies
 var mysql = require('mysql');
-var host = require('../conf/cosmos-gui.json').mysql.host;
-var port = require('../conf/cosmos-gui.json').mysql.port;
-var user = require('../conf/cosmos-gui.json').mysql.user;
-var password = require('../conf/cosmos-gui.json').mysql.password;
-var database = require('../conf/cosmos-gui.json').mysql.database;
+var mysqlConfig = require('../conf/cosmos-gui.json').mysql;
 
 var connection = mysql.createConnection({
-    host: host,
-    port: port,
-    user: user,
-    password: password,
-    database: database
+    host: mysqlConfig.host,
+    port: mysqlConfig.port,
+    user: mysqlConfig.user,
+    password: mysqlConfig.password,
+    database: mysqlConfig.database
 });
 
-module.exports = {
-    connect: function() {
-        connection.connect(function (error) {
+function connect(callback) {
+    connection.connect(function (error) {
+        if (error) {
+            callback(error);
+        } else {
+            console.log('Connected to http://' + mysqlConfig.host + ':' + mysqlConfig.port + '/' +
+                mysqlConfig.database);
+            callback(null);
+        } // if else
+    });
+} // connect
+
+function addUser(idm_username, username, password, callback) {
+    var query = connection.query(
+        'INSERT INTO cosmos_user (idm_username, username, password) ' +
+        'VALUES (?, ?, ?)',
+        [idm_username, username, password],
+        function (error, result) {
             if (error) {
-                throw error;
+                callback(error)
             } else {
-                console.log('Connected to http://' + host + ':' + port + '/' + database);
-                return connection;
+                console.log('Successful insert: \'INSERT INTO cosmos_user ' +
+                    '(idm_username, username, password) VALUES' +
+                    '(' + idm_username + ', ' + username + ', ' + password + ')\'');
+                callback(null, result);
             } // if else
-        });
-    }, // connect
+        }
+    );
+} // addUser
 
-    addUser: function (idm_username, username, password, callback) {
-        var query = connection.query(
-            'INSERT INTO cosmos_user (idm_username, username, password) ' +
-            'VALUES (?, ?, ?)',
-            [idm_username, username, password],
-            function (error, result) {
-                if (error) {
-                    callback(error)
-                } else {
-                    console.log('Successful insert: \'INSERT INTO cosmos_user ' +
-                        '(idm_username, username, password) VALUES' +
-                        '(' + idm_username + ', ' + username + ', ' + password + ')\'');
-                    callback(null, result);
-                } // if else
-            }
-        );
-    }, // addUser
+function addPassword(idm_username, password, callback) {
+    var query = connection.query(
+        'UPDATE cosmos_user SET password=\'' + password + '\' WHERE idmUsername=\'' + idm_username + '\'',
+        function(error, result) {
+            if (error) {
+                callback(error);
+            } else {
+                console.log('Successful update: \'UPDATE cosmos_user SET password=\'' + password +
+                    '\' WHERE idmUsername=\'' + idm_username + '\'');
+                callback(null, result);
+            } // if else
+        }
+    );
+} // addPassword
 
-    getUser: function (idm_username, callback) {
-        var query = connection.query(
-            'SELECT * from cosmos_user WHERE idm_username=\'' + idm_username + '\'',
-            function (error, result) {
-                if (error) {
-                    callback(error);
-                } else {
-                    console.log('Successful select: \'SELECT * from cosmos_user WHERE idm_username=\'' +
-                        idm_username + '\'\'');
-                    callback(null, result);
-                } // if else
-            }
-        );
-    }, // getJobStatus
+function getUser(idm_username, callback) {
+    var query = connection.query(
+        'SELECT * from cosmos_user WHERE idm_username=\'' + idm_username + '\'',
+        function (error, result) {
+            if (error) {
+                callback(error);
+            } else {
+                console.log('Successful select: \'SELECT * from cosmos_user WHERE idm_username=\'' +
+                    idm_username + '\'');
+                callback(null, result);
+            } // if else
+        }
+    );
+} // getUser
 
-    close: function(connection) {
-        connection.end();
-    } // end
-}
+function close(connection) {
+    connection.end();
+} // end
+
+module.exports = {
+    connect: connect,
+    addUser: addUser,
+    addPassword: addPassword,
+    getUser: getUser,
+    close: close
+} // module.exports
