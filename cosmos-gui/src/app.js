@@ -180,7 +180,6 @@ app.post('/new_account', function(req, res) {
 
 app.post('/new_password', function(req, res) {
     var idm_username = req.session.idm_username;
-    var username = idm_username.split('@')[0];
     var password1 = req.body.password1;
     var password2 = req.body.password2;
 
