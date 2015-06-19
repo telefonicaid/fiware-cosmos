@@ -25,12 +25,13 @@
 
 // Module dependencies
 var express = require('express');
+var boom = require('boom');
 var stylus = require('stylus');
 var nib = require('nib');
-var bodyParser = require('body-parser');
 var config = require('../conf/cosmos-gui.json');
 var mysqlDriver = require('./mysql_driver.js');
 var OAuth2 = require('./oauth2').OAuth2;
+var cmdRunner = require('./cmd_runner.js');
 
 // Express configuration
 var app = express();
@@ -65,6 +66,7 @@ var client_secret = config.oauth2.client_secret;
 var idmURL = config.oauth2.idmURL;
 var response_type = config.oauth2.response_type;
 var callbackURL = config.oauth2.callbackURL;
+var hdfsQuota = config.hdfs.quota;
 
 // Creates oauth library object with the config data
 var oa = new OAuth2(client_id,
@@ -73,9 +75,6 @@ var oa = new OAuth2(client_id,
     '/oauth2/authorize',
     '/oauth2/token',
     callbackURL);
-
-// Create a permanent connection to MySQL
-mysqlDriver.connect();
 
 // Handles requests to the main page
 app.get('/', function (req, res) {
@@ -86,7 +85,7 @@ app.get('/', function (req, res) {
         // Get user information given its access token
         oa.get(idmURL + '/user/', access_token, function (error, response) {
             if (error) {
-                throw error;
+                res.send(boom.internal('There was some error when getting user information from the IdM', error));
             } else {
                 // Get the user's IdM email (username)
                 var idm_username = JSON.parse(response).email;
@@ -95,13 +94,17 @@ app.get('/', function (req, res) {
                 // Check if the user, given its IdM username, has a Cosmos account
                 mysqlDriver.getUser(idm_username, function(error, result) {
                     if (error) {
-                        throw error;
+                        res.send(boom.internal('There was some error when getting user information from the ' +
+                            'database', error));
                     } else if (result[0]) {
-                        res.render('dashboard');
+                        if (result[0].password) {
+                            res.render('dashboard'); // both old and new Cosmos users with password
+                        } else {
+                            res.render('new_password'); // old Cosmos users not having a password
+                        } // if else
                     } else {
-                        res.render('new_account');
-                    }
-                     // if else
+                        res.render('new_account'); // new Cosmos users not having a username
+                    } // if else
                 });
             } // if else
         });
@@ -135,11 +138,60 @@ app.post('/new_account', function(req, res) {
     if (password1 === password2) {
         mysqlDriver.addUser(idm_username, username, password1, function(error, result) {
             if (error) {
-                throw error;
+                res.send(boom.internal('There was some error when putting user information in the database', error));
+            } else {
+                cmdRunner.run('bash', ['-c', 'useradd ' + username], function(error, result) {
+                    if (error) {
+                        res.send(boom.internal('There was an error while adding the Unix user ' + username, error));
+                    } else {
+                        cmdRunner.run('bash', ['-c', 'echo ' + password1 + " | passwd " + username + " --stdin"], function(error, result) {
+                            if (error) {
+                                res.send(boom.internal('There was an error while setting the password for the user ' + username, error));
+                            } else {
+                                cmdRunner.run('bash', ['-c', 'sudo', '-u', 'hdfs', 'hadoop', 'fs', '-mkdir', '/user/' + username], function(error, result) {
+                                    if (error) {
+                                        res.send(boom.internal('There was an error while creating the HDFS folder for the user ' + username, error));
+                                    } else {
+                                        cmdRunner.run('bash', ['-c', 'sudo', '-u', 'hdfs', 'hadoop', 'fs', '-chown', '-R', username + ':' + username, '/user/' + username], function(error, result) {
+                                            if (error) {
+                                                res.send(boom.internal('There was an error while changing the ownership of /user/' + username, error));
+                                            } else {
+                                                cmdRunner.run('bash', ['-c', 'sudo', '-u', 'hdfs', 'hadoop', 'dfsadmin', '-setSpaceQuota', hdfsQuota + 'g', '/user/' + username], function(error, result) {
+                                                    if (error) {
+                                                        res.send(boom.internal('There was an error while setting the quota to /user/' + username, error));
+                                                    } else {
+                                                        res.redirect('/');
+                                                    } // if else
+                                                })
+                                            } // if else
+                                        })
+                                    } // if else
+                                })
+                            } // if else
+                        })
+                    } // if else
+                })
+            } // if else
+        });
+    } else {
+        res.redirect('/');
+    } // if else
+});
+
+app.post('/new_password', function(req, res) {
+    var idm_username = req.session.idm_username;
+    var username = idm_username.split('@')[0];
+    var password1 = req.body.password1;
+    var password2 = req.body.password2;
+
+    if (password1 === password2) {
+        mysqlDriver.addPassword(idm_username, password1, function(error, result) {
+            if (error) {
+                res.send(boom.internal('', error));
             } else {
                 res.redirect('/');
             } // if else
-        });
+        })
     } else {
         res.redirect('/');
     } // if else
@@ -151,6 +203,14 @@ app.get('/logout', function(req, res){
     res.redirect('/');
 });
 
-// start the application, listening at the configured port
-console.log("cosmos-gui running at http://localhost:" + port);
-app.listen(port);
+// Create a permanent connection to MySQL, and start the server
+mysqlDriver.connect(function(error, result) {
+    if (error) {
+        console.log('There was some error when connecting to MySQL database. The server will not be run. ' +
+            'Details: ' + error);
+    } else {
+        // Start the application, listening at the configured port
+        console.log("cosmos-gui running at http://localhost:" + port);
+        app.listen(port);
+    } // if else
+});
