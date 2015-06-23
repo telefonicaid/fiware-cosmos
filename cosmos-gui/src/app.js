@@ -109,18 +109,18 @@ app.get('/', function (req, res) {
             } // if else
         });
     } else {
-        res.redirect('/auth');
+        res.render('login');
     } // if else
 });
 
 // Redirection to IDM authentication portal
-app.get('/auth', function(req, res) {
+app.get('/login', function(req, res) {
     var path = oa.getAuthorizeUrl(response_type);
     res.redirect(path);
 });
 
 // Handles requests from IDM with the access code
-app.get('/login', function(req, res) {
+app.get('/auth', function(req, res) {
     // Using the access code goes again to the IDM to obtain the access_token
     oa.getOAuthAccessToken(req.query.code, function (e, results){
     // Stores the access_token in a session cookie
@@ -139,39 +139,45 @@ app.post('/new_account', function(req, res) {
         mysqlDriver.addUser(idm_username, username, password1, function(error, result) {
             if (error) {
                 res.send(boom.internal('There was some error when putting user information in the database', error));
-            } else {
-                cmdRunner.run('bash', ['-c', 'useradd ' + username], function(error, result) {
+            } // if
+
+            cmdRunner.run('bash', ['-c', 'useradd ' + username], function(error, result) {
+                if (error) {
+                    res.send(boom.internal('There was an error while adding the Unix user ' + username, error));
+                } // if
+
+                console.log('Successful command executed: \'bash -c useradd ' + username + '\'');
+                cmdRunner.run('bash', ['-c', 'echo ' + password1 + ' | passwd ' + username + ' --stdin'], function(error, result) {
                     if (error) {
-                        res.send(boom.internal('There was an error while adding the Unix user ' + username, error));
-                    } else {
-                        cmdRunner.run('bash', ['-c', 'echo ' + password1 + " | passwd " + username + " --stdin"], function(error, result) {
+                        res.send(boom.internal('There was an error while setting the password for the user ' + username, error));
+                    } // if
+
+                    console.log('Successful command executed: \'bash -c echo ' + password1 + ' | passwd ' + username + ' --stdin\'');
+                    cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop fs -mkdir /user/' + username], function(error, result) {
+                        if (error) {
+                            res.send(boom.internal('There was an error while creating the HDFS folder for the user ' + username, error));
+                        } // if
+
+                        console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop fs -mkdir /user/' + username + '\'');
+                        cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username], function(error, result) {
                             if (error) {
-                                res.send(boom.internal('There was an error while setting the password for the user ' + username, error));
-                            } else {
-                                cmdRunner.run('bash', ['-c', 'sudo', '-u', 'hdfs', 'hadoop', 'fs', '-mkdir', '/user/' + username], function(error, result) {
-                                    if (error) {
-                                        res.send(boom.internal('There was an error while creating the HDFS folder for the user ' + username, error));
-                                    } else {
-                                        cmdRunner.run('bash', ['-c', 'sudo', '-u', 'hdfs', 'hadoop', 'fs', '-chown', '-R', username + ':' + username, '/user/' + username], function(error, result) {
-                                            if (error) {
-                                                res.send(boom.internal('There was an error while changing the ownership of /user/' + username, error));
-                                            } else {
-                                                cmdRunner.run('bash', ['-c', 'sudo', '-u', 'hdfs', 'hadoop', 'dfsadmin', '-setSpaceQuota', hdfsQuota + 'g', '/user/' + username], function(error, result) {
-                                                    if (error) {
-                                                        res.send(boom.internal('There was an error while setting the quota to /user/' + username, error));
-                                                    } else {
-                                                        res.redirect('/');
-                                                    } // if else
-                                                })
-                                            } // if else
-                                        })
-                                    } // if else
-                                })
-                            } // if else
+                                res.send(boom.internal('There was an error while changing the ownership of /user/' + username, error));
+                            } // if
+
+                            console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '\'');
+                            cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username], function(error, result) {
+
+                                if (error) {
+                                    res.send(boom.internal('There was an error while setting the quota to /user/' + username, error));
+                                } // if
+
+                                console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '\'');
+                                res.redirect('/');
+                            })
                         })
-                    } // if else
+                    })
                 })
-            } // if else
+            })
         });
     } else {
         res.redirect('/');
