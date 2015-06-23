@@ -30,15 +30,15 @@ function run(cmd, params, callback) {
     var execution = spawn(cmd, params);
     var result = '';
 
-    job.stdout.on('data', function (data) {
+    execution.stdout.on('data', function (data) {
         result += 'stdout: ' + data.toString();
     });
 
-    job.stderr.on('data', function (data) {
+    execution.stderr.on('data', function (data) {
         result += 'stderr: ' + data.toString();
     });
 
-    job.on('close', function (code) {
+    execution.on('close', function (code) {
         return callback(null, result);
     });
 } // run
