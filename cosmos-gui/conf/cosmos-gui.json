@@ -1,6 +1,6 @@
 {
   "gui": {
-    "port": 9090
+    "port": 80
   },
   "hdfs": {
     "quota": 5
@@ -9,7 +9,7 @@
     "idmURL": "",
     "client_id": "",
     "client_secret": "",
-    "callbackURL": "http://localhost/login",
+    "callbackURL": "http://localhost:80/auth",
     "response_type": "code"
   },
   "mysql": {
