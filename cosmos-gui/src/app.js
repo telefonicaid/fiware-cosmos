@@ -138,7 +138,7 @@ app.post('/new_account', function(req, res) {
     if (password1 === password2) {
         mysqlDriver.addUser(idm_username, username, password1, function(error, result) {
             if (error) {
-                res.send(boom.internal('There was some error when putting user information in the database', error));
+                res.send(boom.internal('There was some error when adding information in the database for user ' + username, error));
             } // if
 
             cmdRunner.run('bash', ['-c', 'useradd ' + username], function(error, result) {
@@ -149,13 +149,13 @@ app.post('/new_account', function(req, res) {
                 console.log('Successful command executed: \'bash -c useradd ' + username + '\'');
                 cmdRunner.run('bash', ['-c', 'echo ' + password1 + ' | passwd ' + username + ' --stdin'], function(error, result) {
                     if (error) {
-                        res.send(boom.internal('There was an error while setting the password for the user ' + username, error));
+                        res.send(boom.internal('There was an error while setting the password for user ' + username, error));
                     } // if
 
                     console.log('Successful command executed: \'bash -c echo ' + password1 + ' | passwd ' + username + ' --stdin\'');
                     cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop fs -mkdir /user/' + username], function(error, result) {
                         if (error) {
-                            res.send(boom.internal('There was an error while creating the HDFS folder for the user ' + username, error));
+                            res.send(boom.internal('There was an error while creating the HDFS folder for user ' + username, error));
                         } // if
 
                         console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop fs -mkdir /user/' + username + '\'');
@@ -186,13 +186,14 @@ app.post('/new_account', function(req, res) {
 
 app.post('/new_password', function(req, res) {
     var idm_username = req.session.idm_username;
+    var username = idm_username.split('@')[0];
     var password1 = req.body.password1;
     var password2 = req.body.password2;
 
     if (password1 === password2) {
         mysqlDriver.addPassword(idm_username, password1, function(error, result) {
             if (error) {
-                res.send(boom.internal('', error));
+                res.send(boom.internal('There was an error while setting up the password for user ' + username, error));
             } else {
                 res.redirect('/');
             } // if else
