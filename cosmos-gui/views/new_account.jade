@@ -1,33 +1,32 @@
 extend layout
 
 block content
-  p
-    | Welcome to FIWARE LAB Cosmos Global Instance.
+    p
+        | <b>Welcome to the Global Instance of Cosmos at FIWARE Lab.</b>
 
-  p
-    | We have detected this is your first time
-    | using this new instance. An accoun will be
-    | immediately created for you, so please choose
-    | a password:
+    p
+        | We have detected this is your first time using this new instance. An account will be
+        | immediately created for you, including remote access, so please choose a SSH password:
 
-  form(name="new_account", action="new_account", method="post")
-    div.input
-      span.label Password
-      input(type="password", name="password1")
-    div.input
-      span.label Retype the password
-      input(type="password", name="password2")
-    div.actions
-      input(type="submit", value="Create account")
+    form(name="new_account", action="new_account", method="post")
+        div.input
+            span.label Password:
+            br
+            input(type="password", name="password1", id="password")
+        div.input
+            span.label Retype the password:
+            br
+            input(type="password", name="password2", id="password")
+        div.actions
+            br
+            input(type="submit", value="Create account", id="submit2")
 
 block sidebar
-  .widget
-    h1 What is Cosmos?
+    .widget
+        h1 What is Cosmos?
+        p
+            | Cosmos is the Reference Implementation of the BigData Generic Enabler.
 
-    p
-      | Cosmos is the Reference Implementation
-      | of the BigData Generic Enabler.
-
-    p
-      | Please, find further information at the
-      | catalogue.
+        p
+            | Please, find further information at the
+            | <a href="http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos">catalogue</a>.
