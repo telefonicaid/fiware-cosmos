@@ -1,15 +1,16 @@
 extend layout
-    block content
-        p
-            | <b>Cosmos Dashboard.</b>
 
-        p
-            | No functionality is available right now, but stay tuned since next coming releases
-            | of this dashboard will allow you to manage your datasets and perform MapReduce
-            | analysis.
+block content
+    p
+        | <b>Cosmos Dashboard.</b>
 
-    block sidebar
-        .widget
-            form(name="logout", action="logout", method="get")
-                div.actions
-                    input(type="submit", value="Logout", id="submit")
+    p
+        | No functionality is available right now, but stay tuned since next coming releases
+        | of this dashboard will allow you to manage your datasets and perform MapReduce
+        | analysis.
+
+block sidebar
+    .widget
+        form(name="logout", action="logout", method="get")
+            div.actions
+                input(type="submit", value="Logout", id="submit")
