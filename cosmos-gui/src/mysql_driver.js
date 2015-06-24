@@ -67,13 +67,13 @@ function addUser(idm_username, username, password, callback) {
 
 function addPassword(idm_username, password, callback) {
     var query = connection.query(
-        'UPDATE cosmos_user SET password=\'' + password + '\' WHERE idmUsername=\'' + idm_username + '\'',
+        'UPDATE cosmos_user SET password=\'' + password + '\' WHERE idm_username=\'' + idm_username + '\'',
         function(error, result) {
             if (error) {
                 callback(error);
             } else {
                 console.log('Successful update: \'UPDATE cosmos_user SET password=\'' + password +
-                    '\' WHERE idmUsername=\'' + idm_username + '\'');
+                    '\' WHERE idm_username=\'' + idm_username + '\'');
                 callback(null, result);
             } // if else
         }
