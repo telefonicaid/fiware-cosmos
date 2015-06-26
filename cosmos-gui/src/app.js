@@ -25,7 +25,7 @@
 
 // Module dependencies
 var express = require('express');
-var boom = require('boom');
+var boom = require('express-boom');
 var stylus = require('stylus');
 var nib = require('nib');
 var config = require('../conf/cosmos-gui.json');
@@ -38,6 +38,7 @@ var app = express();
 
 app.set('views', __dirname + '/../views');
 app.set('view engine', 'jade');
+app.use(boom());
 app.use(express.logger());
 app.use(stylus.middleware(
     { src: __dirname + '/../public',
@@ -85,7 +86,8 @@ app.get('/', function (req, res) {
         // Get user information given its access token
         oa.get(idmURL + '/user/', access_token, function (error, response) {
             if (error) {
-                res.send(boom.internal('There was some error when getting user information from the IdM', error));
+                res.boom.notFound('There was some error when getting user information from the IdM', error);
+                return;
             } else {
                 // Get the user's IdM email (username)
                 var idm_username = JSON.parse(response).email;
@@ -94,8 +96,9 @@ app.get('/', function (req, res) {
                 // Check if the user, given its IdM username, has a Cosmos account
                 mysqlDriver.getUser(idm_username, function(error, result) {
                     if (error) {
-                        res.send(boom.internal('There was some error when getting user information from the ' +
-                            'database', error));
+                        res.boom.badData('There was some error when getting user information from the ' +
+                            'database', error);
+                        return;
                     } else if (result[0]) {
                         if (result[0].password) {
                             res.render('dashboard'); // both old and new Cosmos users with password
@@ -138,37 +141,43 @@ app.post('/new_account', function(req, res) {
     if (password1 === password2) {
         mysqlDriver.addUser(idm_username, username, password1, function(error, result) {
             if (error) {
-                res.send(boom.internal('There was some error when adding information in the database for user ' + username, error));
+                res.boom.badData('There was some error when adding information in the database for user ' + username, error);
+                return;
             } // if
 
             cmdRunner.run('bash', ['-c', 'useradd ' + username], function(error, result) {
                 if (error) {
-                    res.send(boom.internal('There was an error while adding the Unix user ' + username, error));
+                    res.boom.badData('There was an error while adding the Unix user ' + username, error);
+                    return;
                 } // if
 
                 console.log('Successful command executed: \'bash -c useradd ' + username + '\'');
                 cmdRunner.run('bash', ['-c', 'echo ' + password1 + ' | passwd ' + username + ' --stdin'], function(error, result) {
                     if (error) {
-                        res.send(boom.internal('There was an error while setting the password for user ' + username, error));
+                        res.boom.badData('There was an error while setting the password for user ' + username, error);
+                        return;
                     } // if
 
                     console.log('Successful command executed: \'bash -c echo ' + password1 + ' | passwd ' + username + ' --stdin\'');
                     cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop fs -mkdir /user/' + username], function(error, result) {
                         if (error) {
-                            res.send(boom.internal('There was an error while creating the HDFS folder for user ' + username, error));
+                            res.boom.badData('There was an error while creating the HDFS folder for user ' + username, error);
+                            return;
                         } // if
 
                         console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop fs -mkdir /user/' + username + '\'');
                         cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username], function(error, result) {
                             if (error) {
-                                res.send(boom.internal('There was an error while changing the ownership of /user/' + username, error));
+                                res.boom.badData('There was an error while changing the ownership of /user/' + username, error);
+                                return;
                             } // if
 
                             console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '\'');
                             cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username], function(error, result) {
 
                                 if (error) {
-                                    res.send(boom.internal('There was an error while setting the quota to /user/' + username, error));
+                                    res.boom.badData('There was an error while setting the quota to /user/' + username, error);
+                                    return;
                                 } // if
 
                                 console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '\'');
@@ -193,7 +202,8 @@ app.post('/new_password', function(req, res) {
     if (password1 === password2) {
         mysqlDriver.addPassword(idm_username, password1, function(error, result) {
             if (error) {
-                res.send(boom.internal('There was an error while setting up the password for user ' + username, error));
+                res.boom.badData('There was an error while setting up the password for user ' + username, error);
+                return;
             } else {
                 res.redirect('/');
             } // if else
