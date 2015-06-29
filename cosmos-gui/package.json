@@ -1,0 +1,20 @@
+{
+  "name": "cosmos-gui",
+  "description": "Node.js GUI for Cosmos (Hadoop-based)",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/telefonicaid/fiware-cosmos.git"
+  },
+  "dependencies": {
+    "express": "3.x",
+    "nib": "^1.0.4",
+    "stylus": "^0.49.1",
+    "jade": "^1.7.0",
+    "mysql": "^2.7.0",
+    "express-boom": "^0.3.0"
+  },
+  "scripts": {
+    "start": "sudo node ./src/app.js"
+  }
+}

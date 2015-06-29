@@ -1,0 +1,22 @@
+{
+  "gui": {
+    "port": 80
+  },
+  "hdfs": {
+    "quota": 5
+  },
+  "oauth2": {
+    "idmURL": "",
+    "client_id": "",
+    "client_secret": "",
+    "callbackURL": "http://localhost:80/auth",
+    "response_type": "code"
+  },
+  "mysql": {
+    "host": "",
+    "port": 3306,
+    "user": "",
+    "password": "",
+    "database": "cosmos_gui"
+  }
+}

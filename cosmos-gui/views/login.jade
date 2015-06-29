@@ -1,0 +1,25 @@
+extend layout
+
+block content
+
+    p
+        | <b>Welcome to the Global Instance of Cosmos at FIWARE Lab.</b>
+
+    p
+        | Please, login to continue.
+
+block sidebar
+    .widget
+        h1 What is Cosmos?
+
+        p
+            | Cosmos is the Reference Implementation of the BigData Generic Enabler.
+
+        p
+            | Please, find further information at the
+            | <a href="http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos">catalogue</a>.
+
+        form(name="login", action="login", method="get")
+            div.actions
+                input(type="submit", value="Login", id="submit")
+
