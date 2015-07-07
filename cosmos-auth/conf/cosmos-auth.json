@@ -6,7 +6,7 @@
     "path": "/oauth2/token"
   },
   "cosmos_app": {
-    "client_id": "4d1af2eec3754099a4f8dc86bf735068",
-    "client_secret": "779a6e86937f49c7849638fa565ba48d"
+    "client_id": "",
+    "client_secret": ""
   }
 }
