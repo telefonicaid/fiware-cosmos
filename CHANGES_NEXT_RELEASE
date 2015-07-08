@@ -1,0 +1,2 @@
+- [cosmos-gui] [FEATURE] Create a GUI for Cosmos, in charge os administrating the shared storage cluster (#2)
+- [cosmos-admin] [FEATURE] Admin tool for copying data among HDFS clusters (#8)
