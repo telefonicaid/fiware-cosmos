@@ -1,2 +1,3 @@
 - [cosmos-gui] [FEATURE] Create a GUI for Cosmos, in charge os administrating the shared storage cluster (#2)
 - [cosmos-admin] [FEATURE] Admin tool for copying data among HDFS clusters (#8)
+- [cosmos] [HARDENING] Add initial content to the general README (#1)
