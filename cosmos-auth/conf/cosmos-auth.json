@@ -1,6 +1,8 @@
 {
   "host": "localhost",
   "port": 13000,
+  "private_key_file": "",
+  "certificate_file": "",
   "idm": {
     "host": "account.lab.fiware.org",
     "port": "443",
