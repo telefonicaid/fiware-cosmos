@@ -1,5 +1,5 @@
 {
-  "host": "",
+  "host": "localhost",
   "port": 13000,
   "idm": {
     "host": "account.lab.fiware.org",
