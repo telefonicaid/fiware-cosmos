@@ -1,7 +1,9 @@
 #Cosmos
-Cosmos is the code name for the Reference Implementation of the BigData Generic Enabler of FIWARE.
+This project is part of [FIWARE](http://fiware.org).
 
-Cosmos comrpises several different projects:
+[Cosmos](http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos) is the code name for the Reference Implementation of the BigData Generic Enabler of FIWARE.
+
+Cosmos comprises several different sub-projects:
 
 * A set of administration tools such as HDFS data copiers and much more, under [cosmos-admin](/cosmos-admin) folder.
 * An OAuth2 tokens generator, under [cosmos-auth](cosmos-auth/) folder.
