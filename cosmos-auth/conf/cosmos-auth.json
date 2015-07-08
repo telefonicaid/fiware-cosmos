@@ -1,0 +1,13 @@
+{
+  "host": "localhost",
+  "port": 13000,
+  "idm": {
+    "host": "account.lab.fiware.org",
+    "port": "443",
+    "path": "/oauth2/token"
+  },
+  "cosmos_app": {
+    "client_id": "",
+    "client_secret": ""
+  }
+}
