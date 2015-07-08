@@ -51,6 +51,7 @@ To be done.
 ##<a name="configuration"></a>Configuration
 cosmos-auth is configured through a JSON file. These are the available parameters:
 
+* **host**: FQDN or IP address of the host running the service.
 * **port**: TCP listening port for incomming API methods invocation. 13000 by default.
 * **idm.host**: FQDN or IP address where the Identity Manager runs. Do not write it in URL form!
 * **idm.port**: Port where the Identity Manager listens for requests. Typically 443.

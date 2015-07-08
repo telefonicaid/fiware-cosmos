@@ -34,7 +34,7 @@ var client = require('./client.js');
 var server = new Hapi.Server();
 
 server.connection({
-    host: 'localhost',
+    host: config.host,
     port: config.port
 });
 
@@ -83,8 +83,8 @@ server.route({
 // Start the Hapi server
 server.start(function(error) {
     if(error) {
-        return console.log("Some error occurred during the starting of the Hapi server. Details: " + error);
+        return console.log('Some error occurred during the starting of the Hapi server. Details: ' + error);
     } // if
 
-    console.log("cosmos-auth running at http://localhost:" + config.port);
+    console.log('cosmos-auth running at http://' + config.host + ':' + config.port);
 });
