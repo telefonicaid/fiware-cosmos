@@ -29,13 +29,18 @@ var boom = require('boom');
 var packageJson = require('../package.json');
 var config = require('../conf/cosmos-auth.json');
 var client = require('./client.js');
+var fs = require('fs');
 
 // Create a Hapi server with a host and port
 var server = new Hapi.Server();
 
 server.connection({
     host: config.host,
-    port: config.port
+    port: config.port,
+    tls: {
+        key: fs.readFileSync(config.private_key_file),
+        cert: fs.readFileSync(config.certificate_file)
+    }
 });
 
 // Add routes
