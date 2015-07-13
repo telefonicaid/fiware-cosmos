@@ -141,6 +141,7 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
     * **port**: specifies the listening port for the application. By default it is 80, but can be changed if such a port is being used in your deployment.
 * **hdfs**:
     * **quota**: measured in gigabytes, defines the size of the HDFS space assigned to each Cosmos user.
+    * **superuser**: HDFS superuser, typically `hdfs`.
 * **oauth2**:
     * **idmURL**: URL where the FIWARE Identity Manager runs. If using the global instance at FIWARE LAB, it is `https://account.lab.fiware.org`.
     * **client_id**: this is given by the Identity Manager once the cosmos-gui has been registered.

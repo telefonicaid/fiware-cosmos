@@ -68,6 +68,7 @@ var idmURL = config.oauth2.idmURL;
 var response_type = config.oauth2.response_type;
 var callbackURL = config.oauth2.callbackURL;
 var hdfsQuota = config.hdfs.quota;
+var hdfsSuperuser = config.hdfs.superuser;
 
 // Creates oauth library object with the config data
 var oa = new OAuth2(client_id,
@@ -159,34 +160,34 @@ app.post('/new_account', function(req, res) {
                     } // if
 
                     console.log('Successful command executed: \'bash -c echo ' + password1 + ' | passwd ' + username + ' --stdin\'');
-                    cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop fs -mkdir /user/' + username], function(error, result) {
+                    cmdRunner.run('bash', ['-c', 'sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username], function(error, result) {
                         if (error) {
                             res.boom.badData('There was an error while creating the HDFS folder for user ' + username, error);
                             return;
                         } // if
 
-                        console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop fs -mkdir /user/' + username + '\'');
-                        cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username], function(error, result) {
+                        console.log('Successful command executed: \'bash -c sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '\'');
+                        cmdRunner.run('bash', ['-c', 'sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username], function(error, result) {
                             if (error) {
                                 res.boom.badData('There was an error while changing the ownership of /user/' + username, error);
                                 return;
                             } // if
 
-                            console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '\'');
-                            cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop fs -chmod -R 740 /user/' + username], function(error, result) {
+                            console.log('Successful command executed: \'bash -c sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '\'');
+                            cmdRunner.run('bash', ['-c', 'sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username], function(error, result) {
                                 if (error) {
                                     res.boom.badData('There was an error while changing the permissions to /user/' + username, error);
                                     return;
                                 } // if
 
-                                console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop fs -chmod -R 740 /user/' + username + '\'');
-                                cmdRunner.run('bash', ['-c', 'sudo -u hdfs hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username], function(error, result) {
+                                console.log('Successful command executed: \'bash -c sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '\'');
+                                cmdRunner.run('bash', ['-c', 'sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username], function(error, result) {
                                     if (error) {
                                         res.boom.badData('There was an error while setting the quota to /user/' + username, error);
                                         return;
                                     } // if
 
-                                    console.log('Successful command executed: \'bash -c sudo -u hdfs hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '\'');
+                                    console.log('Successful command executed: \'bash -c sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '\'');
                                     res.redirect('/');
                                 })
                             })
