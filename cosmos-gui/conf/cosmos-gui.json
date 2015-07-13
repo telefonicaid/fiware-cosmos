@@ -3,7 +3,8 @@
     "port": 80
   },
   "hdfs": {
-    "quota": 5
+    "quota": 5,
+    "superuser": "hdfs"
   },
   "oauth2": {
     "idmURL": "",
