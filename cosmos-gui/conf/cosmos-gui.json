@@ -2,6 +2,18 @@
   "gui": {
     "port": 80
   },
+  "clusters": {
+    "storage": {
+      "endpoint": "dev-fiwr-httpfs-01.hi.inet",
+      "user": "fiware-portal",
+      "private_key": "/Users/frb/devel/fiware/private-key.pem"
+    },
+    "computing": {
+      "endpoint": "dev-fiwr-...",
+      "user": "fiware-portal",
+      "private_key": "/Users/frb/devel/fiware/private-key.pem"
+    }
+  },
   "hdfs": {
     "quota": 5,
     "superuser": "hdfs"
