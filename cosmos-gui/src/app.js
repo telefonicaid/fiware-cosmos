@@ -69,6 +69,12 @@ var response_type = config.oauth2.response_type;
 var callbackURL = config.oauth2.callbackURL;
 var hdfsQuota = config.hdfs.quota;
 var hdfsSuperuser = config.hdfs.superuser;
+var scPrivKey = config.clusters.storage.endpoint;
+var scUser = config.clusters.storage.user;
+var scEndpoint = config.clusters.storage.private_key;
+var ccPrivKey = config.clusters.computing.endpoint;
+var scUser = config.clusters.computing.user;
+var ccEndpoint = config.clusters.computing.private_key;
 
 // Creates oauth library object with the config data
 var oa = new OAuth2(client_id,
@@ -142,46 +148,46 @@ app.post('/new_account', function(req, res) {
     if (password1 === password2) {
         mysqlDriver.addUser(idm_username, username, password1, function(error, result) {
             if (error) {
-                res.boom.badData('There was some error when adding information in the database for user ' + username, error);
+                res.boom.badData('There was some error when adding information in the database for user '+ username, error);
                 return;
             } // if
 
-            cmdRunner.run('bash', ['-c', 'useradd ' + username], function(error, result) {
+            cmdRunner.run('bash', ['-c', 'echo "useradd ' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                 if (error) {
                     res.boom.badData('There was an error while adding the Unix user ' + username, error);
                     return;
                 } // if
 
                 console.log('Successful command executed: \'bash -c useradd ' + username + '\'');
-                cmdRunner.run('bash', ['-c', 'echo ' + password1 + ' | passwd ' + username + ' --stdin'], function(error, result) {
+                cmdRunner.run('bash', ['-c', 'echo "echo ' + password1 + ' | passwd ' + username + ' --stdin' + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                     if (error) {
                         res.boom.badData('There was an error while setting the password for user ' + username, error);
                         return;
                     } // if
 
                     console.log('Successful command executed: \'bash -c echo ' + password1 + ' | passwd ' + username + ' --stdin\'');
-                    cmdRunner.run('bash', ['-c', 'sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username], function(error, result) {
+                    cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                         if (error) {
                             res.boom.badData('There was an error while creating the HDFS folder for user ' + username, error);
                             return;
                         } // if
 
                         console.log('Successful command executed: \'bash -c sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '\'');
-                        cmdRunner.run('bash', ['-c', 'sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username], function(error, result) {
+                        cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                             if (error) {
                                 res.boom.badData('There was an error while changing the ownership of /user/' + username, error);
                                 return;
                             } // if
 
                             console.log('Successful command executed: \'bash -c sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '\'');
-                            cmdRunner.run('bash', ['-c', 'sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username], function(error, result) {
+                            cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                                 if (error) {
                                     res.boom.badData('There was an error while changing the permissions to /user/' + username, error);
                                     return;
                                 } // if
 
                                 console.log('Successful command executed: \'bash -c sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '\'');
-                                cmdRunner.run('bash', ['-c', 'sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username], function(error, result) {
+                                cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                                     if (error) {
                                         res.boom.badData('There was an error while setting the quota to /user/' + username, error);
                                         return;
