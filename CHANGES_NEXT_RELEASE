@@ -4,3 +4,4 @@
 - [cosmos-gui] [HARDENING] Set 740 permissions to new created accounts (#17)
 - [cosmos-gui] [HARDENING] Add the HDFS superuser as a configuration parameter (#20)
 - [cosmos-gui] [HARDENING] Add detailed information about reporting issues and contact information (#5)
+- [cosmos-gui] [HARDENING] Running as sudo is not required anymore (#28)
