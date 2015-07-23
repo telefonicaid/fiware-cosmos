@@ -135,10 +135,19 @@ To be done.
 [Top](#top)
 
 ##<a name="configuration"></a>Configuration
-cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a JSON document with four main *sections*:
+cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a JSON document with five main *sections*:
 
 * **gui**:
     * **port**: specifies the listening port for the application. By default it is 80, but can be changed if such a port is being used in your deployment.
+* **clusters**:
+    * **storage**
+        * **endpoint**: IP address or FQDN of the Namenode/HttpFS server of the storage cluster.
+        * **user**: Unix user within the Namenode/HttpFS server having sudo permissions.
+        * **private_key**: user's private key used to ssh into the Namenode/HttpFS server.
+    * **computing**
+        * **endpoint**: IP address or FQDN of the Namenode/HttpFS server of the computing cluster.
+        * **user**: Unix user within the Namenode/HttpFS server having sudo permissions.
+        * **private_key**: user's private key used to ssh into the Namenode/HttpFS server.
 * **hdfs**:
     * **quota**: measured in gigabytes, defines the size of the HDFS space assigned to each Cosmos user.
     * **superuser**: HDFS superuser, typically `hdfs`.
