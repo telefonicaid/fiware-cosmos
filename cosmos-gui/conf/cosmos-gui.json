@@ -2,15 +2,27 @@
   "gui": {
     "port": 80
   },
+  "clusters": {
+    "storage": {
+      "endpoint": "",
+      "user": "",
+      "private_key": ""
+    },
+    "computing": {
+      "endpoint": "",
+      "user": "",
+      "private_key": ""
+    }
+  },
   "hdfs": {
     "quota": 5,
     "superuser": "hdfs"
   },
   "oauth2": {
-    "idmURL": "",
+    "idmURL": "https://account.lab.fiware.org",
     "client_id": "",
     "client_secret": "",
-    "callbackURL": "http://localhost:80/auth",
+    "callbackURL": "",
     "response_type": "code"
   },
   "mysql": {
