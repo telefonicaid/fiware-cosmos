@@ -105,38 +105,28 @@ a img {
  */
 body {
   font-family: 'Georgia';
-  background-color: #faf9f0;
+  background-color: #fff;
   color: #444;
 }
 header {
-  font-family: 'Quicksand';
-  padding: 50px 10px;
-  color: #fff;
-  font-size: 25px;
   text-align: center;
-/*
-   * Note the use of the `main-color`
-   * variable and the `darken` function
-   */
-  background-color: #fa5b4d;
-  border-bottom: 1px solid #df1806;
-  text-shadow: 0px -1px 0px #df1806;
+  background-color: #fff;
 }
 .container {
-  width: 500px;
+  width: 700px;
   margin: 50px auto;
   overflow: hidden;
 }
 .main-content {
   float: left;
-  width: 300px;
+  width: 400px;
 }
 .main-content p {
   margin-bottom: 20px;
 }
 .sidebar {
   float: left;
-  width: 200px;
+  width: 300px;
 }
 .sidebar .widget {
 /*
@@ -148,7 +138,7 @@ header {
   border-radius: 3px;
   border: 1px solid #ccc;
   margin-left: 20px;
-  background-color: #faf9f0;
+  background-color: #fff;
   -webkit-box-shadow: inset 0px 0px 0px 3px rgba(255,255,255,0.8), 0px 3px 0px -2px rgba(0,0,0,0.1);
   box-shadow: inset 0px 0px 0px 3px rgba(255,255,255,0.8), 0px 3px 0px -2px rgba(0,0,0,0.1);
 }
@@ -170,9 +160,24 @@ p {
   line-height: 1.8;
 }
 footer {
-  width: 500px;
-  margin: 50px auto;
+  margin: 20px auto;
   border-top: 1px dotted #ccc;
   padding-top: 5px;
   font-size: 13px;
+  text-align: center;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
+}
+#submit {
+  background-color: #ccc;
+  padding: 5px;
+  margin: 10px;
+}
+#submit2 {
+  background-color: #ccc;
+  padding: 5px;
+}
+#password {
+  width: 400px;
 }
