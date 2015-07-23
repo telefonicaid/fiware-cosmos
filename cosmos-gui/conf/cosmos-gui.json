@@ -31,5 +31,9 @@
     "user": "",
     "password": "",
     "database": "cosmos_gui"
+  },
+  "log": {
+    "file_name": "/var/log/cosmos/cosmos-gui.log",
+    "date_pattern": ".dd-MM-yyyy"
   }
 }
