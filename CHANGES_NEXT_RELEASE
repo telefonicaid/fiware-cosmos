@@ -1,6 +1,8 @@
 - [cosmos-gui] [FEATURE] Create a GUI for Cosmos, in charge os administrating the shared storage cluster (#2)
 - [cosmos-admin] [FEATURE] Admin tool for copying data among HDFS clusters (#8)
 - [cosmos] [HARDENING] Add initial content to the general README (#1)
+- [cosmos-auth] [FEATURE] OAuth2 Tokens Generator (#10)
+- [cosmos-auth] [HARDENING] Enable TLS in http connections to the OAuth2 Tokens Generator (#12)
 - [cosmos-gui] [HARDENING] Set 740 permissions to new created accounts (#17)
 - [cosmos-gui] [HARDENING] Add the HDFS superuser as a configuration parameter (#20)
 - [cosmos-gui] [HARDENING] Run administration commands remotely through ssh (#23)
