@@ -16,14 +16,14 @@
 * [Contact](#contact)
 
 ##<a name="whatis"></a>What is cosmos-gui
-This is one of the pieces of the called "Cosmos ecosystem". Cosmos is the code name for a [Hadoop](http://hadoop.apache.org/)-based solution to FIWARE's BigData Analysis Generic Enabler; such a solution is based on the split of storage and computing:
+This is one of the pieces of the named "Cosmos Ecosystem". Within such an ecosystem there is a [Hadoop](http://hadoop.apache.org/)-based implementation of FIWARE's BigData Analysis Generic Enabler; such a solution is based on the split of storage and computing capabilities:
 
 * A only-[HDFS](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html) cluster for permanently storing the user data.
 * Depending on the available resources and the goals pursued by your deployment, there are two flavours for the computing side:
     * Another Hadoop cluster, shared among all the users, addressing data processing and only allowing for temporal storage.
     * A [Sahara](https://wiki.openstack.org/wiki/Sahara)-based platform for on-demand private temporal Hadoop clusters.
 
-As seen, the storage cluster is always shared, thus a provisioning procedure is require in order to create specific Unix users and HDFS user spaces; this is also know as creating a <i>Cosmos account</i>. This procedure is automated by this cosmos-gui, a Node.js application rendering a set of web pages mainly in charge of guiding the user through this provisioning step.
+As seen, the storage cluster is always shared, and depending on the chosen flavour, the computing cluster is shared as well. Thus a provisioning procedure is require in order to create specific Unix users and HDFS user spaces within both clusters; this is also know as creating a <i>Cosmos account</i>. This procedure is automated by this cosmos-gui, a Node.js application rendering a set of web pages mainly in charge of guiding the user through this provisioning step.
 
 In addition, the cosmos-gui can be used as a centralized dashboard where a user can explore its HDFS space and run [predefined MapReduce](https://github.com/telefonicaid/fiware-tidoop/tree/develop/tidoop-mr-lib-api) jobs, once his/her Cosmos account has been provisioned.
 
@@ -35,7 +35,9 @@ This is a software written in JavaScript, specifically suited for [Node.js](http
 [Top](#top)
 
 ###<a name="prerequisites"></a>Prerequisites
-This GUI has no sense if there is no [Hadoop](http://hadoop.apache.org/)-based storage cluster to be managed.
+This GUI has no sense if there is no storage and computing clusters to be managed.
+
+A couple of sudoer users, one within the storage cluster and another one wihtin the computing clusters, are required. Through these users the cosmos-gui will remotely run certain administration commands such as new users creation, HDFS userspaces provision, etc. The access through these sudoer users will be authenticated by means of private keys.
 
 The Cosmos users management is done by means of a [MySQL](https://www.mysql.com/) database, thus install it in the same node the GUI runs, or a remote but accessible machine.
 
@@ -46,20 +48,27 @@ Of course, common Unix tools such as `git` and `curl` are needed.
 [Top](#top)
 
 ###<a name="gui"></a>Installating the GUI
-cosmos-gui must be installed in a machine being part of the storage cluster to be managed. This can be done in the Namenode, or in a dedicated node for services related to the cluster, such as HttpFS.
+cosmos-gui must be installed in a machine having ssh access both to the storage and computing clusters the GUI is going to manage. This ssh access may be limited to the Namenode (or Namenodes, if HA is enabled) of each cluster, and it is necessary since certain administration commands are remotely run through ssh.
 
-Once logged into the node, start by creating, if not yet created, a sudoer Unix user named `cosmos`; it is needed for installing and running the application. You can only do this as root, or as another sudoer user:
+Start by creating, if not yet created, a Unix user named `cosmos-gui`; it is needed for installing and running the application. You can only do this as root, or as another sudoer user:
 
-    $ sudo useradd cosmos sudo   # if the 'sudo' group is within /etc/sudoers
-    $ sudo useradd cosmos        # if the 'sudo' group is not within /etc/sudoers
-    $ sudo passwd cosmos <choose_a_password>
+    $ sudo useradd cosmos-gui
+    $ sudo passwd cosmos-gui <choose_a_password>
     
-If the `sudo` group is not within `/etc/sudoers` you can add such a group or add specifically the `cosmos` user, as you want. This is done by invoking the `sudo visudo` command.
-    
-Now, change to the new fresh `cosmos` user:
+Now, change to the new fresh `cosmos-gui` user:
 
-    $ su - cosmos
- 
+    $ su - cosmos-gui
+    
+Before continuing, remember to add the RSA key fingerprints of the Namenodes accessed by the GUI. This fingerprints are automatically added to `/home/cosmos-gui/.ssh/known_hosts` if you try a ssh access to the Namenodes for the first time. 
+
+    $ ssh somesudoeruser@my.storage.namenode.com
+    The authenticity of host 'my.storage.namenode.com (192.168.12.1)' can't be established.
+    RSA key fingerprint is 96:c4:0b:8c:09:ce:d4:09:91:a2:b2:9c:40:71:9b:c6.
+    Are you sure you want to continue connecting (yes/no)? yes
+    Warning: Permanently added 'my.storage.namenode.com,192.168.12.1' (RSA) to the list of known hosts.
+    
+Please observe `somesudoeruser` is the (ficticious) sudoer user required for the storage cluster, as stated in the [Prerequisites](#prerequisites) section. Do the same for the computing cluster.
+
 Then, clone the Cosmos repository somewhere of your ownership:
 
     $ git clone https://github.com/telefonicaid/fiware-cosmos.git
