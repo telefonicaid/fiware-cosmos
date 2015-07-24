@@ -19,7 +19,9 @@
 * [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-gui
-This is one of the pieces of the named "Cosmos Ecosystem". Within such an ecosystem there is a [Hadoop](http://hadoop.apache.org/)-based implementation of FIWARE's BigData Analysis Generic Enabler; such a solution is based on the split of storage and computing capabilities:
+This project is part of [FIWARE](http://fiware.org).
+
+[Cosmos](http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos) is the codename for the Reference Implementation of the BigData Generic Enabler of FIWARE. Such a solution is based on the split of storage and computing capabilities:
 
 * A only-[HDFS](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html) cluster for permanently storing the user data.
 * Depending on the available resources and the goals pursued by your deployment, there are two flavours for the computing side:
