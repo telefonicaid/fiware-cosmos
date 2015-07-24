@@ -13,10 +13,15 @@
     * [Cosmos account provision](#provision)
         * [Migration from an old version of Cosmos](#migration)
     * [Dashboard](#dashboard)
+* [Administration](#administration)
+    * [Logging traces](#loggingtraces)
+    * [Database](#database)
 * [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-gui
-This is one of the pieces of the named "Cosmos Ecosystem". Within such an ecosystem there is a [Hadoop](http://hadoop.apache.org/)-based implementation of FIWARE's BigData Analysis Generic Enabler; such a solution is based on the split of storage and computing capabilities:
+This project is part of [FIWARE](http://fiware.org).
+
+[Cosmos](http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos) is the codename for the Reference Implementation of the BigData Generic Enabler of FIWARE. Such a solution is based on the split of storage and computing capabilities:
 
 * A only-[HDFS](https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html) cluster for permanently storing the user data.
 * Depending on the available resources and the goals pursued by your deployment, there are two flavours for the computing side:
@@ -243,6 +248,83 @@ Current version of cosmos-gui has no functionlality exposed in the dashboard, th
 Next coming versions of the GUI will allow the users to explore their HDFS space and run predefinied MapReduce jobs from this dashboard. Stay tuned!
 
 ![](doc/images/cosmos_gui__dashboard.png)
+
+[Top](#top)
+
+##<a name="administration"></a>Administration
+
+Two are the sources of data, the logs and the database, useful for an administrator of cosmos-gui.
+
+[Top](#top)
+
+###<a name="loggingtraces"></a>Logging traces
+Logging traces, typically saved under `/var/log/cosmos/cosmos-gui`, are the main source of information regarding the GUI performance. These traces are written in JSON format, having the following fields: level, message and timestamp. For instance:
+
+    {"level":"info","message":"cosmos-gui running at http://localhost:9090","timestamp":"2015-07-23T13:25:20.019Z"}
+
+Logging levels follow this hierarchy:
+
+    debug < info < warn < error < fatal
+    
+Within the log it is expected to find many `info` messages, and a few of `warn` or `error` types. Of special interest are the errors:
+
+* ***There was some error when connecting to MySQL database. The server will not be run***: This message may appear when starting the GUI. Most probably the MySQL endpoint is not correct, the MySQL user is not allowed to remotely connect, of there is some network error like a port filtering.
+* ***There was some error when getting user information from the database***: This message may appear when a user gets the main page and his/her session has not yet expired; then, his/her information is retrieved from the database. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful. 
+* ***There was some error when getting user information from the IdM***: This message may appear when a user signs in using his/her Identity Manager (IdM) credentials. Most probably the IdM endpoint is not correct, the client id and secret related to cosmos-gui are not correct or the callback URL has not been propertly set.
+* ***There was an error while setting up the password for user \<unix_user\>***: This message may appear when a user from the old Cosmos deployment has accessed the GUI for the first time. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful.
+* ***There was some error when adding information in the database for user \<cosmos_user>***: This message may appear when a new fresh user has accessed the GUI for the first time. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful.
+* ***There was an error while adding the Unix user \<unix_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
+* ***There was an error while setting the password for user \<unix_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
+* ***There was an error while creating the HDFS folder for user \<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
+* ***There was an error while changing the ownership of /user/\<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the superuser configured for HDFS is not a superuser, or there is some network error with the ssh access.
+* ***There was an error while changing the permissions to /user/\<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the superuser configured for HDFS is not a superuser, or there is some network error with the ssh access.
+* ***There was an error while setting the quota to /user/\<cosmos_user\>:***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the superuser configured for HDFS is not a superuser, or there is some network error with the ssh access.
+
+[Top](#top)
+
+###<a name="database"></a>Database
+
+Information regarding registered users in Cosmos can be found in a MySQL table named `cosmos_user` within a database named `comsos_gui` in the MySQL deployment you did when installing the GUI. Such a table contains the IdM username, the Cosmos username, the password and the registration time.
+
+    $ mysql -u cb -p
+    Enter password: 
+    Welcome to the MySQL monitor.  Commands end with ; or \g.
+    ...
+    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+    mysql> show databases;
+    +-----------------------+
+    | Database              |
+    +-----------------------+
+    | information_schema    |
+    | cosmos_gui            |
+    | mysql                 |
+    | test                  |
+    +-----------------------+
+    4 rows in set (0.00 sec)
+
+    mysql> use cosmos_gui;
+    Reading table information for completion of table and column names
+    You can turn off this feature to get a quicker startup with -A
+
+    Database changed
+    mysql> show tables;
+    +----------------------+
+    | Tables_in_cosmos_gui |
+    +----------------------+
+    | cosmos_user          |
+    | tidoop_job           |
+    +----------------------+
+    2 rows in set (0.00 sec)
+
+    mysql> select * from cosmos_user;
+    +------------------------------------------------+---------------------------+----------+---------------------+
+    | idm_username                                   | username                  | password | registration_time   |
+    +------------------------------------------------+---------------------------+----------+---------------------+
+    | francisco.romerobueno@telefonica.com           | francisco.romerobueno     | 12345    | 2015-06-26 12:14:21 |
+    ...
+    +------------------------------------------------+---------------------------+----------+---------------------+
+    368 rows in set (0.00 sec)
 
 [Top](#top)
 
