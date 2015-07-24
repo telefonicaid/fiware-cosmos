@@ -8,5 +8,6 @@
 - [cosmos-gui] [HARDENING] Run administration commands remotely through ssh (#23)
 - [cosmos-gui] [HARDENING] Add detailed information about reporting issues and contact information (#5)
 - [cosmos-gui] [HARDENING] Running as sudo is not required anymore (#28)
+- [cosmos-gui] [HARDENING] Add an administration section (#27)
 - [cosmos-gui] [HARDENING] Add references to FIWARE in the README (#34)
 - [cosmos-gui] [HARDENING] Use "cosmos" instead of "cosmos_gui" as MySQL database (#41)
