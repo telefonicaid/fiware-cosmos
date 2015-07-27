@@ -87,7 +87,6 @@ var oa = new OAuth2(client_id,
 
 // Handles requests to the main page
 app.get('/', function (req, res) {
-    res.render('new_account');
     var access_token = req.session.access_token;
 
     // Check if the user had a session
@@ -142,16 +141,10 @@ app.get('/auth', function(req, res) {
 });
 
 app.post('/new_account', function(req, res) {
-    /*
     var idm_username = req.session.idm_username;
     var username = idm_username.split('@')[0];
     var password1 = req.body.password1;
     var password2 = req.body.password2;
-*/
-    var idm_username = 'deleteme@tid.com';
-    var username = 'deleteme';
-    var password1 = 'abc';
-    var password2 = 'abc';
 
     if (password1 === password2) {
         mysqlDriver.addUser(idm_username, username, password1, function(error, result) {
