@@ -8,7 +8,7 @@
 * [Configuration](#configuration)
 * [Running](#running)
 * [Usage](#usage)
-* [Contact](#contact)
+* [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-auth
 cosmos-auth exposes a RESTful API for [OAuth2](http://oauth.net/2/) tokens generation. These tokens are used in other Cosmos RESTful APIs, such as [WebHDFS](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html) for authentication/authorization purposes.
@@ -90,9 +90,15 @@ Resposne have the following format (JSON encoding):
     
 [Top](#top)
 
-##<a name="whatis"></a>Contact
-francisco dot romerobueno at telefonica dot com **[Main contributor]**
-<br>
-german dot torodelvalle at telefonica dot com **[Contributor]**
+##<a name="contact"></a>Reporting issues and contact information
+There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
+
+* Use [stackoverflow.com](http://stackoverflow.com) for specific questions about the software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cosmos` tag.
+* Use [fiware-tech-help@lists.fi-ware.org](mailto:fiware-tech-help@lists.fi-ware.org) for general questions about the software. Typically, these will be related to the conceptual usage of the component, e.g. wether it suites for your project or not. It is worth to mention the issues reported to [fiware-tech-help@lists.fi-ware.org](mailto:fiware-tech-help@lists.fi-ware.org) are tracked under [http://jira.fiware.org](http://jira.fiware.org); use this Jira to see the status of the issue, who has been assigneed to, the exchanged emails, etc, nevertheless the answers will be sent to you via email too.
+* Personal email:
+    * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
+    * [german.torodelvalle@telefonica.com](german.torodelvalle@telefonica.com) **[Contributor]**
+
+**NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [fiware-tech-help@lists.fi-ware.org](mailto:fiware-tech-help@lists.fi-ware.org). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)
