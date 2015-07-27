@@ -59,7 +59,7 @@ function addUser(idm_username, username, password, hdfsQuota, callback) {
                 callback(error)
             } else {
                 logger.info('Successful insert: \'INSERT INTO cosmos_user ' +
-                    '(idm_username, username, password, hdfs_quota) VALUES' +
+                    '(idm_username, username, password, hdfs_quota) VALUES ' +
                     '(' + idm_username + ', ' + username + ', ' + password + ', ' + hdfsQuota + ')\'');
                 callback(null, result);
             } // if else
