@@ -31,8 +31,8 @@ var nib = require('nib');
 var config = require('../conf/cosmos-gui.json');
 var mysqlDriver = require('./mysql_driver.js');
 var OAuth2 = require('./oauth2').OAuth2;
-var cmdRunner = require('./cmd_runner.js');
 var logger = require('./logger.js');
+var appUtils = require('./app_utils.js');
 
 // Global variables
 var port = config.gui.port;
@@ -87,6 +87,7 @@ var oa = new OAuth2(client_id,
 
 // Handles requests to the main page
 app.get('/', function (req, res) {
+    res.render('new_account');
     var access_token = req.session.access_token;
 
     // Check if the user had a session
@@ -141,10 +142,16 @@ app.get('/auth', function(req, res) {
 });
 
 app.post('/new_account', function(req, res) {
+    /*
     var idm_username = req.session.idm_username;
     var username = idm_username.split('@')[0];
     var password1 = req.body.password1;
     var password2 = req.body.password2;
+*/
+    var idm_username = 'deleteme@tid.com';
+    var username = 'deleteme';
+    var password1 = 'abc';
+    var password2 = 'abc';
 
     if (password1 === password2) {
         mysqlDriver.addUser(idm_username, username, password1, function(error, result) {
@@ -155,61 +162,8 @@ app.post('/new_account', function(req, res) {
             } // if
 
             logger.info('Successful information added to the dataase for user ' + username);
-            cmdRunner.run('bash', ['-c', 'echo "sudo useradd ' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                if (error) {
-                    res.boom.badData('There was an error while adding the Unix user ' + username, error);
-                    logger.error('There was an error while adding the Unix user ' + username);
-                    return;
-                } // if
-
-                logger.info('Successful command executed: \'bash -c echo "sudo useradd ' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                cmdRunner.run('bash', ['-c', 'echo "echo ' + password1 + ' | sudo passwd ' + username + ' --stdin' + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                    if (error) {
-                        res.boom.badData('There was an error while setting the password for user ' + username, error);
-                        logger.error('There was an error while setting the password for user ' + username);
-                        return;
-                    } // if
-
-                    logger.info('Successful command executed: \'bash -c echo "echo ' + password1 + ' | sudo passwd ' + username + ' --stdin' + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                    cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                        if (error) {
-                            res.boom.badData('There was an error while creating the HDFS folder for user ' + username, error);
-                            logger.error('There was an error while creating the HDFS folder for user ' + username);
-                            return;
-                        } // if
-
-                        logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                        cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                            if (error) {
-                                res.boom.badData('There was an error while changing the ownership of /user/' + username, error);
-                                logger.error('There was an error while changing the ownership of /user/' + username);
-                                return;
-                            } // if
-
-                            logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                            cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                                if (error) {
-                                    res.boom.badData('There was an error while changing the permissions to /user/' + username, error);
-                                    logger.error('There was an error while changing the permissions to /user/' + username);
-                                    return;
-                                } // if
-
-                                logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                                cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                                    if (error) {
-                                        res.boom.badData('There was an error while setting the quota to /user/' + username, error);
-                                        logger.error('There was an error while setting the quota to /user/' + username);
-                                        return;
-                                    } // if
-
-                                    logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                                    res.redirect('/');
-                                })
-                            })
-                        })
-                    })
-                })
-            })
+            appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+            appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
         });
     } else {
         res.redirect('/');
