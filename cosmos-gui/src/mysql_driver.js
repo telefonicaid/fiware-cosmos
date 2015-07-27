@@ -23,10 +23,12 @@
  * Author: frb
  */
 
-// module dependencies
+// Module dependencies
 var mysql = require('mysql');
 var mysqlConfig = require('../conf/cosmos-gui.json').mysql;
+var logger = require('./logger.js');
 
+// Create a connection to the database
 var connection = mysql.createConnection({
     host: mysqlConfig.host,
     port: mysqlConfig.port,
@@ -40,7 +42,7 @@ function connect(callback) {
         if (error) {
             callback(error);
         } else {
-            console.log('Connected to http://' + mysqlConfig.host + ':' + mysqlConfig.port + '/' +
+            logger.info('Connected to http://' + mysqlConfig.host + ':' + mysqlConfig.port + '/' +
                 mysqlConfig.database);
             callback(null);
         } // if else
@@ -56,7 +58,7 @@ function addUser(idm_username, username, password, callback) {
             if (error) {
                 callback(error)
             } else {
-                console.log('Successful insert: \'INSERT INTO cosmos_user ' +
+                logger.info('Successful insert: \'INSERT INTO cosmos_user ' +
                     '(idm_username, username, password) VALUES' +
                     '(' + idm_username + ', ' + username + ', ' + password + ')\'');
                 callback(null, result);
@@ -72,7 +74,7 @@ function addPassword(idm_username, password, callback) {
             if (error) {
                 callback(error);
             } else {
-                console.log('Successful update: \'UPDATE cosmos_user SET password=\'' + password +
+                logger.info('Successful update: \'UPDATE cosmos_user SET password=\'' + password +
                     '\' WHERE idm_username=\'' + idm_username + '\'');
                 callback(null, result);
             } // if else
@@ -87,7 +89,7 @@ function getUser(idm_username, callback) {
             if (error) {
                 callback(error);
             } else {
-                console.log('Successful select: \'SELECT * from cosmos_user WHERE idm_username=\'' +
+                logger.info('Successful select: \'SELECT * from cosmos_user WHERE idm_username=\'' +
                     idm_username + '\'');
                 callback(null, result);
             } // if else
@@ -97,7 +99,7 @@ function getUser(idm_username, callback) {
 
 function close(connection) {
     connection.end();
-} // end
+} // close
 
 module.exports = {
     connect: connect,

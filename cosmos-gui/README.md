@@ -60,6 +60,11 @@ Start by creating, if not yet created, a Unix user named `cosmos-gui`; it is nee
     $ sudo useradd cosmos-gui
     $ sudo passwd cosmos-gui <choose_a_password>
     
+While you are a sudoer user, create a folder for saving the cosmos-gui log traces under a path of your choice, typically `/var/log/cosmos/cosmos-gui`, and set `cosmos-gui` as the owner:
+
+    $ sudo mkdir -p /var/log/cosmos/cosmos-gui
+    $ sudo chown cosmos-gui:cosmos-gui /var/log/cosmos/cosmos-gui
+
 Now, change to the new fresh `cosmos-gui` user:
 
     $ su - cosmos-gui
@@ -149,7 +154,7 @@ To be done.
 [Top](#top)
 
 ##<a name="configuration"></a>Configuration
-cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a JSON document with five main *sections*:
+cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a JSON document with six main *sections*:
 
 * **gui**:
     * **port**: specifies the listening port for the application. By default it is 80, but can be changed if such a port is being used in your deployment.
@@ -177,6 +182,9 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
     * **user**: a valid user in the MySQL server with permissions to insert into the `cosmos_user` table.
     * **password**: password for the above user in MySQL.
     * **database**: must be `cosmos_gui`.
+* **log**:
+    * **file_name**: path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `cosmos-gui`.
+    * **date_pattern**: data pattern to be appended to the log file name when the log file is rotated.
 
 [Top](#top)
 

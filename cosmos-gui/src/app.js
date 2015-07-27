@@ -32,6 +32,23 @@ var config = require('../conf/cosmos-gui.json');
 var mysqlDriver = require('./mysql_driver.js');
 var OAuth2 = require('./oauth2').OAuth2;
 var cmdRunner = require('./cmd_runner.js');
+var logger = require('./logger.js');
+
+// Global variables
+var port = config.gui.port;
+var client_id = config.oauth2.client_id;
+var client_secret = config.oauth2.client_secret;
+var idmURL = config.oauth2.idmURL;
+var response_type = config.oauth2.response_type;
+var callbackURL = config.oauth2.callbackURL;
+var hdfsQuota = config.hdfs.quota;
+var hdfsSuperuser = config.hdfs.superuser;
+var scPrivKey = config.clusters.storage.private_key;
+var scUser = config.clusters.storage.user;
+var scEndpoint = config.clusters.storage.endpoint;
+var ccPrivKey = config.clusters.computing.private_key;
+var ccUser = config.clusters.computing.user;
+var ccEndpoint = config.clusters.computing.endpoint;
 
 // Express configuration
 var app = express();
@@ -59,22 +76,6 @@ function compile(str, path) {
         .set('filename', path)
         .use(nib());
 }
-
-// Global variables
-var port = config.gui.port;
-var client_id = config.oauth2.client_id;
-var client_secret = config.oauth2.client_secret;
-var idmURL = config.oauth2.idmURL;
-var response_type = config.oauth2.response_type;
-var callbackURL = config.oauth2.callbackURL;
-var hdfsQuota = config.hdfs.quota;
-var hdfsSuperuser = config.hdfs.superuser;
-var scPrivKey = config.clusters.storage.private_key;
-var scUser = config.clusters.storage.user;
-var scEndpoint = config.clusters.storage.endpoint;
-var ccPrivKey = config.clusters.computing.private_key;
-var ccUser = config.clusters.computing.user;
-var ccEndpoint = config.clusters.computing.endpoint;
 
 // Creates oauth library object with the config data
 var oa = new OAuth2(client_id,
@@ -149,51 +150,59 @@ app.post('/new_account', function(req, res) {
         mysqlDriver.addUser(idm_username, username, password1, function(error, result) {
             if (error) {
                 res.boom.badData('There was some error when adding information in the database for user '+ username, error);
+                logger.error('There was some error when adding information in the database for user '+ username);
                 return;
             } // if
 
+            logger.info('Successful information added to the dataase for user ' + username);
             cmdRunner.run('bash', ['-c', 'echo "sudo useradd ' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                 if (error) {
                     res.boom.badData('There was an error while adding the Unix user ' + username, error);
+                    logger.error('There was an error while adding the Unix user ' + username);
                     return;
                 } // if
 
-                console.log('Successful command executed: \'bash -c echo "sudo useradd ' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
+                logger.info('Successful command executed: \'bash -c echo "sudo useradd ' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
                 cmdRunner.run('bash', ['-c', 'echo "echo ' + password1 + ' | sudo passwd ' + username + ' --stdin' + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                     if (error) {
                         res.boom.badData('There was an error while setting the password for user ' + username, error);
+                        logger.error('There was an error while setting the password for user ' + username);
                         return;
                     } // if
 
-                    console.log('Successful command executed: \'bash -c echo "echo ' + password1 + ' | sudo passwd ' + username + ' --stdin' + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
+                    logger.info('Successful command executed: \'bash -c echo "echo ' + password1 + ' | sudo passwd ' + username + ' --stdin' + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
                     cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                         if (error) {
                             res.boom.badData('There was an error while creating the HDFS folder for user ' + username, error);
+                            logger.error('There was an error while creating the HDFS folder for user ' + username);
                             return;
                         } // if
 
-                        console.log('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
+                        logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
                         cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                             if (error) {
                                 res.boom.badData('There was an error while changing the ownership of /user/' + username, error);
+                                logger.error('There was an error while changing the ownership of /user/' + username);
                                 return;
                             } // if
 
-                            console.log('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
+                            logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
                             cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                                 if (error) {
                                     res.boom.badData('There was an error while changing the permissions to /user/' + username, error);
+                                    logger.error('There was an error while changing the permissions to /user/' + username);
                                     return;
                                 } // if
 
-                                console.log('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
+                                logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
                                 cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
                                     if (error) {
                                         res.boom.badData('There was an error while setting the quota to /user/' + username, error);
+                                        logger.error('There was an error while setting the quota to /user/' + username);
                                         return;
                                     } // if
 
-                                    console.log('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
+                                    logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
                                     res.redirect('/');
                                 })
                             })
@@ -236,11 +245,11 @@ app.get('/logout', function(req, res){
 // Create a permanent connection to MySQL, and start the server
 mysqlDriver.connect(function(error, result) {
     if (error) {
-        console.log('There was some error when connecting to MySQL database. The server will not be run. ' +
+        logger.error('There was some error when connecting to MySQL database. The server will not be run. ' +
             'Details: ' + error);
     } else {
         // Start the application, listening at the configured port
-        console.log("cosmos-gui running at http://localhost:" + port);
+        logger.info("cosmos-gui running at http://localhost:" + port);
         app.listen(port);
     } // if else
 });
