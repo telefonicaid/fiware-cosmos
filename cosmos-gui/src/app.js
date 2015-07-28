@@ -25,14 +25,14 @@
 
 // Module dependencies
 var express = require('express');
-var boom = require('express-boom');
+var boom = require('boom');
 var stylus = require('stylus');
 var nib = require('nib');
 var config = require('../conf/cosmos-gui.json');
 var mysqlDriver = require('./mysql_driver.js');
 var OAuth2 = require('./oauth2').OAuth2;
-var cmdRunner = require('./cmd_runner.js');
 var logger = require('./logger.js');
+var appUtils = require('./app_utils.js');
 
 // Global variables
 var port = config.gui.port;
@@ -55,7 +55,6 @@ var app = express();
 
 app.set('views', __dirname + '/../views');
 app.set('view engine', 'jade');
-app.use(boom());
 app.use(express.logger());
 app.use(stylus.middleware(
     { src: __dirname + '/../public',
@@ -94,8 +93,9 @@ app.get('/', function (req, res) {
         // Get user information given its access token
         oa.get(idmURL + '/user/', access_token, function (error, response) {
             if (error) {
-                res.boom.notFound('There was some error when getting user information from the IdM', error);
-                return;
+                var boomError = boom.badData('There was some error when getting user information from the IdM', error);
+                logger.error('There was some error when getting user information from the IdM', error);
+                res.status(boomError.output.statusCode).send(boomError.output.payload.message);
             } else {
                 // Get the user's IdM email (username)
                 var idm_username = JSON.parse(response).email;
@@ -104,9 +104,9 @@ app.get('/', function (req, res) {
                 // Check if the user, given its IdM username, has a Cosmos account
                 mysqlDriver.getUser(idm_username, function(error, result) {
                     if (error) {
-                        res.boom.badData('There was some error when getting user information from the ' +
-                            'database', error);
-                        return;
+                        var boomError = boom.badData('There was some error when getting user information from the ' + 'database', error);
+                        logger.error('There was some error when getting user information from the ' + 'database', error);
+                        res.status(boomError.output.statusCode).send(boomError.output.payload.message);
                     } else if (result[0]) {
                         if (result[0].password) {
                             res.render('dashboard'); // both old and new Cosmos users with password
@@ -149,67 +149,14 @@ app.post('/new_account', function(req, res) {
     if (password1 === password2) {
         mysqlDriver.addUser(idm_username, username, password1, hdfsQuota, function(error, result) {
             if (error) {
-                res.boom.badData('There was some error when adding information in the database for user '+ username, error);
+                var boomError = boom.badData('There was some error when adding information in the database for user '+ username, error);
                 logger.error('There was some error when adding information in the database for user '+ username);
-                return;
+                res.status(boomError.output.statusCode).send(boomError.output.payload.message);
             } // if
 
             logger.info('Successful information added to the dataase for user ' + username);
-            cmdRunner.run('bash', ['-c', 'echo "sudo useradd ' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                if (error) {
-                    res.boom.badData('There was an error while adding the Unix user ' + username, error);
-                    logger.error('There was an error while adding the Unix user ' + username);
-                    return;
-                } // if
-
-                logger.info('Successful command executed: \'bash -c echo "sudo useradd ' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                cmdRunner.run('bash', ['-c', 'echo "echo ' + password1 + ' | sudo passwd ' + username + ' --stdin' + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                    if (error) {
-                        res.boom.badData('There was an error while setting the password for user ' + username, error);
-                        logger.error('There was an error while setting the password for user ' + username);
-                        return;
-                    } // if
-
-                    logger.info('Successful command executed: \'bash -c echo "echo ' + password1 + ' | sudo passwd ' + username + ' --stdin' + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                    cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                        if (error) {
-                            res.boom.badData('There was an error while creating the HDFS folder for user ' + username, error);
-                            logger.error('There was an error while creating the HDFS folder for user ' + username);
-                            return;
-                        } // if
-
-                        logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                        cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                            if (error) {
-                                res.boom.badData('There was an error while changing the ownership of /user/' + username, error);
-                                logger.error('There was an error while changing the ownership of /user/' + username);
-                                return;
-                            } // if
-
-                            logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                            cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                                if (error) {
-                                    res.boom.badData('There was an error while changing the permissions to /user/' + username, error);
-                                    logger.error('There was an error while changing the permissions to /user/' + username);
-                                    return;
-                                } // if
-
-                                logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                                cmdRunner.run('bash', ['-c', 'echo "sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint], function(error, result) {
-                                    if (error) {
-                                        res.boom.badData('There was an error while setting the quota to /user/' + username, error);
-                                        logger.error('There was an error while setting the quota to /user/' + username);
-                                        return;
-                                    } // if
-
-                                    logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/' + username + '" | ssh -i ' + scPrivKey + ' ' + scUser + '@' + scEndpoint + '\'');
-                                    res.redirect('/');
-                                })
-                            })
-                        })
-                    })
-                })
-            })
+            appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+            appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
         });
     } else {
         res.redirect('/');
@@ -225,8 +172,9 @@ app.post('/new_password', function(req, res) {
     if (password1 === password2) {
         mysqlDriver.addPassword(idm_username, password1, function(error, result) {
             if (error) {
-                res.boom.badData('There was an error while setting up the password for user ' + username, error);
-                return;
+                var boomError = boom.badData('There was an error while setting up the password for user ' + username, error);
+                logger.error('There was an error while setting up the password for user ' + username, error);
+                res.status(boomError.output.statusCode).send(boomError.output.payload.message);
             } else {
                 res.redirect('/');
             } // if else

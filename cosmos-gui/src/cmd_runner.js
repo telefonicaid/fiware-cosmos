@@ -28,18 +28,21 @@ var spawn = require('child_process').spawn;
 
 function run(cmd, params, callback) {
     var execution = spawn(cmd, params);
-    var result = '';
+    var resStdout = '';
+    var resStderr = '';
 
     execution.stdout.on('data', function (data) {
-        result += 'stdout: ' + data.toString();
+        resStdout += data.toString();
     });
 
     execution.stderr.on('data', function (data) {
-        result += 'stderr: ' + data.toString();
+        resStderr += data.toString();
     });
 
     execution.on('close', function (code) {
-        return callback(null, result);
+        console.log('stderr ' + resStderr + ' stdout ' + resStdout);
+//        return callback(resStderr || null, resStdout || null);
+        return callback(null, resStdout || null);
     });
 } // run
 
