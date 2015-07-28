@@ -32,7 +32,21 @@ Of course, common tools such as `git` and `curl` may be needed.
 [Top](#top)
 
 ###<a name="installation"></a>Installation
-Start by cloning the Cosmos repository somewhere of your ownership:
+Start by creating, if not yet created, a Unix user named `cosmos-auth`; it is needed for installing and running the application. You can only do this as root, or as another sudoer user:
+
+    $ sudo useradd cosmos-auth
+    $ sudo passwd cosmos-auth <choose_a_password>
+    
+While you are a sudoer user, create a folder for saving the cosmos-gui log traces under a path of your choice, typically `/var/log/cosmos/cosmos-auth`, and set `cosmos-auth` as the owner:
+
+    $ sudo mkdir -p /var/log/cosmos/cosmos-auth
+    $ sudo chown cosmos-auth:cosmos-auth /var/log/cosmos/cosmos-auth
+
+Now, change to the new fresh `cosmos-auth` user:
+
+    $ su - cosmos-auth
+
+Then, clone the Cosmos repository somewhere of your ownership:
 
     $ git clone https://github.com/telefonicaid/fiware-cosmos.git
     
@@ -55,13 +69,18 @@ cosmos-auth is configured through a JSON file. These are the available parameter
 
 * **host**: FQDN or IP address of the host running the service.
 * **port**: TCP listening port for incomming API methods invocation. 13000 by default.
-* **private_key_file**: File name containing the private key used to encrypt the communications with the clients.
-* **certificate_file**: File name containing the self-signed X509 certificate used by the server to send the clients the public counterpart of the above private key.
-* **idm.host**: FQDN or IP address where the Identity Manager runs. Do not write it in URL form!
-* **idm.port**: Port where the Identity Manager listens for requests. Typically 443.
-* **idm.path**: Path where the Identity Managers serves the tokens generation. Typicaly `/oauth2/token`.
-* **cosmos_app.client\_id**: This value is given by the Identity Manager when the Cosmos application is registered. By configuring it here, the user has not the need to know about it.
-* **cosmos_app.client\_secret**: This value is given by the Identity Manager when the Cosmos application is registered. By configuring it here, the user has not the need to know about it.
+* **private\_key\_file**: File name containing the private key used to encrypt the communications with the clients.
+* **certificate\_file**: File name containing the self-signed X509 certificate used by the server to send the clients the public counterpart of the above private key.
+* **idm**:
+    * **host**: FQDN or IP address where the Identity Manager runs. Do not write it in URL form!
+    * **port**: Port where the Identity Manager listens for requests. Typically 443.
+    * **path**: Path where the Identity Managers serves the tokens generation. Typicaly `/oauth2/token`.
+* **cosmos_app**:
+    * **client\_id**: This value is given by the Identity Manager when the Cosmos application is registered. By configuring it here, the user has not the need to know about it.
+    * **client\_secret**: This value is given by the Identity Manager when the Cosmos application is registered. By configuring it here, the user has not the need to know about it.
+* **log**:
+    * **file_name**: path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `cosmos-auth`.
+    * **date_pattern**: data pattern to be appended to the log file name when the log file is rotated.
 
 [Top](#top)
 
