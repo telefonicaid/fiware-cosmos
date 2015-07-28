@@ -36,7 +36,7 @@ function run(cmd, params, callback) {
     });
 
     execution.stderr.on('data', function (data) {
-        resStderr += + data.toString();
+        resStderr += data.toString();
     });
 
     execution.on('close', function (code) {
