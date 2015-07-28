@@ -25,7 +25,7 @@
 
 // Module dependencies
 var https = require('https');
-var logger = require('./loggerjs');
+var logger = require('./logger.js');
 
 function doAuthorizedRequest(host, port, path, method, clientId, clientSecret, data, callback) {
     logger.info('[cosmos-auth -> IdM] Request: ' + method + ' https://' + host + ':' + port + path);
