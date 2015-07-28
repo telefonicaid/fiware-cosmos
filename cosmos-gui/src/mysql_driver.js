@@ -49,18 +49,18 @@ function connect(callback) {
     });
 } // connect
 
-function addUser(idm_username, username, password, callback) {
+function addUser(idm_username, username, password, hdfsQuota, callback) {
     var query = connection.query(
-        'INSERT INTO cosmos_user (idm_username, username, password) ' +
-        'VALUES (?, ?, ?)',
-        [idm_username, username, password],
+        'INSERT INTO cosmos_user (idm_username, username, password, hdfs_quota) ' +
+        'VALUES (?, ?, ?, ?)',
+        [idm_username, username, password, hdfsQuota],
         function (error, result) {
             if (error) {
                 callback(error)
             } else {
                 logger.info('Successful insert: \'INSERT INTO cosmos_user ' +
-                    '(idm_username, username, password) VALUES' +
-                    '(' + idm_username + ', ' + username + ', ' + password + ')\'');
+                    '(idm_username, username, password, hdfs_quota) VALUES ' +
+                    '(' + idm_username + ', ' + username + ', ' + password + ', ' + hdfsQuota + ')\'');
                 callback(null, result);
             } // if else
         }
