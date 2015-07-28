@@ -40,7 +40,9 @@ function run(cmd, params, callback) {
     });
 
     execution.on('close', function (code) {
-        return callback(null, resStdout.length == 0 ? null : resStdout);
+        console.log('stderr ' + resStderr + ' stdout ' + resStdout);
+//        return callback(resStderr || null, resStdout || null);
+        return callback(null, resStdout || null);
     });
 } // run
 
