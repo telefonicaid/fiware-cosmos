@@ -25,9 +25,10 @@
 
 // Module dependencies
 var https = require('https');
+var logger = require('./loggerjs');
 
 function doAuthorizedRequest(host, port, path, method, clientId, clientSecret, data, callback) {
-    console.log('[cosmos-auth -> IdM] Request: ' + method + ' https://' + host + ':' + port + path);
+    logger.info('[cosmos-auth -> IdM] Request: ' + method + ' https://' + host + ':' + port + path);
 
     var headers = {
         'Authorization': 'Basic ' + new Buffer(clientId + ":" + clientSecret).toString('base64'),
@@ -35,8 +36,8 @@ function doAuthorizedRequest(host, port, path, method, clientId, clientSecret, d
         'Content-Length': Buffer.byteLength(data, 'utf8')
     }
 
-    console.log('[cosmos-auth -> IdM] ' + JSON.stringify(headers));
-    console.log('[cosmos-auth -> IdM] ' + data);
+    logger.info('[cosmos-auth -> IdM] ' + JSON.stringify(headers));
+    logger.info('[cosmos-auth -> IdM] ' + data);
 
     var options = {
         host : host,
@@ -54,7 +55,7 @@ function doAuthorizedRequest(host, port, path, method, clientId, clientSecret, d
         });
 
         response.on('end', function() {
-            console.log('[cosmos-auth <- IdM] Response: ' + result)
+            logger.info('[cosmos-auth <- IdM] Response: ' + result)
             callback(null, result);
         });
     });
