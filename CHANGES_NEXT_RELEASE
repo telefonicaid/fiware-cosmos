@@ -14,3 +14,4 @@
 - [cosmos-gui] [HARDENING] Use "cosmos" instead of "cosmos_gui" as MySQL database (#41)
 - [cosmos-gui] [FEATURE] Provision the computing cluster with permanent user accounts (#25)
 - [cosmos-gui] [HARDENING] Store in the database the HDFS quota each user has assigned (#22)
+- [cosmos-auth] [HARDENING] Add logging facilities (#40)

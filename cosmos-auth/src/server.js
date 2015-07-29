@@ -30,6 +30,7 @@ var packageJson = require('../package.json');
 var config = require('../conf/cosmos-auth.json');
 var client = require('./client.js');
 var fs = require('fs');
+var logger = require('./logger.js');
 
 // Create a Hapi server with a host and port
 var server = new Hapi.Server();
@@ -48,9 +49,9 @@ server.route({
     method: 'GET',
     path: '/cosmos-auth/v1/version',
     handler: function (request, reply) {
-        console.log("[user --> cosmos-auth] Request: GET /tidoop/v1/version");
+        logger.info("[user --> cosmos-auth] Request: GET /tidoop/v1/version");
         var response = '{version: ' + packageJson.version + '}';
-        console.log("[user <-- cosmos-auth] Response: " + response);
+        logger.info("[user <-- cosmos-auth] Response: " + response);
         reply(response);
     } // handler
 });
@@ -64,9 +65,9 @@ server.route({
         }
     },
     handler: function(request, reply) {
-        console.log('[user --> cosmos-auth] Request: POST /cosmos-auth/v1/token');
-        console.log('[user --> cosmos-auth] ' + JSON.stringify(request.headers));
-        console.log('[user --> cosmos-auth] ' + request.payload.toString());
+        logger.info('[user --> cosmos-auth] Request: POST /cosmos-auth/v1/token');
+        logger.info('[user --> cosmos-auth] ' + JSON.stringify(request.headers));
+        logger.info('[user --> cosmos-auth] ' + request.payload.toString());
 
         // Check the request parameters
         // TBD
@@ -78,7 +79,7 @@ server.route({
                 if (error) {
                     reply(boom.internal('Could not connect to the IdM', error));
                 } else {
-                    console.log('[user <-- cosmos-auth] Response: ' + result);
+                    logger.info('[user <-- cosmos-auth] Response: ' + result);
                     reply(result);
                 } // if else
             })
@@ -88,8 +89,8 @@ server.route({
 // Start the Hapi server
 server.start(function(error) {
     if(error) {
-        return console.log('Some error occurred during the starting of the Hapi server. Details: ' + error);
+        return logger.error('Some error occurred during the starting of the Hapi server. Details: ' + error);
     } // if
 
-    console.log('cosmos-auth running at http://' + config.host + ':' + config.port);
+    logger.info('cosmos-auth running at http://' + config.host + ':' + config.port);
 });

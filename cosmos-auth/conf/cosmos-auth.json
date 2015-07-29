@@ -11,5 +11,9 @@
   "cosmos_app": {
     "client_id": "",
     "client_secret": ""
+  },
+  "log": {
+    "file_name": "/var/log/cosmos/cosmos-auth/cosmos-auth.log",
+    "date_pattern": ".dd-MM-yyyy"
   }
 }
