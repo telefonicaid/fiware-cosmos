@@ -15,3 +15,4 @@
 - [cosmos-gui] [FEATURE] Provision the computing cluster with permanent user accounts (#25)
 - [cosmos-gui] [HARDENING] Store in the database the HDFS quota each user has assigned (#22)
 - [cosmos-auth] [HARDENING] Add logging facilities (#40)
+- [cosmos-gui] [HARDENING] Append an incremental index to those new usernames already existing (#18)
