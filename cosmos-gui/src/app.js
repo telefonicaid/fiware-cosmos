@@ -153,11 +153,11 @@ app.post('/new_account', function(req, res) {
                     var boomError = boom.badData('There was some error when adding information in the database for user '+ username, error);
                     logger.error('There was some error when adding information in the database for user '+ username);
                     res.status(boomError.output.statusCode).send(boomError.output.payload.message);
-                } // if
-
-                logger.info('Successful information added to the dataase for user ' + username);
-                appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
-                appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+                } else {
+                    logger.info('Successful information added to the database for user ' + username);
+                    appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+                    appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+                } // if else
             });
         } else {
             res.redirect('/');

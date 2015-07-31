@@ -36,6 +36,7 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
             var boomError = boom.badData('There was an error while adding the Unix user ' + username, error);
             logger.error('There was an error while adding the Unix user ' + username + ' ' + error);
             res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+            return;
         } // if
 
         logger.info('Successful command executed: \'bash -c echo "sudo useradd ' + username + '" | ssh -i '
@@ -46,6 +47,7 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                 var boomError = boom.badData('There was an error while setting the password for user ' + username, error);
                 logger.error('There was an error while setting the password for user ' + username);
                 res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+                return;
             } // if
 
             logger.info('Successful command executed: \'bash -c echo "echo ' + password + ' | sudo passwd ' + username
@@ -56,6 +58,7 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                     var boomError = boom.badData('There was an error while creating the HDFS folder for user ' + username, error);
                     logger.error('There was an error while creating the HDFS folder for user ' + username);
                     res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+                    return;
                 } // if
 
                 logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser
@@ -68,6 +71,7 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                         var boomError = boom.badData('There was an error while changing the ownership of /user/' + username, error);
                         logger.error('There was an error while changing the ownership of /user/' + username);
                         res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+                        return;
                     } // if
 
                     logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser
@@ -79,6 +83,7 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                             var boomError = boom.badData('There was an error while changing the permissions to /user/' + username, error);
                             logger.error('There was an error while changing the permissions to /user/' + username);
                             res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+                            return;
                         } // if
 
                         logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser
@@ -91,6 +96,7 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                                 var boomError = boom.badData('There was an error while setting the quota to /user/' + username, error);
                                 logger.error('There was an error while setting the quota to /user/' + username);
                                 res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+                                return;
                             } // if
 
                             logger.info('Successful command executed: \'bash -c echo "sudo -u ' + hdfsSuperuser
