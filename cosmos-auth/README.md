@@ -7,6 +7,7 @@
     * [Unit tests](#unittests)
 * [Configuration](#configuration)
 * [Running](#running)
+* [Administration](#administration)
 * [Usage](#usage)
 * [Reporting issues and contact information](#contact)
 
@@ -107,6 +108,24 @@ Resposne have the following format (JSON encoding):
 
     {"access_token": "M2ir2989wWhs5mAmj9OJLQdok0MeGl", "token_type": "Bearer", "expires_in": 3600, "refresh_token": "nEy34Tc74HhlA6Hk34uCihUGRppLO9"}
     
+[Top](#top)
+
+##<a name="administration"></a>Administration
+Within cosmos-auth, there is a single source of information useful for administrating it: the logs.
+
+Logging traces are typically saved under `/var/log/cosmos/cosmos-auth`. These traces are written in JSON format, having the following fields: level, message and timestamp. For instance:
+
+    {"level":"info","message":"cosmos-auth running at http://localhost:13000","timestamp":"2015-07-28T14:15:28.746Z"}
+
+Logging levels follow this hierarchy:
+
+    debug < info < warn < error < fatal
+    
+Within the log it is expected to find many `info` messages, and a few of `warn` or `error` types. Of special interest are the errors:
+
+* ***Some error occurred during the starting of the Hapi server***: This message may appear when starting cosmos-auth. Most probably the configured host IP address/FQDN does not belongs to the physical machine the service is running, or the configured port is already used .
+* ***Could not connect to the IdM***: This message may appear when connecting to the identity server. Most probably the configured endpoint is not correct, or there is some network error like a port filtering, or the given credentials (cliend id and secret) regarding the application aimed to be authorized (in this case, any Cosmos REST API) are not valid.
+
 [Top](#top)
 
 ##<a name="contact"></a>Reporting issues and contact information
