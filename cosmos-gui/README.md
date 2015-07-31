@@ -93,7 +93,7 @@ That must download all the dependencies under a `node_modules` directory.
 [Top](#top)
 
 ###<a name="database"></a>Installing the database
-The user management for the storage cluster is done through a MySQL database, `cosmos_gui`. The commands for creating this database and the `cosmos_user` table can be found at `resources/mysql_db_and_tables.sql`.
+The user management for the storage cluster is done through a MySQL database, `cosmos`. The commands for creating this database and the `cosmos_user` table can be found at `resources/mysql_db_and_tables.sql`.
 
 Simply log into your MySQL deployment and copy&paste the SQL sentences within the above file.
 
@@ -112,9 +112,8 @@ Simply log into your MySQL deployment and copy&paste the SQL sentences within th
 
     Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
-    mysql> DROP DATABASE cosmos_gui;
-    mysql> CREATE DATABASE cosmos_gui;
-    mysql> USE cosmos_gui;
+    mysql> CREATE DATABASE IF NOT EXISTS cosmos;
+    mysql> USE cosmos;
     mysql> CREATE TABLE cosmos_user (idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE, username TEXT NOT NULL, password TEXT NOT NULL, registration_time TIMESTAMP NOT NULL);
 
 [Top](#top)
@@ -181,7 +180,7 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
     * **port**: port the MySQL server is listening for new incoming connections. Typically 3306.
     * **user**: a valid user in the MySQL server with permissions to insert into the `cosmos_user` table.
     * **password**: password for the above user in MySQL.
-    * **database**: must be `cosmos_gui`.
+    * **database**: must be `cosmos`.
 * **log**:
     * **file_name**: path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `cosmos-gui`.
     * **date_pattern**: data pattern to be appended to the log file name when the log file is rotated.
@@ -297,24 +296,24 @@ Information regarding registered users in Cosmos can be found in a MySQL table n
     | Database              |
     +-----------------------+
     | information_schema    |
-    | cosmos_gui            |
+    | cosmos                |
     | mysql                 |
     | test                  |
     +-----------------------+
     4 rows in set (0.00 sec)
 
-    mysql> use cosmos_gui;
+    mysql> use cosmos;
     Reading table information for completion of table and column names
     You can turn off this feature to get a quicker startup with -A
 
     Database changed
     mysql> show tables;
-    +----------------------+
-    | Tables_in_cosmos_gui |
-    +----------------------+
-    | cosmos_user          |
-    | tidoop_job           |
-    +----------------------+
+    +------------------+
+    | Tables_in_cosmos |
+    +------------------+
+    | cosmos_user      |
+    | tidoop_job       |
+    +------------------+
     2 rows in set (0.00 sec)
 
     mysql> select * from cosmos_user;
