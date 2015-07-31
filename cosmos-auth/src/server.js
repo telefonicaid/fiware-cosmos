@@ -77,6 +77,7 @@ server.route({
             config.cosmos_app.client_id, config.cosmos_app.client_secret, request.payload.toString(),
             function(error, result) {
                 if (error) {
+                    logger.error('Could not connect to the IdM', error);
                     reply(boom.internal('Could not connect to the IdM', error));
                 } else {
                     logger.info('[user <-- cosmos-auth] Response: ' + result);
