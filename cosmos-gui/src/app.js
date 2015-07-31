@@ -142,25 +142,27 @@ app.get('/auth', function(req, res) {
 
 app.post('/new_account', function(req, res) {
     var idm_username = req.session.idm_username;
-    var username = idm_username.split('@')[0];
-    var password1 = req.body.password1;
-    var password2 = req.body.password2;
 
-    if (password1 === password2) {
-        mysqlDriver.addUser(idm_username, username, password1, hdfsQuota, function(error, result) {
-            if (error) {
-                var boomError = boom.badData('There was some error when adding information in the database for user '+ username, error);
-                logger.error('There was some error when adding information in the database for user '+ username);
-                res.status(boomError.output.statusCode).send(boomError.output.payload.message);
-            } // if
+    appUtils.getUsername(idm_username.split('@')[0], 0, function(username) {
+        var password1 = req.body.password1;
+        var password2 = req.body.password2;
 
-            logger.info('Successful information added to the dataase for user ' + username);
-            appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
-            appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
-        });
-    } else {
-        res.redirect('/');
-    } // if else
+        if (password1 === password2) {
+            mysqlDriver.addUser(idm_username, username, password1, hdfsQuota, function(error, result) {
+                if (error) {
+                    var boomError = boom.badData('There was some error when adding information in the database for user '+ username, error);
+                    logger.error('There was some error when adding information in the database for user '+ username);
+                    res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+                } else {
+                    logger.info('Successful information added to the database for user ' + username);
+                    appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+                    appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+                } // if else
+            });
+        } else {
+            res.redirect('/');
+        } // if else
+    });
 });
 
 app.post('/new_password', function(req, res) {

@@ -97,6 +97,20 @@ function getUser(idm_username, callback) {
     );
 } // getUser
 
+function getUserByCosmosUser(username, callback) {
+    var query = connection.query(
+        'SELECT * from cosmos_user WHERE username=\'' + username + '\'',
+        function (error, result) {
+            if (error) {
+                callback(error);
+            } else {
+                logger.info('Successful select: \'SELECT * from cosmos_user WHERE username=\'' + username + '\'');
+                callback(null, result);
+            } // if else
+        }
+    );
+} // getUserByCosmosUser
+
 function close(connection) {
     connection.end();
 } // close
@@ -106,5 +120,6 @@ module.exports = {
     addUser: addUser,
     addPassword: addPassword,
     getUser: getUser,
+    getUserByCosmosUser: getUserByCosmosUser,
     close: close
 } // module.exports
