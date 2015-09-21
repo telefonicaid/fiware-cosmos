@@ -1,5 +1,5 @@
 #Cosmos
-This project is part of [FIWARE](http://fiware.org).
+This project is part of [FIWARE](http://fiware.org), being part of the [Cosmos](http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos) Ecosystem.
 
 [Cosmos](http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos) is the code name for the Reference Implementation of the BigData Generic Enabler of FIWARE.
 
