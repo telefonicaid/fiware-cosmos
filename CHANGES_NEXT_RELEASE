@@ -18,3 +18,4 @@
 - [cosmos-gui] [HARDENING] Append an incremental index to those new usernames already existing (#18)
 - [cosmos-auth] [HARDENING] Add an administration section (#39)
 - [cosmos-gui] [HARDENING] Remove wrong references to cosmos_gui database name (#52)
+- [cosmos-gui] [FEATURE] Add a blacklist of not allowed usernames (#60)

@@ -143,7 +143,7 @@ app.get('/auth', function(req, res) {
 app.post('/new_account', function(req, res) {
     var idm_username = req.session.idm_username;
 
-    appUtils.getUsername(idm_username.split('@')[0], 0, function(username) {
+    appUtils.buildUsername(idm_username.split('@')[0], 0, function(username) {
         var password1 = req.body.password1;
         var password2 = req.body.password2;
 

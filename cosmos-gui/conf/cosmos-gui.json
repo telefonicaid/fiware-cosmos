@@ -32,6 +32,9 @@
     "password": "",
     "database": "cosmos"
   },
+  "users_blacklist": [
+    "root", "admin", "sysadmin", "localadmin"
+  ],
   "log": {
     "file_name": "/var/log/cosmos/cosmos-gui/cosmos-gui.log",
     "date_pattern": ".dd-MM-yyyy"
