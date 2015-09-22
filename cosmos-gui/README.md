@@ -225,9 +225,11 @@ The login procedure delegates in FIWARE Identity Manager. This means cosmos-gui 
 After authentication (using your email and password registered at the Identity Manager), there are three possibilities:
 
 * You are an already registered user in Cosmos. In this case, you are directly redirected to the dashboard of the GUI.
-* You are not a user in Cosmos. In this case, the GUI will provision (one and only once) an account in the managed Hadoop cluster; this comprises:
-    * The creation of a Unix user based on your Identity Manager registered email address. This user, together with the password the page asks for, will allow you to ssh into the cluster.
-    * The creation of a HDFS user equals to the unix one. This user will allow you to manage your own private HDFS userspace (with limited quota).
+* You are not a user in Cosmos. In this case, the GUI will provision (one and only once) an account in the managed Hadoop clusters (both storage and computing); this comprises:
+    * The creation of a Unix user based on your Identity Manager registered email address. This user, together with the password the page asks for, will allow you to ssh into the clusters (both storage and computing).
+    * The creation of a HDFS user equals to the unix one. This user will allow you to manage your own persistent private HDFS userspace within the storage cluster (with limited quota), and the temporal private HDFS userspace within the computing cluster (with limited quota).
+
+Please observe when the storage and computing clusters are the same (it is not the recommended architecture, but it is feasible from a technical point of view) only one provisioning step is done, as it is obvious.
 
 ![](doc/images/cosmos_gui__new_account.png)
     

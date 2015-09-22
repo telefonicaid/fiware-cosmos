@@ -155,8 +155,15 @@ app.post('/new_account', function(req, res) {
                     res.status(boomError.output.statusCode).send(boomError.output.payload.message);
                 } else {
                     logger.info('Successful information added to the database for user ' + username);
-                    appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
-                    appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+
+                    if (scEndpoint === ccEndpoint) {
+                        // Just one provision step instead of two
+                        appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+                    } else {
+                        // Two different provision steps
+                        appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+                        appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
+                    } // if else
                 } // if else
             });
         } else {
