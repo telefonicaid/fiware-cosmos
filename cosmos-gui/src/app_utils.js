@@ -28,6 +28,7 @@ var boom = require('boom');
 var cmdRunner = require('./cmd_runner.js');
 var logger = require('./logger.js');
 var mysqlDriver = require('./mysql_driver.js');
+var usersBlacklist = require('../conf/cosmos-gui.json').users_blacklist;
 
 function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdfsSuperuser, hdfsQuota, username, password) {
     cmdRunner.run('bash', ['-c', 'echo "sudo useradd ' + username + '" | ssh -i ' + clusterPrivKey + ' ' + clusterUser
@@ -111,21 +112,26 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
     })
 } // provisionCluster
 
-function getUsername(username, index, callback) {
+function buildUsername(username, index, callback) {
+    if (usersBlacklist.indexOf(username) > -1) {
+        logger.error('The base username "' + username + '" is not allowed');
+        callback(null);
+    } // if
+
     mysqlDriver.getUserByCosmosUser(username + (index == 0 ? '' : index), function (error, result) {
         if (error) {
             logger.error('There was some error when getting user information from the ' + 'database', error);
             callback(null);
         } else if (result[0]) {
             index += 1;
-            return getUsername(username, index, callback);
+            return buildUsername(username, index, callback);
         } else {
             callback(username + (index == 0 ? '' : index));
         } // if else
     });
-} // getUsername
+} // buildUsername
 
 module.exports = {
     provisionCluster: provisionCluster,
-    getUsername: getUsername
+    buildUsername: buildUsername
 } // module.exports
