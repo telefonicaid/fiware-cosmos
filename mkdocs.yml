@@ -14,7 +14,7 @@ pages:
       - 'Introduction': 'user_and_programmer_manual/introduction.md'
       - 'Data management and I/O': 'user_and_programmer_manual/batch/data_management_and_io.md'
       - 'Requesting computing resources': 'user_and_programmer_manual/batch/request_computing_resources.md'
-      - 'Using Hadoop': 'user_and_programmer_manual/batch/using_hadoop.md'
+      - 'Using Hadoop and its ecosystem': 'user_and_programmer_manual/batch/using_hadoop_and_ecosystem.md'
       - 'OAuth2-protected REST APIs': 'user_and_programmer_manual/batch/oauth2_rest_apis.md'
   - 'Installation and Administration manual':
       - 'Some words about Cosmos and its ecosystem': 'administration_and_configuration_manual/some_words_avout_cosmos_and_ecosystem.md'

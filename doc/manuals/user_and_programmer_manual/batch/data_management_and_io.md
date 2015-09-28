@@ -72,8 +72,7 @@ As said, the following sequence of sentences will produce the same result:
 
 ##<a name="section3"></a>WebHDFS
 
-WebHDFS is the API for applications aiming to do remote I/O of data. It is a REST API containing all the operation within the File System Shell, thus any standard REST client library available for any programming
-language will be able to intereact with HDFS. Please refer to the [official documentation](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html) for full details on the API.
+WebHDFS is the API for applications aiming to do remote I/O of data. It is a REST API containing all the operation within the File System Shell, thus any standard REST client library available for any programming language will be able to intereact with HDFS. Please refer to the [official documentation](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html) for full details on the API.
 
 Observations:
 
@@ -116,11 +115,7 @@ It is the time to upload the files:
     $ curl -L -X PUT "http://<services_node>:50070/webhdfs/v1/user/myuserspace/myfolder/mydatafile1.txt?op=create&user.name=myuserspace" -H "X-Auth-Token: QfS3FSluzvDKNg2ZyiJ1T9K9fmh73u" -H "Content-Type: application/octet-stream" -d@./mydatafile1.txt
     $ curl -L -X PUT "http://<services_node>:50070/webhdfs/v1/user/myuserspace/myfolder/mydatafile2.txt?op=create&user.name=myuserspace" -H "X-Auth-Token: QfS3FSluzvDKNg2ZyiJ1T9K9fmh73u" -H "Content-Type: application/octet-stream" -d@./mydatafile2.txt
 
-Please observe in this case the `*` wildcard cannot be used and the
-files must be uploaded one by one. Please observe as well the usage of
-the option `-L`, it is used to follow the redirection returned by the
-server (creating a HDFS file is a two-step operation in WebHDFS, check
-the [documentation](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Create_and_Write_to_a_File)).
+Please observe in this case the `*` wildcard cannot be used and the files must be uploaded one by one. Please observe as well the usage of the option `-L`, it is used to follow the redirection returned by the server (creating a HDFS file is a two-step operation in WebHDFS, check the [documentation](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html#Create_and_Write_to_a_File)).
 
 Let's check my root userspace, the new folder must appear:
 
@@ -199,72 +194,29 @@ Finally, we can list the content of one of the uploaded files:
 
 ##<a name="section4"></a>HttpFS
 
-HttpFS in an alternative implementation of the WebHDFS REST API.
-Specifically, the redirection locations in the two-step request
-operations point to the same HttpFS server you sent the first request;
-internally, the server knows which is the real datanode the second
-request must be sent, this is why HttpFS is said to be a gateway.
+HttpFS in an alternative implementation of the WebHDFS REST API. Specifically, the redirection locations in the two-step request
+operations point to the same HttpFS server you sent the first request; internally, the server knows which is the real datanode the second request must be sent, this is why HttpFS is said to be a gateway.
 
 Observations:
 
--   HttpFS REST API is 100% equals to the WebHDFS one, the only chages
-    are the IP address/FQDN of the HttpFS server, that may be different
-    than the Namenode IP address/FQDN (it depends on the specific
-    deployment), and the TCP port (14000 instead of 50070 used
-    by WebHDFS).
--   This REST API may be protected with [OAuth2](http://oauth.net/2/);
-    check how to use such a protected API in the [OAuth2-protected REST
-    APIs usage](#section5) section.
+* HttpFS REST API is 100% equals to the WebHDFS one, the only chages are the IP address/FQDN of the HttpFS server, that may be different than the Namenode IP address/FQDN (it depends on the specific deployment), and the TCP port (14000 instead of 50070 used by WebHDFS).
+* This REST API may be protected with [OAuth2](http://oauth.net/2/); check how to use such a protected API in the [OAuth2-protected REST APIs usage](#section5) section.
 
 [Top](#top)
 
 ##<a name="section5"></a>Feeding HDFS with Cygnus
 
-Once installed and configured, Cygnus works as a connector between
-[Orion Context
-Broker](http://catalogue.fiware.org/enablers/publishsubscribe-context-broker-orion-context-broker)
-and multiple storage backends, HDFS among them, automatically moving
-NGSI-like context data from one to the other in order to build a
-historic view of such a data. Within the NGSI model, every concept,
-object or thing is translated into an *entity*, and its properties are
-modeled as *attributes*. Since Orion Context Broker is designed to
-handle just the last value for each entity's attribute, it is necessary
-a tool like Cygnus in order to create a list of attribute values all
-along the time.
+Once installed and configured, Cygnus works as a connector between [Orion Context Broker](http://catalogue.fiware.org/enablers/publishsubscribe-context-broker-orion-context-broker) and multiple storage backends, HDFS among them, automatically moving NGSI-like context data from one to the other in order to build a historic view of such a data. Within the NGSI model, every concept, object or thing is translated into an *entity*, and its properties are modeled as *attributes*. Since Orion Context Broker is designed to handle just the last value for each entity's attribute, it is necessary a tool like Cygnus in order to create a list of attribute values all along the time.
 
-In the case of our permanent storage, which is based in HDFS, Cygnus is
-an excellent tool for feeding the enabler with valuable (big) data from
-the Internet of Things. All the details about how to persist context
-data in HDFS can be found in the
-[README](http://github.com/telefonicaid/fiware-cygnus/blob/master/README.md)
-of Cygnus at Github, and more specifically in the
-[OrionHDFSSink](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/OrionMySQLSink.md)
-class documentation; however, we could say a generic Cygnus
-configuration for HDFS could be:
+In the case of our permanent storage, which is based in HDFS, Cygnus is an excellent tool for feeding the enabler with valuable (big) data from the Internet of Things. All the details about how to persist context data in HDFS can be found in the [README](http://github.com/telefonicaid/fiware-cygnus/blob/master/README.md) of Cygnus at Github, and more specifically in the [OrionHDFSSink](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/OrionMySQLSink.md) class documentation; however, we could say a generic Cygnus configuration for HDFS could be:
 
--   A Http source in charge of receiving NGSI-like notifications.
--   A memory channel with capacity for, let's say, 1000 events.
--   A OrionHDFSSink properly configured to write the data in the
-    permanent storage, which is HDFS based.
+* A Http source in charge of receiving NGSI-like notifications.
+* A memory channel with capacity for, let's say, 1000 events.
+* A OrionHDFSSink properly configured to write the data in the permanent storage, which is HDFS based.
 
-Once the above configuration is done, nothing has to be done with Cygnus
-in terms of usage or programming. It will automatically start persisting
-the notified context data in HDFS files; the mapping between the
-NGSI-like notified data and the HDFS files is described
-[here](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/OrionMySQLSink.md#mapping-flume-events-to-hdfs-data-structures),
-but unless the advanced
-[grouping](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/interceptors.md#groupinginterceptor-interceptor)
-feature is used, a per-entity HDFS file is created in a path that
-depends on the [FIWARE
-Service](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide#Multi_service_tenancy)
-and [FIWARE Service
-Path](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide#Entity_service_paths)
-the entity belogs to, and the entity identifier and type itself.
+Once the above configuration is done, nothing has to be done with Cygnus in terms of usage or programming. It will automatically start persisting the notified context data in HDFS files; the mapping between the NGSI-like notified data and the HDFS files is described [here](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/OrionMySQLSink.md#mapping-flume-events-to-hdfs-data-structures), but unless the advanced [grouping](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/interceptors.md#groupinginterceptor-interceptor) feature is used, a per-entity HDFS file is created in a path that depends on the [FIWARE Service](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide#Multi_service_tenancy) and [FIWARE Service Path](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide#Entity_service_paths) the entity belogs to, and the entity identifier and type itself.
 
-The HDFS files created and fed by Cygnus are regular HDFS files (with an
-internal data representation in JSON format) that can be queried through
-Hive (a JSON serialized-deserializer is needed) and processed with
-custom NGSI-like MapReduce applications.
+The HDFS files created and fed by Cygnus are regular HDFS files (with an internal data representation in JSON format) that can be queried through Hive (a JSON serialized-deserializer is needed) and processed with custom NGSI-like MapReduce applications.
 
 [Top](#top)
 
