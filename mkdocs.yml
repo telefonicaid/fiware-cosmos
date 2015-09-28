@@ -16,4 +16,16 @@ pages:
       - 'Requesting computing resources': 'user_and_programmer_manual/batch/request_computing_resources.md'
       - 'Using Hadoop and its ecosystem': 'user_and_programmer_manual/batch/using_hadoop_and_ecosystem.md'
       - 'OAuth2-protected REST APIs': 'user_and_programmer_manual/batch/oauth2_rest_apis.md'
-
+  - 'Installation and Administration manual':
+      - 'Some words about Cosmos and its ecosystem': 'administration_and_configuration_manual/some_words_avout_cosmos_and_ecosystem.md'
+      - 'HAAS engine (Shara version)': 'administration_and_configuration_manual/haas_engine_sahara.md'
+      - 'HAAS engine (shared Hadoop version)': 'administration_and_configuration_manual/haas_engine_shared_hadoop.md'
+      - 'Storage cluster': 'administration_and_configuration_manual/storage_cluster.md'
+      - 'Cosmos GUI': 'administration_and_configuration_manual/cosmos_gui.md'
+      - 'OAuth2-protected APIs': 'administration_and_configuration_manual/oauth2_protected_apis.md'
+      - 'Tidoop': 'administration_and_configuration_manual/tidoop.md'
+      - 'Cygnus': 'administration_and_configuration_manual/cygnus.md'
+      - 'Sanity Check Procedures': 'administration_and_configuration_manual/sanity_check_procedures.md'
+      - 'Diagnosis Procedures': 'administration_and_configuration_manual/diagnosis_procedures.md'
+      - 'Annex A: Creating a public-private key pair and installing the public key': 'administration_and_configuration_manual/annex_a_create_and_install_keypair.md'
+      - 'Annex B: Get a keystone auth token': 'administration_and_configuration_manual/annex_b_get_keystone_auth_token.md'
