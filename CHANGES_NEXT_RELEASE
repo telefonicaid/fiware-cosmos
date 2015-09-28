@@ -22,3 +22,4 @@
 - [cosmos-gui] [HARDENING] Allow the storage and computing clusters to be the same (#61)
 - [cosmos] [HARDENING] Add a User and Programmer Manual (#69)
 - [cosmos] [HARDENING] Add a Administration and Configuration Manual (#70)
+- [cosmos-gui] [HARDENING] Add TLS support (#77)
