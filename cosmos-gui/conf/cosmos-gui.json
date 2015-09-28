@@ -1,6 +1,6 @@
 {
   "gui": {
-    "port": 80,
+    "port": 443,
     "private_key_file": "",
     "certificate_file": ""
   },
