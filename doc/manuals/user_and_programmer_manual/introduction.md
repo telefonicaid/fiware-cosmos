@@ -19,7 +19,7 @@ If you are aiming to to expose BigData Analysis GE-like services, then please vi
 
 [Top](#top)
 
-##<a name="section2></a>Structure of the document
+##<a name="section2"></a>Structure of the document
 
 Apart from this introduction, this User and Programmer Guide contains two main sections, one for batch and another one for stream analysis.
 
