@@ -6,8 +6,8 @@
     * [Reference repositories in Github](./introduction.md#section3)
     * [Reporting issues and contact information](./introduction.md#section4)
 * Batch analysis
-    * [Some words about Cosmos and its ecosystem](./batch/some_words_avout_cosmos_and_ecosystem.md)
-    * [HAAS engine (Shara version)](./batch/haas_engine_sahara.md)
+    * [Some words about Cosmos and its ecosystem](./batch/some_words_about_cosmos_and_ecosystem.md)
+    * [HAAS engine (Sahara version)](./batch/haas_engine_sahara.md)
     * [HAAS engine (shared Hadoop version)](./batch/haas_engine_shared_hadoop.md)
     * [Storage cluster](./batch/storage_cluster.md)
     * [Cosmos GUI](./batch/cosmos_gui.md)

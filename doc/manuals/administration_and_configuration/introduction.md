@@ -20,12 +20,11 @@ If you don't relay on [FIWARE LAB](http://account.lab.fiware.org/) global instan
 
 If you still have doubts, we have built the flow diagram below in order to help you identifying which kind of Big Data user you are (if any):
 
-![Figure 1 - Which kind of Big Data user am
-I?](./big_data_installation_guide_figure_1.png)
+![Figure 1 - Which kind of Big Data user am I?](./big_data_installation_guide_figure_1.png)
 
 [Top](#top)
 
-##<a name="section2></a>Structure of the document
+##<a name="section2"></a>Structure of the document
 
 Apart from this introduction, this Installation and Administration Guide contains two main sections, one for batch and another one for stream analysis. Within each main section, there are specific topics regarding the tools involved; in addition, sanity check procedures (useful to know wether the installation was successful or not) and diagnosis procedures (a set of tips aiming to help when an issue arises) are provided as well.
 
