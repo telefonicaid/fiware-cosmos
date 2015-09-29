@@ -25,6 +25,8 @@
 
 // Module dependencies
 var express = require('express');
+var https = require('https');
+var fs = require('fs');
 var boom = require('boom');
 var stylus = require('stylus');
 var nib = require('nib');
@@ -49,6 +51,10 @@ var scEndpoint = config.clusters.storage.endpoint;
 var ccPrivKey = config.clusters.computing.private_key;
 var ccUser = config.clusters.computing.user;
 var ccEndpoint = config.clusters.computing.endpoint;
+var httpsOptions = {
+    key: fs.readFileSync(config.private_key_file),
+    cert: fs.readFileSync(config.certificate_file)
+}
 
 // Express configuration
 var app = express();
@@ -209,6 +215,6 @@ mysqlDriver.connect(function(error, result) {
     } else {
         // Start the application, listening at the configured port
         logger.info("cosmos-gui running at http://localhost:" + port);
-        app.listen(port);
+        https.createServer(httpsOptions, app).listen(port);
     } // if else
 });

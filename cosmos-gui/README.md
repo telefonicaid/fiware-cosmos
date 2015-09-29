@@ -32,6 +32,8 @@ As seen, the storage cluster is always shared, and depending on the chosen flavo
 
 In addition, the cosmos-gui can be used as a centralized dashboard where a user can explore its HDFS space and run [predefined MapReduce](https://github.com/telefonicaid/fiware-tidoop/tree/develop/tidoop-mr-lib-api) jobs, once his/her Cosmos account has been provisioned.
 
+[Transport Layer Security](https://en.wikipedia.org/wiki/Transport_Layer_Security) (TLS) is used to provide communications security through asymetric cryptography (public/private encryption keys).
+
 [Top](#top)
 
 ##<a name="maininstall"></a>Installation
@@ -156,7 +158,9 @@ To be done.
 cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a JSON document with six main *sections*:
 
 * **gui**:
-    * **port**: specifies the listening port for the application. By default it is 80, but can be changed if such a port is being used in your deployment.
+    * **port**: Specifies the listening port for the application. By default it is 80, but can be changed if such a port is being used in your deployment.
+    * **private\_key\_file**: File name containing the private key used to encrypt the communications with the clients.
+    * **certificate\_file**: File name containing the self-signed X509 certificate used by the server to send the clients the public counterpart of the above private key.
 * **clusters**:
     * **storage**
         * **endpoint**: IP address or FQDN of the Namenode/HttpFS server of the storage cluster.
@@ -165,26 +169,26 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
     * **computing**
         * **endpoint**: IP address or FQDN of the Namenode/HttpFS server of the computing cluster.
         * **user**: Unix user within the Namenode/HttpFS server having sudo permissions.
-        * **private_key**: user's private key used to ssh into the Namenode/HttpFS server.
+        * **private_key**: User's private key used to ssh into the Namenode/HttpFS server.
 * **hdfs**:
-    * **quota**: measured in gigabytes, defines the size of the HDFS space assigned to each Cosmos user.
+    * **quota**: Measured in gigabytes, defines the size of the HDFS space assigned to each Cosmos user.
     * **superuser**: HDFS superuser, typically `hdfs`.
 * **oauth2**:
     * **idmURL**: URL where the FIWARE Identity Manager runs. If using the global instance at FIWARE LAB, it is `https://account.lab.fiware.org`.
-    * **client_id**: this is given by the Identity Manager once the cosmos-gui has been registered.
-    * **client_secre**t: this is given by the Identity Manager once the cosmos-gui has been registered.
+    * **client_id**: This is given by the Identity Manager once the cosmos-gui has been registered.
+    * **client_secret**: This is given by the Identity Manager once the cosmos-gui has been registered.
     * **callbackURL**: URL used by the Identity Manager to return the control to the GUI once the delegated authentication step has finished. This must be `http://localhost:<listening_port>/auth`.
-    * **response_type**: must be `code`.
+    * **response_type**: Must be `code`.
 * **mysql**:
     * **host**: IP or FQDN of the host running the MySQL server.
-    * **port**: port the MySQL server is listening for new incoming connections. Typically 3306.
-    * **user**: a valid user in the MySQL server with permissions to insert into the `cosmos_user` table.
-    * **password**: password for the above user in MySQL.
-    * **database**: must be `cosmos`.
-* **users_blacklist**: an array of strings not allowed to be a username.
+    * **port**: Port the MySQL server is listening for new incoming connections. Typically 3306.
+    * **user**: A valid user in the MySQL server with permissions to insert into the `cosmos_user` table.
+    * **password**: Password for the above user in MySQL.
+    * **database**: Must be `cosmos`.
+* **users_blacklist**: An array of strings not allowed to be a username.
 * **log**:
-    * **file_name**: path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `cosmos-gui`.
-    * **date_pattern**: data pattern to be appended to the log file name when the log file is rotated.
+    * **file_name**: Path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `cosmos-gui`.
+    * **date_pattern**: Data pattern to be appended to the log file name when the log file is rotated.
 
 [Top](#top)
 
@@ -205,7 +209,7 @@ If everything goes well, you should be able to see in a web browser the login pa
 
 ![](doc/images/cosmos_gui__init.png)
     
-cosmos-gui typically listens in the TCP/80 port, but you can change it by editing `conf/cosmos-gui.conf`.
+cosmos-gui typically listens in the TCP/443 port (TLS encryption), but you can change it by editing `conf/cosmos-gui.conf`.
 
 [Top](#top)
 
