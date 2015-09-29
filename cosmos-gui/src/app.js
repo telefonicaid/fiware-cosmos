@@ -52,7 +52,7 @@ var ccPrivKey = config.clusters.computing.private_key;
 var ccUser = config.clusters.computing.user;
 var ccEndpoint = config.clusters.computing.endpoint;
 var httpsOptions = {
-    key: fs.readFileSync(config.private_ley_filekey),
+    key: fs.readFileSync(config.private_key_file),
     cert: fs.readFileSync(config.certificate_file)
 }
 
