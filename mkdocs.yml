@@ -17,7 +17,7 @@ pages:
       - 'Using Hadoop and its ecosystem': 'user_and_programmer_manual/batch/using_hadoop_and_ecosystem.md'
       - 'OAuth2-protected REST APIs': 'user_and_programmer_manual/batch/oauth2_rest_apis.md'
   - 'Installation and Administration manual':
-      - 'Some words about Cosmos and its ecosystem': 'administration_and_configuration_manual/some_words_avout_cosmos_and_ecosystem.md'
+      - 'Some words about Cosmos and its ecosystem': 'administration_and_configuration_manual/some_words_about_cosmos_and_ecosystem.md'
       - 'HAAS engine (Shara version)': 'administration_and_configuration_manual/haas_engine_sahara.md'
       - 'HAAS engine (shared Hadoop version)': 'administration_and_configuration_manual/haas_engine_shared_hadoop.md'
       - 'Storage cluster': 'administration_and_configuration_manual/storage_cluster.md'
