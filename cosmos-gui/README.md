@@ -116,7 +116,7 @@ Simply log into your MySQL deployment and copy&paste the SQL sentences within th
 
     mysql> CREATE DATABASE IF NOT EXISTS cosmos;
     mysql> USE cosmos;
-    mysql> CREATE TABLE cosmos_user (idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE, username TEXT NOT NULL, password TEXT NOT NULL, registration_time TIMESTAMP NOT NULL);
+    mysql> CREATE TABLE cosmos_user (idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE, username TEXT NOT NULL, password TEXT NOT NULL, hdfs_quota INTEGER NOT NULL, registration_time TIMESTAMP NOT NULL);
 
 [Top](#top)
 

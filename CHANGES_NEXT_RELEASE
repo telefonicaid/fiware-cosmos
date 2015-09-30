@@ -24,3 +24,4 @@
 - [cosmos] [HARDENING] Add a Administration and Configuration Manual (#70)
 - [cosmos-gui] [HARDENING] Add TLS support (#77)
 - [cosmos-gui] [BUG] The new_password route uses the stored username instead of the email-based one (#65)
+- [cosmos-gui] [BUG] The command for creating the cosmos_user table is now the correct one (#82) 
