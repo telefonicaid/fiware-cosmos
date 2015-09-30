@@ -11,6 +11,7 @@ extra_css: ["http://fiware.org/style/monokai_sublime.css"]
 pages:
   - Home: index.md
   - 'Installation and Administration manual':
+      - 'Introduction': 'installation_and_administration_manual/introduction.md'
       - 'Some words about Cosmos and its ecosystem': 'installation_and_administration_manual/batch/some_words_about_cosmos_and_ecosystem.md'
       - 'HAAS engine (Shara version)': 'installation_and_administration_manual/batch/haas_engine_sahara.md'
       - 'HAAS engine (shared Hadoop version)': 'installation_and_administration_manual/batch/haas_engine_shared_hadoop.md'
