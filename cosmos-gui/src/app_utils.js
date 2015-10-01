@@ -78,7 +78,7 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                         + clusterEndpoint + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':'
                         + username + ' /user/' + username + '\' | sudo bash\"\'');
                     cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
-                            'echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '\' | sudo bash'],
+                        'echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '\' | sudo bash'],
                         function(error, result) {
                         if (error) {
                             var boomError = boom.badData('There was an error while changing the permissions to /user/' + username, error);
