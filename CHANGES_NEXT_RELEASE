@@ -27,3 +27,4 @@
 - [cosmos-gui] [BUG] The command for creating the cosmos_user table is now the correct one (#82) 
 - [cosmos-gui] [BUG] Fix the path to the certificate and key files (#83)
 - [cosmos-gui] [HARDENING] Add an annex about creating and installing a RSA identity (#87)
+- [cosmos-gui] [BUG] Disable pseudo-terminal in ssh command executions (#88)
