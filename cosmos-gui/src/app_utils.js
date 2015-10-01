@@ -115,7 +115,7 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
 function buildUsername(username, index, callback) {
     if (usersBlacklist.indexOf(username) > -1) {
         logger.error('The base username "' + username + '" is not allowed');
-        callback(null);
+        return callback(null);
     } // if
 
     mysqlDriver.getUserByCosmosUser(username + (index == 0 ? '' : index), function (error, result) {

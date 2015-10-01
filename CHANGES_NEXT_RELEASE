@@ -20,6 +20,7 @@
 - [cosmos-gui] [HARDENING] Remove wrong references to cosmos_gui database name (#52)
 - [cosmos-gui] [FEATURE] Add a blacklist of not allowed usernames (#60)
 - [cosmos-gui] [HARDENING] Allow the storage and computing clusters to be the same (#61)
+- [cosmos-gui] [HARDENING] Add tests for app_utils.js and mysql_driver.js (#54)
 - [cosmos] [HARDENING] Add a User and Programmer Manual (#69)
 - [cosmos] [HARDENING] Add a Administration and Configuration Manual (#70)
 - [cosmos-gui] [HARDENING] Add TLS support (#77)

@@ -152,7 +152,37 @@ An important result of the registration process are the OAuth2 credentials that 
 [Top](#top)
 
 ###<a name="unittests"></a>Unit tests
-To be done.
+The tests are running by invoking the `make` command:
+
+    $ make
+    ***** STARTING TESTS *****
+
+      ․ [appUtils.buildUsername] build a username from a valid base string should return frb1 when frb is used as base string: 1ms
+        [appUtils.buildUsername] build an invalid username from an invalid base string should return null when fiware is used as base string: error: The base username "fiware" is not allowed
+      ․ [appUtils.buildUsername] build an invalid username from an invalid base string should return null when fiware is used as base string: 3ms
+    [appUtils.provisionCluster] provision a cluster should redirect to /after when being called from /before: info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo useradd frb' | sudo bash"'
+    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 12345 | sudo passwd frb --stdin | sudo bash"'
+    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop fs -mkdir /user/frb' | sudo bash"'
+    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop fs -chown -R frb:frb /user/frb' | sudo bash"'
+    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop fs -chmod -R 740 /user/frb' | sudo bash"'
+    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop dfsadmin -setSpaceQuota 5g /user/frb' | sudo bash"'
+      ․ [appUtils.provisionCluster] provision a cluster should redirect to /after when being called from /before: 2ms
+
+      3 passing (30ms)
+
+
+        [mysqlDriver.connect] create a MySQL connection should return null error: info: Connected to http://:3306/cosmos
+      ․ [mysqlDriver.connect] create a MySQL connection should return null error: 3ms
+        [mysqlDriver.addUser] add a new user should return null error and an empty result set: info: Successful insert: 'INSERT INTO cosmos_user (idm_username, username, password, hdfs_quota) VALUES (frb@tid.es, frb1, 12345, 5)'
+      ․ [mysqlDriver.addUser] add a new user should return null error and an empty result set: 1ms
+      ․ [mysqlDriver.addPassword] add a new password should return null error and an empty result set: 0ms
+      ․ [mysqlDriver.getUser] get a user by the idm user should return null error and a result set containing frb1: 0ms
+      ․ [mysqlDriver.getUserByCosmosUser] get a user by the cosmos user should return null error and a result set containing frb1: 0ms
+      ․ [mysqlDriver.close] close a connection should finish: 0ms
+
+      6 passing (23ms)
+
+    ****** TESTS ENDED *******
 
 [Top](#top)
 
