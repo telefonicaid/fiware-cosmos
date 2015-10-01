@@ -25,6 +25,8 @@
 
 // Module dependencies
 var express = require('express');
+var https = require('https');
+var fs = require('fs');
 var boom = require('boom');
 var stylus = require('stylus');
 var nib = require('nib');
@@ -49,6 +51,10 @@ var scEndpoint = config.clusters.storage.endpoint;
 var ccPrivKey = config.clusters.computing.private_key;
 var ccUser = config.clusters.computing.user;
 var ccEndpoint = config.clusters.computing.endpoint;
+var httpsOptions = {
+    key: fs.readFileSync(config.gui.private_key_file),
+    cert: fs.readFileSync(config.gui.certificate_file)
+}
 
 // Express configuration
 var app = express();
@@ -108,6 +114,8 @@ app.get('/', function (req, res) {
                         logger.error('There was some error when getting user information from the ' + 'database', error);
                         res.status(boomError.output.statusCode).send(boomError.output.payload.message);
                     } else if (result[0]) {
+                        req.session.username = result[0].username;
+
                         if (result[0].password) {
                             res.render('dashboard'); // both old and new Cosmos users with password
                         } else {
@@ -174,7 +182,7 @@ app.post('/new_account', function(req, res) {
 
 app.post('/new_password', function(req, res) {
     var idm_username = req.session.idm_username;
-    var username = idm_username.split('@')[0];
+    var username = req.username;
     var password1 = req.body.password1;
     var password2 = req.body.password2;
 
@@ -207,6 +215,6 @@ mysqlDriver.connect(function(error, result) {
     } else {
         // Start the application, listening at the configured port
         logger.info("cosmos-gui running at http://localhost:" + port);
-        app.listen(port);
+        https.createServer(httpsOptions, app).listen(port);
     } // if else
 });
