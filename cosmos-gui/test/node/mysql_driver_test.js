@@ -97,7 +97,7 @@ describe('[mysqlDriver.getUser] get a user by the idm user', function() {
 });
 
 describe('[mysqlDriver.getUserByCosmosUser] get a user by the cosmos user', function() {
-    it('should return null error and an result set containing ' + username, function() {
+    it('should return null error and a result set containing ' + username, function() {
         mysqlDriver.addPassword(idm_username, password, function(error, result) {
             assert.equal(null, error);
             assert.equal(username, result[0]);
