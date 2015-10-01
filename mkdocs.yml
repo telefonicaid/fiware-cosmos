@@ -10,13 +10,8 @@ theme: readthedocs
 extra_css: ["http://fiware.org/style/monokai_sublime.css"]
 pages:
   - Home: index.md
-  - 'User and Programmer manual':
-      - 'Introduction': 'user_and_programmer_manual/introduction.md'
-      - 'Data management and I/O': 'user_and_programmer_manual/batch/data_management_and_io.md'
-      - 'Requesting computing resources': 'user_and_programmer_manual/batch/request_computing_resources.md'
-      - 'Using Hadoop and its ecosystem': 'user_and_programmer_manual/batch/using_hadoop_and_ecosystem.md'
-      - 'OAuth2-protected REST APIs': 'user_and_programmer_manual/batch/oauth2_rest_apis.md'
   - 'Installation and Administration manual':
+      - 'Introduction': 'installation_and_administration_manual/introduction.md'
       - 'Some words about Cosmos and its ecosystem': 'installation_and_administration_manual/batch/some_words_about_cosmos_and_ecosystem.md'
       - 'HAAS engine (Shara version)': 'installation_and_administration_manual/batch/haas_engine_sahara.md'
       - 'HAAS engine (shared Hadoop version)': 'installation_and_administration_manual/batch/haas_engine_shared_hadoop.md'
@@ -29,3 +24,9 @@ pages:
       - 'Diagnosis Procedures': 'installation_and_administration_manual/batch/diagnosis_procedures.md'
       - 'Annex A: Creating a public-private key pair and installing the public key': 'installation_and_administration_manual/batch/annex_a_create_and_install_keypair.md'
       - 'Annex B: Get a keystone auth token': 'installation_and_administration_manual/batch/annex_b_get_keystone_auth_token.md'
+  - 'User and Programmer manual':
+      - 'Introduction': 'user_and_programmer_manual/introduction.md'
+      - 'Data management and I/O': 'user_and_programmer_manual/batch/data_management_and_io.md'
+      - 'Requesting computing resources': 'user_and_programmer_manual/batch/request_computing_resources.md'
+      - 'Using Hadoop and its ecosystem': 'user_and_programmer_manual/batch/using_hadoop_and_ecosystem.md'
+      - 'OAuth2-protected REST APIs': 'user_and_programmer_manual/batch/oauth2_rest_apis.md'
