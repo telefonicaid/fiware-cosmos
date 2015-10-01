@@ -26,3 +26,4 @@
 - [cosmos-gui] [BUG] The new_password route uses the stored username instead of the email-based one (#65)
 - [cosmos-gui] [BUG] The command for creating the cosmos_user table is now the correct one (#82) 
 - [cosmos-gui] [BUG] Fix the path to the certificate and key files (#83)
+- [cosmos-gui] [HARDENING] Add an annex about creating and installing a RSA identity (#87)
