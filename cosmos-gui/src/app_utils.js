@@ -40,10 +40,10 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
             return;
         } // if
 
-            logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@' + clusterEndpoint
-                + ' \"echo \'sudo useradd ' + username + '\' | sudo bash\"\'');
-            cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
-                'echo ' + password + ' | sudo passwd ' + username + ' --stdin'], function(error, result) {
+        logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@' + clusterEndpoint
+            + ' \"echo \'sudo useradd ' + username + '\' | sudo bash\"\'');
+        cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
+            'echo ' + password + ' | sudo passwd ' + username + ' --stdin'], function(error, result) {
             if (error) {
                 var boomError = boom.badData('There was an error while setting the password for user ' + username, error);
                 logger.error('There was an error while setting the password for user ' + username);
@@ -51,10 +51,10 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                 return;
             } // if
 
-                logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@' + clusterEndpoint
-                    + ' \"echo ' + password + ' | sudo passwd ' + username + ' --stdin | sudo bash\"\'');
-                cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
-                    'echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '\' | sudo bash'], function(error, result) {
+            logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@' + clusterEndpoint
+                + ' \"echo ' + password + ' | sudo passwd ' + username + ' --stdin | sudo bash\"\'');
+            cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
+                'echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '\' | sudo bash'], function(error, result) {
                 if (error) {
                     var boomError = boom.badData('There was an error while creating the HDFS folder for user ' + username, error);
                     logger.error('There was an error while creating the HDFS folder for user ' + username);
@@ -62,11 +62,11 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                     return;
                 } // if
 
-                    logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@' + clusterEndpoint
-                        + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '\' | sudo bash\"\'');
-                    cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
-                        'echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username
-                        + '\' | sudo bash'], function(error, result) {
+                logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@' + clusterEndpoint
+                    + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -mkdir /user/' + username + '\' | sudo bash\"\'');
+                cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
+                    'echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':' + username + ' /user/' + username
+                    + '\' | sudo bash'], function(error, result) {
                     if (error) {
                         var boomError = boom.badData('There was an error while changing the ownership of /user/' + username, error);
                         logger.error('There was an error while changing the ownership of /user/' + username);
@@ -74,12 +74,12 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                         return;
                     } // if
 
-                            logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@'
-                                + clusterEndpoint + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':'
-                                + username + ' /user/' + username + '\' | sudo bash\"\'');
-                            cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
-                                'echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '\' | sudo bash'],
-                                function(error, result) {
+                    logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@'
+                        + clusterEndpoint + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chown -R ' + username + ':'
+                        + username + ' /user/' + username + '\' | sudo bash\"\'');
+                    cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
+                            'echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/' + username + '\' | sudo bash'],
+                        function(error, result) {
                         if (error) {
                             var boomError = boom.badData('There was an error while changing the permissions to /user/' + username, error);
                             logger.error('There was an error while changing the permissions to /user/' + username);
@@ -87,12 +87,12 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                             return;
                         } // if
 
-                                logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@'
-                                    + clusterEndpoint + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/'
-                                    + username + '\' | sudo bash\"\'');
-                                cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
-                                    'echo \'sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/'
-                                    + username + '\' | sudo bash'], function(error, result) {
+                        logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@'
+                            + clusterEndpoint + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop fs -chmod -R 740 /user/'
+                            + username + '\' | sudo bash\"\'');
+                        cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
+                            'echo \'sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota ' + hdfsQuota + 'g /user/'
+                            + username + '\' | sudo bash'], function(error, result) {
                             if (error) {
                                 var boomError = boom.badData('There was an error while setting the quota to /user/' + username, error);
                                 logger.error('There was an error while setting the quota to /user/' + username);
@@ -100,9 +100,9 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                                 return;
                             } // if
 
-                                    logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@'
-                                        + clusterEndpoint + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota '
-                                        + hdfsQuota + 'g /user/' + username + '\' | sudo bash\"\'');
+                            logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@'
+                                + clusterEndpoint + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota '
+                                + hdfsQuota + 'g /user/' + username + '\' | sudo bash\"\'');
                             res.redirect('/');
                         })
                     })
