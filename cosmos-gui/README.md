@@ -17,8 +17,8 @@
     * [Logging traces](#loggingtraces)
     * [Database](#database)
 * [Annexes](#annexes)
-    * [Annex A](#annexa)
-    * [Annex B](#annexb)
+    * [Annex A: Creating and installing a RSA identity](#annexa)
+    * [Annex B: Creating a self-signed certificate](#annexb)
 * [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-gui
@@ -368,7 +368,7 @@ Information regarding registered users in Cosmos can be found in a MySQL table n
 [Top](#top)
 
 ##<a name="annexes"></a>Annexes
-###<a name="annexa"></a>Annex A: creating and installing a RSA identity
+###<a name="annexa"></a>Annex A: Creating and installing a RSA identity
 
 For this guide we will assume there is a server machine `server_vm` needed to be accessed by a client machine `client_vm`.
 
@@ -414,7 +414,7 @@ Finally, you can check the access from the client machine:
 
 [Top](#top)
 
-###<a name="annexb"></a>Annex B: creating a self-signed certificate
+###<a name="annexb"></a>Annex B: Creating a self-signed certificate
 
 First of all, create a private key; it may not be necessary if you already have one:
 
