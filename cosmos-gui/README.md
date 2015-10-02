@@ -193,7 +193,7 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
 * **gui**:
     * **port**: Specifies the listening port for the application. By default it is 80, but can be changed if such a port is being used in your deployment.
     * **private\_key\_file**: File name containing the private key used to encrypt the communications with the clients.
-    * **certificate\_file**: File name containing the self-signed X509 certificate used by the server to send the clients the public counterpart of the above private key.
+    * **certificate\_file**: File name containing the self-signed X509 certificate used by the server to send the clients the public counterpart of the above private key (see [Annex B](#annexb)].
 * **clusters**:
     * **storage**
         * **endpoint**: IP address or FQDN of the Namenode/HttpFS server of the storage cluster.
