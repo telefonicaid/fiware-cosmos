@@ -17,7 +17,8 @@
     * [Logging traces](#loggingtraces)
     * [Database](#database)
 * [Annexes](#annexes)
-    * [Annex A](#annexa)
+    * [Annex A: Creating and installing a RSA identity](#annexa)
+    * [Annex B: Creating a self-signed certificate](#annexb)
 * [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-gui
@@ -192,7 +193,7 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
 * **gui**:
     * **port**: Specifies the listening port for the application. By default it is 80, but can be changed if such a port is being used in your deployment.
     * **private\_key\_file**: File name containing the private key used to encrypt the communications with the clients.
-    * **certificate\_file**: File name containing the self-signed X509 certificate used by the server to send the clients the public counterpart of the above private key.
+    * **certificate\_file**: File name containing the self-signed X509 certificate used by the server to send the clients the public counterpart of the above private key (see [Annex B](#annexb)].
 * **clusters**:
     * **storage**
         * **endpoint**: IP address or FQDN of the Namenode/HttpFS server of the storage cluster.
@@ -367,7 +368,7 @@ Information regarding registered users in Cosmos can be found in a MySQL table n
 [Top](#top)
 
 ##<a name="annexes"></a>Annexes
-###<a name="annexa"></a>Annex A: creating and installing a RSA identity
+###<a name="annexa"></a>Annex A: Creating and installing a RSA identity
 
 For this guide we will assume there is a server machine `server_vm` needed to be accessed by a client machine `client_vm`.
 
@@ -410,6 +411,22 @@ Finally, you can check the access from the client machine:
 
     $ su - cosmos-gui
     $ ssh -i conf/id_rsa2 cosmos@server_vm
+
+[Top](#top)
+
+###<a name="annexb"></a>Annex B: Creating a self-signed certificate
+
+First of all, create a private key; it may not be necessary if you already have one:
+
+    $ openssl genrsa -out private-key.pem 1024
+    
+Second, create a Certificate Signing Request (CSR) using the privte key:
+
+    $ openssl req -new -key private-key.pem -out csr.pem
+
+Finally, create the self-signed certificate:
+
+    $ openssl x509 -req -in csr.pem -signkey private-key.pem -out public-cert.pem
 
 [Top](#top)
 
