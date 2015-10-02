@@ -18,6 +18,7 @@
     * [Database](#database)
 * [Annexes](#annexes)
     * [Annex A](#annexa)
+    * [Annex B](#annexb)
 * [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-gui
@@ -410,6 +411,22 @@ Finally, you can check the access from the client machine:
 
     $ su - cosmos-gui
     $ ssh -i conf/id_rsa2 cosmos@server_vm
+
+[Top](#top)
+
+###<a name="annexb"></a>Annex B: creating a self-signed certificate
+
+First of all, create a private key; it may not be necessary if you already have one:
+
+    $ openssl genrsa -out private-key.pem 1024
+    
+Second, create a Certificate Signing Request (CSR) using the privte key:
+
+    $ openssl req -new -key private-key.pem -out csr.pem
+
+Finally, create the self-signed certificate:
+
+    $ openssl x509 -req -in csr.pem -signkey private-key.pem -out public-cert.pem
 
 [Top](#top)
 
