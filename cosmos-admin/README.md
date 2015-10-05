@@ -2,14 +2,16 @@
 
 * [What is cosmos-admin](#whatis)
 * [`data_copier.sh`](#datacopier)
-* [Reporting issues and contact informatio](#contact)
+* [`get_user_stats.sh`](#getuserstats)
+* [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-admin
 cosmos-admin is a set of tools designed to administrate a Cosmos deployment, both for the Sahara-based and shared Hadoop-based flavours.
 
 Available tools are:
 
-* **data_copier.sh**: a script designed to copy HDFS data from one cluster to another.
+* **data\_copier.sh**: a script designed to copy HDFS data from one cluster to another.
+* **get\_user\_stats.sh**: a script designed to get certain user statistics (e.g. HDFS use, last access time) in a periodic fashion (i.e. as script within the crontab).
 
 [Top](#top)
 
@@ -25,6 +27,10 @@ The underlying data copying mechanism used by `data_copier.sh` is [WebHDFS](http
 * Destination HDFS cluster Http URL.
 * Maximum number of bytes allowed to be transfered in upload operations by the destination cluster.
 
+In a shell:
+
+    $ ./data_copier.sh <usernames_file> <src_cluster_URL> <dst_cluster_URL> <max_bytes_transfer>
+
 Data is copied user by user, in a sequential way; you'll see logs in the standard output about the current file.
 
 If for any reason the data copying is interrupted (for instance, the communication with any of the clusters breaks down), it is recommended to initiate again the process, starting by the user whose files were partially copied. In more details:
@@ -35,15 +41,41 @@ If for any reason the data copying is interrupted (for instance, the communicati
 
 [Top](#top)
 
+##<a name="getuserstats"></a>`get_user_stats.sh`
+
+This script has been designed to get certain user statistics, these ones:
+
+* Last access time (timestamp format).
+* HDFS usage (number of bytes).
+* Local file system usage (number of bytes).
+
+The above values are stored within a database usally named `cosmos`,  in a table usually named `cosmos_user`. Follow [this link](../cosmos-gui/README.md#database) for more details about the database.
+
+`get_user_stats.sh` is parameterized by:
+
+* Host running the MySQL server
+* Port where the MySQL server listens for requests. Typically, TCP/3306 port.
+* Database name. Usually, `cosmos`.
+* MySQL user allowd to insert data within the `cosmos` database, `cosmos_user` table.
+* Pasword for the MySQL user.
+
+In a shell:
+
+    $ ./get_user_stats.sh <mysql_host> <mysql_port> <db_name> <mysql_user> <mysql_password>
+
+Since the above mentioned statistics change along the time, it is useful to schedule this script execution in a periodic fashion, let's say at least once per day. You can use the `crontab` for achieving this.
+
+[Top](#top)
+
 ##<a name="contact"></a>Reporting issues and contact information
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
-* Use [stackoverflow.com](http://stackoverflow.com) for specific questions about the software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cosmos` tag.
-* Use [fiware-tech-help@lists.fi-ware.org](mailto:fiware-tech-help@lists.fi-ware.org) for general questions about the software. Typically, these will be related to the conceptual usage of the component, e.g. wether it suites for your project or not. It is worth to mention the issues reported to [fiware-tech-help@lists.fi-ware.org](mailto:fiware-tech-help@lists.fi-ware.org) are tracked under [http://jira.fiware.org](http://jira.fiware.org); use this Jira to see the status of the issue, who has been assigneed to, the exchanged emails, etc, nevertheless the answers will be sent to you via email too.
+* Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cygnus` tag.
+* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [fermin.galanmarquez@telefonica.com](mailto:fermin.galanmarquez@telefonica.com) **[Contributor]**
 
-**NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [fiware-tech-help@lists.fi-ware.org](mailto:fiware-tech-help@lists.fi-ware.org). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)

@@ -5,6 +5,7 @@
     * [Prerequisites](#prerequisites)
     * [Installing the GUI](#gui)
     * [Installing the database](#database)
+        * [Upgrading from 0.1.0 to 0.2.0](#upgrade010to020)
     * [Unit tests](#unittests)
 * [Configuration](#configuration)
 * [Running](#running)
@@ -98,9 +99,13 @@ That must download all the dependencies under a `node_modules` directory.
 [Top](#top)
 
 ###<a name="database"></a>Installing the database
-The user management for the storage cluster is done through a MySQL database, `cosmos`. The commands for creating this database and the `cosmos_user` table can be found at `resources/mysql_db_and_tables.sql`.
+The user management for the storage cluster is done through a MySQL database, `cosmos`. The commands for creating this database and the `cosmos_user` table can be found at `resources/mysql_db_and_tables.sql`. Please observe <b>if you already installed a database for a previous version of the GUI, please ignore this section and visit the specific upgrading section</b>.
 
-Simply log into your MySQL deployment and copy&paste the SQL sentences within the above file.
+Simply log into your MySQL deployment and execute the sentence within the file above:
+
+    mysql> resources/mysql_db_and_tables.sql
+    
+Alternatively, you can copy&paste the SQL sentences and execute them:
 
     $ mysql -u <user> -p
     Enter password: 
@@ -119,7 +124,28 @@ Simply log into your MySQL deployment and copy&paste the SQL sentences within th
 
     mysql> CREATE DATABASE IF NOT EXISTS cosmos;
     mysql> USE cosmos;
-    mysql> CREATE TABLE cosmos_user (idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE, username TEXT NOT NULL, password TEXT NOT NULL, hdfs_quota INTEGER NOT NULL, registration_time TIMESTAMP NOT NULL);
+    mysql> CREATE TABLE cosmos_user (idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE, username TEXT NOT NULL, password TEXT NOT NULL, hdfs_quota BIGINT NOT NULL, hdfs_used BIGINT NOT NULL, fs_used BIGINT NOT NULL, registration_time TIMESTAMP DEFAULT "0000-00-00 00:00:00", last_access_time TIMESTAMP DEFAULT "0000-00-00 00:00:00");
+
+[Top](#top)
+
+####<a name="upgrade010to020"></a>Upgrading from 0.1.0 to 0.2.0
+**NOTE**: It is highly recommended you backup your `cosmos` database before performing any upgrade operation.
+
+You are visiting this section since you already installed Cosmos GUI 0.1.0 and want to upgrade to 0.2.0. If you never installed the GUI before, please go to the <i>[Installing the database](#database)</i> section.
+
+Cosmos GUI 0.2.0 adds some columns to the `cosmos_user` table, and many others are modified. In order to do the upgrade, please execute the `resource/mysql_upgrade_0.1.0-0.2.0.sql` file:
+
+    mysql> SOURCE resource/mysql_upgrade_0.1.0-0.2.0.sql
+    
+Or type the sentences within that file into a mysql shell:
+
+    mysql> USE cosmos;
+    mysql> ALTER TABLE cosmos_user MODIFY registration_time TIMESTAMP DEFAULT "0000-00-00 00:00:00";
+    mysql> ALTER TABLE cosmos_user ADD COLUMN last_access_time TIMESTAMP DEFAULT "0000-00-00 00:00:00";
+    mysql> ALTER TABLE cosmos_user ADD COLUMN hdfs_used BIGINT NOT NULL;
+    mysql> ALTER TABLE cosmos_user ADD COLUMN fs_used BIGINT NOT NULL;
+    mysql> ALTER TABLE cosmos_user MODIFY hdfs_quota BIGINT NOT NULL;
+    mysql> UPDATE cosmos_user SET hdfs_quota=1073741824*hdfs_quota;
 
 [Top](#top)
 
@@ -204,7 +230,7 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
         * **user**: Unix user within the Namenode/HttpFS server having sudo permissions.
         * **private_key**: User's private key used to ssh into the Namenode/HttpFS server.
 * **hdfs**:
-    * **quota**: Measured in gigabytes, defines the size of the HDFS space assigned to each Cosmos user.
+    * **quota**: Measured in bytes, defines the size of the HDFS space assigned to each Cosmos user.
     * **superuser**: HDFS superuser, typically `hdfs`.
 * **oauth2**:
     * **idmURL**: URL where the FIWARE Identity Manager runs. If using the global instance at FIWARE LAB, it is `https://account.lab.fiware.org`.
