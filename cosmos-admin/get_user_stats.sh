@@ -32,8 +32,8 @@ dbName=$3
 dbUser=$4
 dbPassword=$5
 
-// From string to number months converter
-// $1 --> month to be converted
+# From string to number months converter
+# $1 --> month to be converted
 convert_month() {
 	local month_str=$1
 
@@ -77,9 +77,9 @@ convert_month() {
 	esac
 }
 
-// Per username iteration
+# Per username iteration
 while read -r username; do
-	// Get the last access time
+	# Get the last access time
 	last_result=$(last -R $username | head -n1)
 	year=$(date | awk '{ print $6 }')
 	convert_month $(echo $last_result | awk '{ print $4 }')
@@ -89,11 +89,11 @@ while read -r username; do
 	last_access_time=$(echo $year-$month-$day $hour_minute:00)
 	mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set last_access_time='$last_access_time' where username='$username'"
 
-	// Get the local file system size
+	# Get the local file system size
 	fs_du_result=$(du -chb /home/$username | grep total | awk '{ print $1 }')
 	mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set fs_used='$fs_du_result' where username='$username'"
 
-	// Get the HDFS size
+	# Get the HDFS size
 	hdfs_du_result=$(hadoop fs -dus /user/$username | awk '{ print $2 }')
 	mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set hdfs_used='$hdfs_du_result' where username='$username'"
 done < <(mysql $dbName -u $dbUser -p$dbPassword -se "select username from cosmos_user")
