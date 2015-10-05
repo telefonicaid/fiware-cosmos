@@ -94,7 +94,7 @@ while read -r username; do
 	mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set fs_used='$fs_du_result' where username='$username'"
 
 	// Get the HDFS size
-        hdfs_du_result=$(hadoop fs -dus /user/$username | awk '{ print $2 }')
+	hdfs_du_result=$(hadoop fs -dus /user/$username | awk '{ print $2 }')
 	mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set hdfs_used='$hdfs_du_result' where username='$username'"
 done < <(mysql $dbName -u $dbUser -p$dbPassword -se "select username from cosmos_user")
 
