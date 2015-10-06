@@ -124,7 +124,7 @@ Alternatively, you can copy&paste the SQL sentences and execute them:
 
     mysql> CREATE DATABASE IF NOT EXISTS cosmos;
     mysql> USE cosmos;
-    mysql> CREATE TABLE cosmos_user (idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE, username TEXT NOT NULL, password TEXT NOT NULL, hdfs_quota BIGINT NOT NULL, hdfs_used BIGINT NOT NULL, fs_used BIGINT NOT NULL, registration_time TIMESTAMP DEFAULT "0000-00-00 00:00:00", last_access_time TIMESTAMP DEFAULT "0000-00-00 00:00:00");
+    mysql> CREATE TABLE cosmos_user (idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE, username TEXT NOT NULL, password TEXT NOT NULL, hdfs_quota BIGINT NOT NULL, hdfs_used BIGINT NOT NULL, fs_used BIGINT NOT NULL, registration_time TIMESTAMP DEFAULT "0000-00-00 00:00:00", last_access_time TIMESTAMP DEFAULT "0000-00-00 00:00:00", num_ssh_conn_ok BIGINT NOT NULL, num_ssh_conn_fail BIGINT NOT NULL);
 
 [Top](#top)
 
@@ -144,6 +144,8 @@ Or type the sentences within that file into a mysql shell:
     mysql> ALTER TABLE cosmos_user ADD COLUMN last_access_time TIMESTAMP DEFAULT "0000-00-00 00:00:00";
     mysql> ALTER TABLE cosmos_user ADD COLUMN hdfs_used BIGINT NOT NULL;
     mysql> ALTER TABLE cosmos_user ADD COLUMN fs_used BIGINT NOT NULL;
+    mysql> ALTER TABLE cosmos_user ADD COLUMN num_ssh_conn_ok BIGINT NOT NULL;
+    mysql> ALTER TABLE cosmos_user ADD COLUMN num_ssh_conn_fail BIGINT NOT NULL;
     mysql> ALTER TABLE cosmos_user MODIFY hdfs_quota BIGINT NOT NULL;
     mysql> UPDATE cosmos_user SET hdfs_quota=1073741824*hdfs_quota;
 

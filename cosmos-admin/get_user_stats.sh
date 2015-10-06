@@ -20,8 +20,8 @@
 # francisco dot romerobueno at telefonica dot com
 
 # Show the usage
-if [ $# -ne 5 ]; then
-        echo "Usage: ./get_user_stats.sh <db_host> <db_port> <db_name> <db_user> <db_password>"
+if [ $# -ne 6 ]; then
+        echo "Usage: ./get_user_stats.sh <db_host> <db_port> <db_name> <db_user> <db_password> <ssh_logs>"
         exit 1;
 fi
 
@@ -31,6 +31,7 @@ dbPort=$2
 dbName=$3
 dbUser=$4
 dbPassword=$5
+sshLogs=$6
 
 # From string to number months converter
 # $1 --> month to be converted
@@ -77,6 +78,9 @@ convert_month() {
 	esac
 }
 
+# Create a snapshot of /var/log/secure, this is because this script will run very close to the daily log rotation
+cp $sshLogs $sshLogs.bak
+
 # Per username iteration
 while read -r username; do
 	# Get the last access time
@@ -96,5 +100,15 @@ while read -r username; do
 	# Get the HDFS size
 	hdfs_du_result=$(hadoop fs -dus /user/$username | awk '{ print $2 }')
 	mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set hdfs_used='$hdfs_du_result' where username='$username'"
+
+	# Get the successful ssh connections
+	cat_result=$(cat $sshLogs.bak | grep $username | grep "Accepted password" | wc -l)
+        mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set num_ssh_conn_ok=num_ssh_conn_ok+$cat_result where username='$username'"
+
+	# Get the failed ssh connections
+        cat_result=$(cat $sshLogs.bak | grep $username | grep "Failed password" | wc -l)
+        mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set num_ssh_conn_fail=num_ssh_conn_fail+$cat_result where username='$username'"
 done < <(mysql $dbName -u $dbUser -p$dbPassword -se "select username from cosmos_user")
 
+# Delete the /var/log/secure snapshot
+rm $sshLogs.bak
