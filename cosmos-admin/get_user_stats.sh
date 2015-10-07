@@ -94,11 +94,11 @@ while read -r username; do
 	mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set last_access_time='$last_access_time' where username='$username'"
 
 	# Get the local file system size
-	fs_du_result=$(du -chb /home/$username | grep total | awk '{ print $1 }')
+	fs_du_result=$(du -chb /home/$username 2> /dev/null | grep total | awk '{ print $1 }')
 	mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set fs_used='$fs_du_result' where username='$username'"
 
 	# Get the HDFS size
-	hdfs_du_result=$(hadoop fs -dus /user/$username | awk '{ print $2 }')
+	hdfs_du_result=$(hadoop fs -dus /user/$username 2> /dev/null | awk '{ print $2 }')
 	mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set hdfs_used='$hdfs_du_result' where username='$username'"
 
 	# Get the successful ssh connections
