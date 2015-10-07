@@ -9,6 +9,8 @@
 * [Running](#running)
 * [Administration](#administration)
 * [Usage](#usage)
+* [Annexes](#annexes)
+    * [Annex A: Creating a self-signed certificate](#annexa)
 * [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-auth
@@ -125,6 +127,24 @@ Within the log it is expected to find many `info` messages, and a few of `warn` 
 
 * ***Some error occurred during the starting of the Hapi server***: This message may appear when starting cosmos-auth. Most probably the configured host IP address/FQDN does not belongs to the physical machine the service is running, or the configured port is already used .
 * ***Could not connect to the IdM***: This message may appear when connecting to the identity server. Most probably the configured endpoint is not correct, or there is some network error like a port filtering, or the given credentials (cliend id and secret) regarding the application aimed to be authorized (in this case, any Cosmos REST API) are not valid.
+
+[Top](#top)
+
+##<a name="annexes"></a>Annexes
+
+###<a name="annexa"></a>Annex A: Creating a self-signed certificate
+
+First of all, create a private key; it may not be necessary if you already have one:
+
+    $ openssl genrsa -out private-key.pem 1024
+    
+Second, create a Certificate Signing Request (CSR) using the privte key:
+
+    $ openssl req -new -key private-key.pem -out csr.pem
+
+Finally, create the self-signed certificate:
+
+    $ openssl x509 -req -in csr.pem -signkey private-key.pem -out public-cert.pem
 
 [Top](#top)
 
