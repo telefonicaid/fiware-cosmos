@@ -2,6 +2,7 @@
 
 * [What is cosmos-admin](#whatis)
 * [`data_copier.sh`](#datacopier)
+* [`warnings.sh`](#warnings)
 * [Reporting issues and contact informatio](#contact)
 
 ##<a name="whatis"></a>What is cosmos-admin
@@ -32,6 +33,30 @@ If for any reason the data copying is interrupted (for instance, the communicati
 * Delete all the files within the destination cluster related to the affected user.
 * Remove all the usernames from the usernames file whose data was successfully copied. The first username in the list must be now the affected user.
 * Run the script again.
+
+[Top](#top)
+
+###<a name="warnings"></a>`warnings.sh`
+This script has been designed for detecting certain scenarios the Cosmos administrator must be warned about. Specifically:
+
+* When a HDFS space is close to the quota limit. How much close it is depends on a configurable threshold.
+* When an account has no data within the HDFS space and certain time has last after the account creation. The interval check depends on a configurable value measured in days.
+
+When any of the above situations is detected, an email is sent to the Cosmos administrator.
+
+`warnings.sh` is parameterized by:
+
+*  Host running the MySQL server
+* Port where the MySQL server listens for requests. Typically, TCP/3306 port.
+* Database name. Usually, `cosmos`.
+* MySQL user allowed to insert data within the `cosmos` database, `cosmos_user` table.
+* Pasword for the MySQL user.
+* Percentage of HDFS space considered close to the quota limit.
+* Number of days since creation an account having no HDFS data is considered unused.
+* Email address (owned by an administrator) which sending the report to.
+* Title for the report.
+
+It is convenient this script is run with a frequency not greater than a day, since the warnings may result in a critical scenario (e.g. insufficient storage space for a user).
 
 [Top](#top)
 
