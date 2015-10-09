@@ -1,3 +1,5 @@
 - [doc] [BUG] Wrong link fixed in the documentation (#98)
 - [cosmos-auth] [HARDENING] Document how to create a self-signed certificate (#99)
 - [cosmos-gui] [HARDENING] Add an annex about binding applications to ports under 1024 (#103)
+- [cosmos-gui] [HARDENING] Use a pool of MySQL connections instead of a single permanent one (#109)
+

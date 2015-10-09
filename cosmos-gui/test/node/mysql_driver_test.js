@@ -61,14 +61,6 @@ var connectionMock = {
 mysqlDriver.__set__('connection', connectionMock);
 
 // Tests suite
-describe('[mysqlDriver.connect] create a MySQL connection', function() {
-    it('should return null error', function () {
-        mysqlDriver.connect(function(error) {
-            assert.equal(null, error);
-        });
-    });
-});
-
 describe('[mysqlDriver.addUser] add a new user', function() {
     it('should return null error and an empty result set', function() {
         mysqlDriver.addUser(idm_username, username, password, hdfsQuota, function(error, result) {
@@ -102,11 +94,5 @@ describe('[mysqlDriver.getUserByCosmosUser] get a user by the cosmos user', func
             assert.equal(null, error);
             assert.equal(username, result[0]);
         });
-    });
-});
-
-describe('[mysqlDriver.close] close a connection', function() {
-    it('should finish', function() {
-        mysqlDriver.close(connectionMock);
     });
 });
