@@ -40,7 +40,9 @@ var pool = mysql.createPool({
 function addUser(idm_username, username, password, hdfsQuota, callback) {
     pool.getConnection(function(error, connection) {
         if (error) {
-            callback(error);
+            if (callback) {
+                callback(error);
+            } // if
         } else {
             var query = connection.query(
                 'INSERT INTO cosmos_user (idm_username, username, password, hdfs_quota) ' +
@@ -48,13 +50,18 @@ function addUser(idm_username, username, password, hdfsQuota, callback) {
                 [idm_username, username, password, hdfsQuota],
                 function (error, result) {
                     if (error) {
-                        callback(error)
+                        if (callback) {
+                            callback(error);
+                        } // if
                     } else {
                         logger.info('Successful insert: \'INSERT INTO cosmos_user ' +
                             '(idm_username, username, password, hdfs_quota) VALUES ' +
                             '(' + idm_username + ', ' + username + ', ' + password + ', ' + hdfsQuota + ')\'');
                         connection.release();
-                        callback(null, result);
+
+                        if (callback) {
+                            callback(null, result);
+                        } // if
                     } // if else
                 }
             );
@@ -65,18 +72,25 @@ function addUser(idm_username, username, password, hdfsQuota, callback) {
 function addPassword(idm_username, password, callback) {
     pool.getConnection(function(error, connection) {
         if (error) {
-            callback(error);
+            if (callback) {
+                callback(error);
+            } // if
         } else {
             var query = connection.query(
                 'UPDATE cosmos_user SET password=\'' + password + '\' WHERE idm_username=\'' + idm_username + '\'',
                 function (error, result) {
                     if (error) {
-                        callback(error);
+                        if (callback) {
+                            callback(error);
+                        } // if
                     } else {
                         logger.info('Successful update: \'UPDATE cosmos_user SET password=\'' + password +
                             '\' WHERE idm_username=\'' + idm_username + '\'');
                         connection.release();
-                        callback(null, result);
+
+                        if (callback) {
+                            callback(null, result);
+                        } // if
                     } // if else
                 }
             );
@@ -87,18 +101,25 @@ function addPassword(idm_username, password, callback) {
 function getUser(idm_username, callback) {
     pool.getConnection(function(error, connection) {
         if (error) {
-            callback(error);
+            if (callback) {
+                callback(error);
+            } // if
         } else {
             var query = connection.query(
                 'SELECT * from cosmos_user WHERE idm_username=\'' + idm_username + '\'',
                 function (error, result) {
                     if (error) {
-                        callback(error);
+                        if (callback) {
+                            callback(error);
+                        } // if
                     } else {
                         logger.info('Successful select: \'SELECT * from cosmos_user WHERE idm_username=\'' +
                             idm_username + '\'');
                         connection.release();
-                        callback(null, result);
+
+                        if (callback) {
+                            callback(null, result);
+                        } // if
                     } // if else
                 }
             );
@@ -109,17 +130,24 @@ function getUser(idm_username, callback) {
 function getUserByCosmosUser(username, callback) {
     pool.getConnection(function(error, connection) {
         if (error) {
-            callback(error);
+            if (callback) {
+                callback(error);
+            } // if
         } else {
             var query = connection.query(
                 'SELECT * from cosmos_user WHERE username=\'' + username + '\'',
                 function (error, result) {
                     if (error) {
-                        callback(error);
+                        if (callback) {
+                            callback(error);
+                        } // if
                     } else {
                         logger.info('Successful select: \'SELECT * from cosmos_user WHERE username=\'' + username + '\'');
                         connection.release();
-                        callback(null, result);
+
+                        if (callback) {
+                            callback(null, result);
+                        } // if
                     } // if else
                 }
             );
