@@ -209,14 +209,6 @@ app.get('/logout', function(req, res){
     res.redirect('/');
 });
 
-// Create a permanent connection to MySQL, and start the server
-mysqlDriver.connect(function(error, result) {
-    if (error) {
-        logger.error('There was some error when connecting to MySQL database. The server will not be run. ' +
-            'Details: ' + error);
-    } else {
-        // Start the application, listening at the configured port
-        logger.info("cosmos-gui running at http://localhost:" + port);
-        https.createServer(httpsOptions, app).listen(port);
-    } // if else
-});
+// Start the application, listening at the configured port
+logger.info("cosmos-gui running at https://localhost:" + port);
+https.createServer(httpsOptions, app).listen(port);
