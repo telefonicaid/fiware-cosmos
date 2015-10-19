@@ -13,6 +13,7 @@
     * [Cosmos account provision](#provision)
         * [Migration from an old version of Cosmos](#migration)
     * [Dashboard](#dashboard)
+    * [Profile](#profile)
 * [Administration](#administration)
     * [Logging traces](#loggingtraces)
     * [Database](#database)
@@ -287,7 +288,18 @@ Current version of cosmos-gui has no functionlality exposed in the dashboard, th
 
 Next coming versions of the GUI will allow the users to explore their HDFS space and run predefinied MapReduce jobs from this dashboard. Stay tuned!
 
+The only option for the time being is to access to the profile page (see next section).
+
 ![](doc/images/cosmos_gui__dashboard.png)
+
+[Top](#top)
+
+###<a name="profile"></a>Profile
+The profile section of dashboard shows the user account details and certain statistics, such as the HDFS quota usage.
+
+This is useful in order to know the credentials the user has in the Cosmos platform.
+
+![](doc/images/cosmos_gui__profile.png)
 
 [Top](#top)
 
