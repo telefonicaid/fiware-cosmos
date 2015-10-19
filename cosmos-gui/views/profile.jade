@@ -1,0 +1,74 @@
+//
+// Copyright 2015 Telefonica Investigación y Desarrollo, S.A.U
+//
+// This file is part of fiware-tidoop (FI-WARE project).
+//
+// fiware-tidoop is free software: you can redistribute it and/or modify it under the terms of the GNU Affero
+// General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your
+// option) any later version.
+// fiware-tidoop is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+// implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+// for more details.
+//
+// You should have received a copy of the GNU Affero General Public License along with fiware-tidoop. If not, see
+// http://www.gnu.org/licenses/.
+//
+// For those usages not covered by the GNU Affero General Public License please contact with
+// francisco dot romerobueno at telefonica dot com
+//
+
+//
+// Profile page
+//
+// Author: frb
+//
+
+extend layout
+
+block content
+    p
+        | <b>My profile.</b>
+
+    table(border=0)
+        - each result in results
+            tr
+                td IdM username:
+                td
+                    b &nbsp;#{result.idm_username}
+            tr
+                td Cosmos username:
+                td
+                    b &nbsp;#{result.username}
+            tr
+                td Password:
+                td
+                    b &nbsp;#{result.password}
+            tr
+                td HDFS quota:
+                td
+                    b &nbsp;#{result.hdfs_quota}
+            tr
+                td HDFS used:
+                td
+                    b &nbsp;#{result.hdfs_used}
+            tr
+                td Registration time:
+                td
+                    b &nbsp;#{result.registration_time}
+            tr
+                td Last access time:
+                td
+                    b &nbsp;#{result.last_access_time}
+
+block sidebar
+    .widget
+        p
+            | Options:
+
+        ul
+            li
+                a(href="dashboard") - Dashboard
+
+        form(name="logout", action="logout", method="get")
+            div.actions
+                input(type="submit", value="Logout", id="submit")
