@@ -1,3 +1,4 @@
+- [cosmos-gui] [FEATURE] Add a script in charge of reporting certain alarms (#96)
 - [cosmos-admin] [FEATURE] Script in charge of gathering per-user stats (#59)
 - [doc] [BUG] Wrong link fixed in the documentation (#98)
 - [cosmos-auth] [HARDENING] Document how to create a self-signed certificate (#99)

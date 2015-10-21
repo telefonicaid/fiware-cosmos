@@ -4,6 +4,7 @@
 * [Scripts](#scripts)
     * [`data_copier.sh`](#datacopier)
     * [`get_user_stats.sh`](#getuserstats)
+    * [`warnings.sh`](#warnings)
 * [OS programming regarding the administrative scripts](#osprogramming)
     * [Crontab](#crontab)
     * [Log rotation](#logrotation)
@@ -16,6 +17,7 @@ Available tools are:
 
 * **data\_copier.sh**: a script designed to copy HDFS data from one cluster to another.
 * **get\_user\_stats.sh**: a script designed to get certain user statistics (e.g. HDFS usage, last access time, etc.) in a periodic fashion (i.e. as script within the crontab).
+* **warnings.sh**: a script designed to warn the administrator about certain scenarios that must be avoided.
 
 [Top](#top)
 
@@ -74,6 +76,30 @@ In a shell:
 Since the above mentioned statistics change along the time, it is useful to schedule this script execution in a periodic fashion, let's say at least once per day. You can use the `crontab` tool for achieving this; take a look on the next section for more details.
 
 At the same time, the system log rotation must be done at the same frequency this script is run. The reason is the ssh log file is used in order to obtain the number of successful and failed connections; therefore, if this is done in a per day fashion, then the system logs must be rotated once per day; if the statistics are got once per week, then the system logs must be rotated once per week as well; and so on. If you don't want to rotate all the system logs at the same frequency this script is executed, at least you must syncronize the ssh log file among all the system log files.
+
+[Top](#top)
+
+###<a name="warnings"></a>`warnings.sh`
+This script has been designed for detecting certain scenarios the Cosmos administrator must be warned about. Specifically:
+
+* When a HDFS space is close to the quota limit. How much close it is depends on a configurable threshold.
+* When an account has no data within the HDFS space and certain time has last after the account creation. The interval check depends on a configurable value measured in days.
+
+When any of the above situations is detected, an email is sent to the Cosmos administrator.
+
+`warnings.sh` is parameterized by:
+
+* Host running the MySQL server
+* Port where the MySQL server listens for requests. Typically, TCP/3306 port.
+* Database name. Usually, `cosmos`.
+* MySQL user allowed to insert data within the `cosmos` database, `cosmos_user` table.
+* Pasword for the MySQL user.
+* Percentage of HDFS space considered close to the quota limit.
+* Number of days since creation an account having no HDFS data is considered unused.
+* Email address (owned by an administrator) to send the report to.
+* Title for the report.
+
+It is convenient this script is run with a frequency not greater than a day, since the warnings may result in a critical scenario (e.g. insufficient storage space for a user).
 
 [Top](#top)
 
@@ -211,3 +237,4 @@ There are several channels suited for reporting issues and asking for doubts in 
 **NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)
+
