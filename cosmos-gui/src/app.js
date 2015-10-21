@@ -35,6 +35,7 @@ var mysqlDriver = require('./mysql_driver.js');
 var OAuth2 = require('./oauth2').OAuth2;
 var logger = require('./logger.js');
 var appUtils = require('./app_utils.js');
+var constants = require('constants');
 
 // Global variables
 var port = config.gui.port;
@@ -52,6 +53,7 @@ var ccPrivKey = config.clusters.computing.private_key;
 var ccUser = config.clusters.computing.user;
 var ccEndpoint = config.clusters.computing.endpoint;
 var httpsOptions = {
+    secureOptions: constants.SSL_OP_NO_SSLv3,
     key: fs.readFileSync(config.gui.private_key_file),
     cert: fs.readFileSync(config.gui.certificate_file)
 }
@@ -201,20 +203,30 @@ app.post('/new_password', function(req, res) {
     } // if else
 });
 
+app.get('/dashboard', function(req, res) {
+    res.render('dashboard');
+});
+
+app.get('/profile', function(req, res) {
+    var idm_username = req.session.idm_username;
+
+    mysqlDriver.getUser(idm_username, function(error, result) {
+        if (error) {
+            var boomError = boom.badData('There was an error while retrieving profile for user ' + idm_username, error);
+            logger.error('There was an error while retrieving profile for user ' + idm_username, error);
+            res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+        } else {
+            res.render('profile', { "results": result });
+        } // if else
+    })
+});
+
 // Handles logout requests to remove access_token from the session cookie
 app.get('/logout', function(req, res){
     req.session.access_token = undefined;
     res.redirect('/');
 });
 
-// Create a permanent connection to MySQL, and start the server
-mysqlDriver.connect(function(error, result) {
-    if (error) {
-        logger.error('There was some error when connecting to MySQL database. The server will not be run. ' +
-            'Details: ' + error);
-    } else {
-        // Start the application, listening at the configured port
-        logger.info("cosmos-gui running at http://localhost:" + port);
-        https.createServer(httpsOptions, app).listen(port);
-    } // if else
-});
+// Start the application, listening at the configured port
+logger.info("cosmos-gui running at https://localhost:" + port);
+https.createServer(httpsOptions, app).listen(port);

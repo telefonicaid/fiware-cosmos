@@ -5,6 +5,7 @@
     * [Prerequisites](#prerequisites)
     * [Installing the GUI](#gui)
     * [Installing the database](#database)
+        * [Upgrading from 0.1.0 to 0.2.0](#upgrade010to020)
     * [Unit tests](#unittests)
 * [Configuration](#configuration)
 * [Running](#running)
@@ -13,12 +14,14 @@
     * [Cosmos account provision](#provision)
         * [Migration from an old version of Cosmos](#migration)
     * [Dashboard](#dashboard)
+    * [Profile](#profile)
 * [Administration](#administration)
     * [Logging traces](#loggingtraces)
     * [Database](#database)
 * [Annexes](#annexes)
     * [Annex A: Creating and installing a RSA identity](#annexa)
     * [Annex B: Creating a self-signed certificate](#annexb)
+    * [Annex C: Binding the GUI to a port under TCP/1024](#annexc) 
 * [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-gui
@@ -98,9 +101,13 @@ That must download all the dependencies under a `node_modules` directory.
 [Top](#top)
 
 ###<a name="database"></a>Installing the database
-The user management for the storage cluster is done through a MySQL database, `cosmos`. The commands for creating this database and the `cosmos_user` table can be found at `resources/mysql_db_and_tables.sql`.
+The user management for the storage cluster is done through a MySQL database, `cosmos`. The commands for creating this database and the `cosmos_user` table can be found at `resources/mysql_db_and_tables.sql`. Please observe <b>if you already installed a database for a previous version of the GUI, please ignore this section and visit the specific upgrading section</b>.
 
-Simply log into your MySQL deployment and copy&paste the SQL sentences within the above file.
+Simply log into your MySQL deployment and execute the sentence within the file above:
+
+    mysql> resources/mysql_db_and_tables.sql
+    
+Alternatively, you can copy&paste the SQL sentences and execute them:
 
     $ mysql -u <user> -p
     Enter password: 
@@ -119,7 +126,40 @@ Simply log into your MySQL deployment and copy&paste the SQL sentences within th
 
     mysql> CREATE DATABASE IF NOT EXISTS cosmos;
     mysql> USE cosmos;
-    mysql> CREATE TABLE cosmos_user (idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE, username TEXT NOT NULL, password TEXT NOT NULL, hdfs_quota INTEGER NOT NULL, registration_time TIMESTAMP NOT NULL);
+    mysql> CREATE TABLE cosmos_user (
+        -> idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE,
+        -> username TEXT NOT NULL,
+        -> password TEXT NOT NULL,
+        -> hdfs_quota BIGINT NOT NULL,
+        -> hdfs_used BIGINT NOT NULL,
+        -> fs_used BIGINT NOT NULL,
+        -> registration_time TIMESTAMP DEFAULT "0000-00-00 00:00:00",
+        -> last_access_time TIMESTAMP DEFAULT "0000-00-00 00:00:00",
+        -> num_ssh_conn_ok BIGINT NOT NULL,
+        -> num_ssh_conn_fail BIGINT NOT NULL);
+
+[Top](#top)
+
+####<a name="upgrade010to020"></a>Upgrading from 0.1.0 to 0.2.0
+**NOTE**: It is highly recommended you backup your `cosmos` database before performing any upgrade operation.
+
+You are visiting this section since you already installed Cosmos GUI 0.1.0 and want to upgrade to 0.2.0. If you never installed the GUI before, please go to the <i>[Installing the database](#database)</i> section.
+
+Cosmos GUI 0.2.0 adds some columns to the `cosmos_user` table, and many others are modified. In order to do the upgrade, please execute the `resource/mysql_upgrade_0.1.0-0.2.0.sql` file:
+
+    mysql> SOURCE resource/mysql_upgrade_0.1.0-0.2.0.sql
+    
+Or type the sentences within that file into a mysql shell:
+
+    mysql> USE cosmos;
+    mysql> ALTER TABLE cosmos_user MODIFY registration_time TIMESTAMP DEFAULT "0000-00-00 00:00:00";
+    mysql> ALTER TABLE cosmos_user ADD COLUMN last_access_time TIMESTAMP DEFAULT "0000-00-00 00:00:00";
+    mysql> ALTER TABLE cosmos_user ADD COLUMN hdfs_used BIGINT NOT NULL;
+    mysql> ALTER TABLE cosmos_user ADD COLUMN fs_used BIGINT NOT NULL;
+    mysql> ALTER TABLE cosmos_user ADD COLUMN num_ssh_conn_ok BIGINT NOT NULL;
+    mysql> ALTER TABLE cosmos_user ADD COLUMN num_ssh_conn_fail BIGINT NOT NULL;
+    mysql> ALTER TABLE cosmos_user MODIFY hdfs_quota BIGINT NOT NULL;
+    mysql> UPDATE cosmos_user SET hdfs_quota=1073741824*hdfs_quota;
 
 [Top](#top)
 
@@ -204,7 +244,7 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
         * **user**: Unix user within the Namenode/HttpFS server having sudo permissions.
         * **private_key**: User's private key used to ssh into the Namenode/HttpFS server.
 * **hdfs**:
-    * **quota**: Measured in gigabytes, defines the size of the HDFS space assigned to each Cosmos user.
+    * **quota**: Measured in bytes, defines the size of the HDFS space assigned to each Cosmos user.
     * **superuser**: HDFS superuser, typically `hdfs`.
 * **oauth2**:
     * **idmURL**: URL where the FIWARE Identity Manager runs. If using the global instance at FIWARE LAB, it is `https://account.lab.fiware.org`.
@@ -286,7 +326,18 @@ Current version of cosmos-gui has no functionlality exposed in the dashboard, th
 
 Next coming versions of the GUI will allow the users to explore their HDFS space and run predefinied MapReduce jobs from this dashboard. Stay tuned!
 
+The only option for the time being is to access to the profile page (see next section).
+
 ![](doc/images/cosmos_gui__dashboard.png)
+
+[Top](#top)
+
+###<a name="profile"></a>Profile
+The profile section of dashboard shows the user account details and certain statistics, such as the HDFS quota usage.
+
+This is useful in order to know the credentials the user has in the Cosmos platform.
+
+![](doc/images/cosmos_gui__profile.png)
 
 [Top](#top)
 
@@ -426,14 +477,33 @@ Second, create a Certificate Signing Request (CSR) using the privte key:
 
 Finally, create the self-signed certificate:
 
-    $ openssl x509 -req -in csr.pem -signkey private-key.pem -out public-cert.pem
+    $ openssl x509 -req -in csr.pem -signkey private-key.pem -out public-cert.pem -days 1000
+    
+Please observe a duration of 1000 days for the certificate has been specified.
+
+[Top](#top)
+
+###<a name="annexc"></a>Annex C: Binding the GUI to a port under TCP/1024
+This GUI may run in any port the user configures. Nevertheless, most of the Unix-like systems avoid non sudoer users to bind applications to ports under 1024. Since the `cosmos-gui` user is not a sudoer one, you won't be able to run the GUI in the typical TCP/443 port, for instance.
+
+In order to solve this, there are several possibilities. One of them is setting the `cap_net_bind_service` <i>capability</i>:
+
+    $ setcap cap_net_bind_service=+ep /path/to/cosmos-gui
+    
+Nevertheless, the above shows some caveats, for instance, it is only valid for kernels over 2.6.24, and Linux will disable `LD_LIBRARY_PATH` on any program that has elevated privileges like `setcap` or `suid`.
+    
+Another one option (the preferred one) is to use port forwarding. By using this technique, the GUI is run on a port over 1024 (e.g. `9090`) and an `iptables` rule is configured this way:
+
+    $ iptables -A PREROUTING -t nat -p tcp --dport 443 -j REDIRECT --to-port 9090
+    
+Which means all the traffic sent to the TCP/443 port will be forwarded to real binding port, TCP/9090.
 
 [Top](#top)
 
 ##<a name="contact"></a>Reporting issues and contact information
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
-* Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cygnus` tag.
+* Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cosmos` tag.
 * Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**

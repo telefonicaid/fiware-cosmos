@@ -16,8 +16,9 @@
 // For those usages not covered by the GNU Affero General Public License please contact with
 // francisco dot romerobueno at telefonica dot com
 //
+
 //
-// Dashboard page
+// Profile page
 //
 // Author: frb
 //
@@ -25,14 +26,39 @@
 extend layout
 
 block content
-
     p
-        | <b>Cosmos Dashboard.</b>
+        | <b>My profile.</b>
 
-    p
-        | No functionality is available right now, but stay tuned since next coming releases
-        | of this dashboard will allow you to manage your datasets and perform MapReduce
-        | analysis.
+    table(border=0)
+        - each result in results
+            tr
+                td IdM username:
+                td
+                    b &nbsp;#{result.idm_username}
+            tr
+                td Cosmos username:
+                td
+                    b &nbsp;#{result.username}
+            tr
+                td Password:
+                td
+                    b &nbsp;#{result.password}
+            tr
+                td HDFS quota:
+                td
+                    b &nbsp;#{result.hdfs_quota}
+            tr
+                td HDFS used:
+                td
+                    b &nbsp;#{result.hdfs_used}
+            tr
+                td Registration time:
+                td
+                    b &nbsp;#{result.registration_time}
+            tr
+                td Last access time:
+                td
+                    b &nbsp;#{result.last_access_time}
 
 block sidebar
     .widget
@@ -41,7 +67,7 @@ block sidebar
 
         ul
             li
-                a(href="profile") - My profile
+                a(href="dashboard") - Dashboard
 
         form(name="logout", action="logout", method="get")
             div.actions
