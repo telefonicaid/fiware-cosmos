@@ -40,10 +40,10 @@ convert_month() {
 
 	case $month_str in 
                 Jan )
-                        return 1
+			return 1
 			;;
                 Feb )
-                        return 2
+			return 2
 			;;
 		Mar )
 			return 3
@@ -78,8 +78,9 @@ convert_month() {
 	esac
 }
 
-# Create a snapshot of /var/log/secure, this is because this script will run very close to the daily log rotation
-cp $sshLogs $sshLogs.bak
+# Create a snapshot of the ssh logs, this is because this script will run very close to the daily log rotation
+tempDir=$(mktemp -d /tmp/ssh_logs_snapsot.XXXXXXXX)
+cp $sshLogs $tempDir/$sshLogs.bak
 
 # Per username iteration
 while read -r username; do
@@ -110,5 +111,5 @@ while read -r username; do
         mysql $dbName -u $dbUser -p$dbPassword -se "update cosmos_user set num_ssh_conn_fail=num_ssh_conn_fail+$cat_result where username='$username'"
 done < <(mysql $dbName -u $dbUser -p$dbPassword -se "select username from cosmos_user")
 
-# Delete the /var/log/secure snapshot
-rm $sshLogs.bak
+# Delete the ssh logs snapshot
+rm -rf $tempDir

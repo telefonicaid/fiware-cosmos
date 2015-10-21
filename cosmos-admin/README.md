@@ -15,7 +15,7 @@ cosmos-admin is a set of tools designed to administrate a Cosmos deployment, bot
 Available tools are:
 
 * **data\_copier.sh**: a script designed to copy HDFS data from one cluster to another.
-* **get\_user\_stats.sh**: a script designed to get certain user statistics (e.g. HDFS use, last access time) in a periodic fashion (i.e. as script within the crontab).
+* **get\_user\_stats.sh**: a script designed to get certain user statistics (e.g. HDFS usage, last access time, etc.) in a periodic fashion (i.e. as script within the crontab).
 
 [Top](#top)
 
@@ -71,7 +71,7 @@ In a shell:
 
     $ ./get_user_stats.sh <mysql_host> <mysql_port> <db_name> <mysql_user> <mysql_password> <ssh_logs>
 
-Since the above mentioned statistics change along the time, it is useful to schedule this script execution in a periodic fashion, let's say at least once per day. You can use the `crontab` for achieving this.
+Since the above mentioned statistics change along the time, it is useful to schedule this script execution in a periodic fashion, let's say at least once per day. You can use the `crontab` tool for achieving this; take a look on the next section for more details.
 
 At the same time, the system log rotation must be done at the same frequency this script is run. The reason is the ssh log file is used in order to obtain the number of successful and failed connections; therefore, if this is done in a per day fashion, then the system logs must be rotated once per day; if the statistics are got once per week, then the system logs must be rotated once per week as well; and so on. If you don't want to rotate all the system logs at the same frequency this script is executed, at least you must syncronize the ssh log file among all the system log files.
 
@@ -102,7 +102,7 @@ Please observe the `get_user_stats.sh` script is executed exactly one minute bef
 [Top](#top)
 
 ###<a name="logrotation"></a>Log rotation
-Log rotation is usually performed by the `logrotate` application. Since this should be installed and already running by default in all Unix-based machines, most probably you will have the following elements in your file system:
+Log rotation is usually performed by the `logrotate` application. Since this should be installed and already running by default in all Unix-based machines (check it by running the command `which logrotate`), most probably you will have the following elements in your file system:
 
 * `/etc/logrotate.conf`. Used to configure the application, typically will contain parameters for a weekly rotation of the system logs in general.
 
