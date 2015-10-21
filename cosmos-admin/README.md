@@ -17,7 +17,7 @@ Available tools are:
 
 * **data\_copier.sh**: a script designed to copy HDFS data from one cluster to another.
 * **get\_user\_stats.sh**: a script designed to get certain user statistics (e.g. HDFS usage, last access time, etc.) in a periodic fashion (i.e. as script within the crontab).
-* **warning.sh**: a script designed to warn the administrator about certain scenarios that must be avoided.
+* **warnings.sh**: a script designed to warn the administrator about certain scenarios that must be avoided.
 
 [Top](#top)
 
@@ -89,14 +89,14 @@ When any of the above situations is detected, an email is sent to the Cosmos adm
 
 `warnings.sh` is parameterized by:
 
-*  Host running the MySQL server
+* Host running the MySQL server
 * Port where the MySQL server listens for requests. Typically, TCP/3306 port.
 * Database name. Usually, `cosmos`.
 * MySQL user allowed to insert data within the `cosmos` database, `cosmos_user` table.
 * Pasword for the MySQL user.
 * Percentage of HDFS space considered close to the quota limit.
 * Number of days since creation an account having no HDFS data is considered unused.
-* Email address (owned by an administrator) which sending the report to.
+* Email address (owned by an administrator) to send the report to.
 * Title for the report.
 
 It is convenient this script is run with a frequency not greater than a day, since the warnings may result in a critical scenario (e.g. insufficient storage space for a user).
