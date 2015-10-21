@@ -17,7 +17,7 @@
     }
   },
   "hdfs": {
-    "quota": 5,
+    "quota": 5368709120,
     "superuser": "hdfs"
   },
   "oauth2": {
