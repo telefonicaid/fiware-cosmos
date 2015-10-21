@@ -3,4 +3,4 @@
 - [cosmos-gui] [HARDENING] Add an annex about binding applications to ports under 1024 (#103)
 - [cosmos-gui] [HARDENING] Force the usage of TLSv1 instead of SSLv3 (#106)
 - [cosmos-gui] [HARDENING] Use a pool of MySQL connections instead of a single permanent one (#109)
-
+- [cosmos-gui] [FEATURE] Add a user profile view (#112)

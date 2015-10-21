@@ -203,6 +203,24 @@ app.post('/new_password', function(req, res) {
     } // if else
 });
 
+app.get('/dashboard', function(req, res) {
+    res.render('dashboard');
+});
+
+app.get('/profile', function(req, res) {
+    var idm_username = req.session.idm_username;
+
+    mysqlDriver.getUser(idm_username, function(error, result) {
+        if (error) {
+            var boomError = boom.badData('There was an error while retrieving profile for user ' + idm_username, error);
+            logger.error('There was an error while retrieving profile for user ' + idm_username, error);
+            res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+        } else {
+            res.render('profile', { "results": result });
+        } // if else
+    })
+});
+
 // Handles logout requests to remove access_token from the session cookie
 app.get('/logout', function(req, res){
     req.session.access_token = undefined;
