@@ -14,12 +14,14 @@
     * [Cosmos account provision](#provision)
         * [Migration from an old version of Cosmos](#migration)
     * [Dashboard](#dashboard)
+    * [Profile](#profile)
 * [Administration](#administration)
     * [Logging traces](#loggingtraces)
     * [Database](#database)
 * [Annexes](#annexes)
     * [Annex A: Creating and installing a RSA identity](#annexa)
     * [Annex B: Creating a self-signed certificate](#annexb)
+    * [Annex C: Binding the GUI to a port under TCP/1024](#annexc) 
 * [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-gui
@@ -324,7 +326,18 @@ Current version of cosmos-gui has no functionlality exposed in the dashboard, th
 
 Next coming versions of the GUI will allow the users to explore their HDFS space and run predefinied MapReduce jobs from this dashboard. Stay tuned!
 
+The only option for the time being is to access to the profile page (see next section).
+
 ![](doc/images/cosmos_gui__dashboard.png)
+
+[Top](#top)
+
+###<a name="profile"></a>Profile
+The profile section of dashboard shows the user account details and certain statistics, such as the HDFS quota usage.
+
+This is useful in order to know the credentials the user has in the Cosmos platform.
+
+![](doc/images/cosmos_gui__profile.png)
 
 [Top](#top)
 
@@ -464,7 +477,26 @@ Second, create a Certificate Signing Request (CSR) using the privte key:
 
 Finally, create the self-signed certificate:
 
-    $ openssl x509 -req -in csr.pem -signkey private-key.pem -out public-cert.pem
+    $ openssl x509 -req -in csr.pem -signkey private-key.pem -out public-cert.pem -days 1000
+    
+Please observe a duration of 1000 days for the certificate has been specified.
+
+[Top](#top)
+
+###<a name="annexc"></a>Annex C: Binding the GUI to a port under TCP/1024
+This GUI may run in any port the user configures. Nevertheless, most of the Unix-like systems avoid non sudoer users to bind applications to ports under 1024. Since the `cosmos-gui` user is not a sudoer one, you won't be able to run the GUI in the typical TCP/443 port, for instance.
+
+In order to solve this, there are several possibilities. One of them is setting the `cap_net_bind_service` <i>capability</i>:
+
+    $ setcap cap_net_bind_service=+ep /path/to/cosmos-gui
+    
+Nevertheless, the above shows some caveats, for instance, it is only valid for kernels over 2.6.24, and Linux will disable `LD_LIBRARY_PATH` on any program that has elevated privileges like `setcap` or `suid`.
+    
+Another one option (the preferred one) is to use port forwarding. By using this technique, the GUI is run on a port over 1024 (e.g. `9090`) and an `iptables` rule is configured this way:
+
+    $ iptables -A PREROUTING -t nat -p tcp --dport 443 -j REDIRECT --to-port 9090
+    
+Which means all the traffic sent to the TCP/443 port will be forwarded to real binding port, TCP/9090.
 
 [Top](#top)
 
