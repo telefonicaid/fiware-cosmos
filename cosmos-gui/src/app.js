@@ -143,10 +143,14 @@ app.get('/login', function(req, res) {
 // Handles requests from IDM with the access code
 app.get('/auth', function(req, res) {
     // Using the access code goes again to the IDM to obtain the access_token
-    oa.getOAuthAccessToken(req.query.code, function (e, results){
-    // Stores the access_token in a session cookie
-        req.session.access_token = results.access_token;
-        res.redirect('/');
+    oa.getOAuthAccessToken(req.query.code, function (e, results) {
+        if ('access_token' in results) {
+            // Stores the access_token in a session cookie
+            req.session.access_token = results.access_token;
+            res.redirect('/');
+        } else {
+            res.redirect('/');
+        } // if else
     });
 });
 
