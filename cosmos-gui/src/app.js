@@ -174,6 +174,8 @@ app.post('/new_account', function(req, res) {
                         appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
                         appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
                     } // if else
+
+                    res.redirect('/');
                 } // if else
             });
         } else {

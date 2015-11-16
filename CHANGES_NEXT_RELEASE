@@ -7,3 +7,4 @@
 - [cosmos-gui] [HARDENING] Use a pool of MySQL connections instead of a single permanent one (#109)
 - [cosmos-gui] [FEATURE] Add a user profile view (#112)
 - [general] ADD LICENSE and Contribution Policy (#114)
+- [cosmos-gui] [BUG] Fix redirection after cluster provisioning (#121)
