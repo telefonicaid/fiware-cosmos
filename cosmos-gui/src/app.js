@@ -147,10 +147,9 @@ app.get('/auth', function(req, res) {
         if ('access_token' in results) {
             // Stores the access_token in a session cookie
             req.session.access_token = results.access_token;
-            res.redirect('/');
-        } else {
-            res.redirect('/');
-        } // if else
+        } // if
+
+        res.redirect('/');
     });
 });
 
