@@ -161,7 +161,7 @@ app.post('/new_account', function(req, res) {
         var password1 = req.body.password1;
         var password2 = req.body.password2;
 
-        if (password1 === password2) {
+        if ((password1 === password2) && (username != null)) {
             mysqlDriver.addUser(idm_username, username, password1, hdfsQuota, function(error, result) {
                 if (error) {
                     var boomError = boom.badData('There was some error when adding information in the database for user '+ username, error);
