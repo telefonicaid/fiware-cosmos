@@ -5,8 +5,8 @@ Content:<br>
 * [Module](#section1)
 * [Creating a Module](#section2)
 * [Development environment](#section3)
-* [Creating a Java Module] (#section4)
-
+* [Creating a Java Module](#section4)
+* [Creating a Python Module](#section5)
 
 [Top](#top)
 
@@ -252,3 +252,107 @@ Once your module (bolts in our examples) is ready to be tested it’s time to wr
 	        Assert.assertEquals(4, Integer.parseInt(result.get("result").toString()));
 	    }
 	}
+
+##<a name="section5"></a>Creating a Python Module
+
+##<a name="section5.1"></a>Python Spouts with Scheduler
+
+ As in the case of Java, we can code Spouts in Python with execution determined by a time interval. This allows us to query an API or a RSS feed from time to time, without doing continuous requests every 100ms.
+
+Coding these Spouts in Python is much easier than Java ones. We just have to use the Python library apscheduler. Using this library, we'll launch a scheduler and this scheduler will be responsible for running a function according a frequency parameter.
+
+Below we see a sample Spout. It's a Dummy Spout, like the Java one, but in this case coded in Python. It's a public module in Sinfonier Community:
+
+http://drawer.sinfonier-project.net/modules/DummyPython
+
+	#!/usr/bin/env python
+	# -*- coding: utf-8 -*-
+	"""
+	    The MIT License (MIT)
+
+	    Copyright (c) 2014 sinfonier-project
+
+	    Permission is hereby granted, free of charge, to any person obtaining a copy
+	    of this software and associated documentation files (the "Software"), to deal
+	    in the Software without restriction, including without limitation the rights
+	    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	    copies of the Software, and to permit persons to whom the Software is
+	    furnished to do so, subject to the following conditions:
+
+	    The above copyright notice and this permission notice shall be included in
+	    all copies or substantial portions of the Software.
+
+	    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	    THE SOFTWARE.
+	"""
+
+
+
+	import basesinfonierspout
+	import json
+	from apscheduler.schedulers.background import BackgroundScheduler
+	from collections import deque
+	import time
+
+	class DummyPython(basesinfonierspout.BaseSinfonierSpout):
+
+	    def __init__(self):
+
+	        basesinfonierspout.BaseSinfonierSpout().__init__()
+
+	    def useropen(self):
+	        
+	        # Using deque as a queue
+	        self.queue = deque()
+	        
+	        self.keylist = self.getParam("keylist")
+	        self.valuelist = self.getParam("valuelist")
+	        self.interval = int(self.getParam("frequency"))        
+	        
+	        # This scheduler launches self.job function every X seconds
+	        self.sched = BackgroundScheduler()
+	        self.sched.add_job(self.job, "interval", seconds=self.interval, id="dummyspout")
+	        self.sched.start()
+
+	    def usernextTuple(self):
+
+	        # If there are items in self.queue, get the first one (.popleft()), do what you want with it and emit the tuple
+	        if self.queue:
+	            self.d = self.queue.popleft()
+	            self.emit()
+	        else:
+	            time.sleep(0.5)
+	        
+	    def job(self):
+	    
+	        try:
+	          keysandvalues = dict(zip(self.keylist, self.valuelist))
+	          for key,value in keysandvalues.items():
+	              item = {key:value}
+	              self.queue.append(item)
+	        except:
+	            self.queue.append({"dummypythonerror","Must have the same number of keys and values"})
+	        
+	        
+	DummyPython().run()
+
+ts operation is very simple. In the function "useropen" we have to initialize variables. We get the 'keylist' and 'valuelist' parameters (both type list) and start the scheduler.
+
+The scheduler is configured to launch the function self.job every time is reached the interval time introduced by the parameter frequency. In that function, we'll type our code, but instead emit the tuple here, we are going to append our dict to a queue. This queue is constantly checked in usernextTuple, and when it has new items, they are emitted.
+
+In this Spout, we use a very useful function to merge in a dictionary the keys and values we have introduced by parameter in both lists. Without using any for loop.
+
+	keysandvalues = dict(zip(self.keylist, self.valuelist))
+
+To test this, we have made a small topology with a DummyPython Spout and a LogIt Drain. In the Spout is set the keys and values are going to be emitted and the execution frequency.
+
+![Figure 8 - Sinfonier Module Create Python Spout](images/sinfonier_dev_module_python_spout.png "Figure 7 - Sinfonier Module Create Python Spout")
+
+Checking the log we can see the expected result. Easy and simple :)
+
+![Figure 9 - Sinfonier Module Create Python Spout Log](images/sinfonier_dev_module_python_spout_log.png "Figure 7 - Sinfonier Module Create Python Spout Log")
