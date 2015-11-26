@@ -9,3 +9,4 @@
 - [cosmos-gui] [BUG] Prevent the GUI crashes when no access_token is sent by the IdM (#117)
 - [general] [HARDENING] ADD LICENSE and Contribution Policy (#114)
 - [cosmos-gui] [BUG] Check the built username is about an invalid username (i.e. null) (#122)
+- [cosmos-gui] [HARDENING] Add readthedocs and AGPL badges to the README (#125)
