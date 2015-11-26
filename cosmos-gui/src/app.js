@@ -143,9 +143,12 @@ app.get('/login', function(req, res) {
 // Handles requests from IDM with the access code
 app.get('/auth', function(req, res) {
     // Using the access code goes again to the IDM to obtain the access_token
-    oa.getOAuthAccessToken(req.query.code, function (e, results){
-    // Stores the access_token in a session cookie
-        req.session.access_token = results.access_token;
+    oa.getOAuthAccessToken(req.query.code, function (e, results) {
+        if ('access_token' in results) {
+            // Stores the access_token in a session cookie
+            req.session.access_token = results.access_token;
+        } // if
+
         res.redirect('/');
     });
 });
@@ -157,7 +160,7 @@ app.post('/new_account', function(req, res) {
         var password1 = req.body.password1;
         var password2 = req.body.password2;
 
-        if (password1 === password2) {
+        if ((password1 === password2) && (username != null)) {
             mysqlDriver.addUser(idm_username, username, password1, hdfsQuota, function(error, result) {
                 if (error) {
                     var boomError = boom.badData('There was some error when adding information in the database for user '+ username, error);
