@@ -11,3 +11,6 @@
     * [Using Hadoop and its ecosystem](./batch/using_hadoop_and_ecosystem.md)
     * [OAuth2-protected REST APIs](./batch/oauth2_rest_apis.md)
 * Stream analysis
+    * [Stream processing: Apche Storm & Sinfonier](./streaming/stream_processing_storm_sinfonier.md)
+    * [Stream processing: Sinfonier Topologies](./streaming/user_and_programmer_manual/streaming/stream_processing_sinfonier_topologies.md)
+    * [Stream processing: Sinfonier Modules](./streaming/stream_processing_sinfonier_modules.md)

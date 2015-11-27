@@ -8,3 +8,7 @@
 - [cosmos-gui] [FEATURE] Add a user profile view (#112)
 - [general] ADD LICENSE and Contribution Policy (#114)
 - [cosmos-gui] [BUG] Fix redirection after cluster provisioning (#121)
+- [cosmos-gui] [BUG] Prevent the GUI crashes when no access_token is sent by the IdM (#117)
+- [general] [HARDENING] ADD LICENSE and Contribution Policy (#114)
+- [cosmos-gui] [BUG] Check the built username is about an invalid username (i.e. null) (#122)
+- [cosmos-sinfonier] [DOC] Adding documentation realted Stream component Sinfonier. Docs include how to create new topologies and modules (Spouts, Bolts and Drains).
