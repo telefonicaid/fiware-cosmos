@@ -103,7 +103,6 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
                             logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@'
                                 + clusterEndpoint + ' \"echo \'sudo -u ' + hdfsSuperuser + ' hadoop dfsadmin -setSpaceQuota '
                                 + hdfsQuota + 'g /user/' + username + '\' | sudo bash\"\'');
-                            res.redirect('/');
                         })
                     })
                 })

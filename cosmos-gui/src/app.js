@@ -144,9 +144,11 @@ app.get('/login', function(req, res) {
 app.get('/auth', function(req, res) {
     // Using the access code goes again to the IDM to obtain the access_token
     oa.getOAuthAccessToken(req.query.code, function (e, results) {
-        if ('access_token' in results) {
-            // Stores the access_token in a session cookie
-            req.session.access_token = results.access_token;
+        if (results) {
+            if ('access_token' in results) {
+                // Stores the access_token in a session cookie
+                req.session.access_token = results.access_token;
+            } // if
         } // if
 
         res.redirect('/');
@@ -177,6 +179,8 @@ app.post('/new_account', function(req, res) {
                         appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
                         appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
                     } // if else
+
+                    res.redirect('/');
                 } // if else
             });
         } else {
