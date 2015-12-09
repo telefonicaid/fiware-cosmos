@@ -207,3 +207,76 @@ Download mobile App
 And start receiving notifications immediately! It's as simple as this. The App is available in Google Play for Android and App Store iOS.
 
 ![Figure N - Sinfonier Topologies Instapush Configure Drain](images/sinfonier_topologies_modules_instapush_install_app.png "Figure N - Sinfonier Topologies Instapush Configure Drain")
+
+###<a name="section3.6"></a>Display
+
+####<a name="section3.6.1"></a>Neo4j
+
+Neo4j is a world's leading open source Graph Database. It is completely developed by using Java Language by Neo Technology. 
+
+![Figure N - Sinfonier Topologies Neo4j Logo](images/sinfonier_topologies_modules_neo4j_logo.png "Figure N - Sinfonier Topologies Neo4j Logo")
+
+Neo4j is a one of the popular Graph Databases and CQL stands for Cypher Query Language. Neo4j is written in Java Language.
+
+Neo4j is supported by a rich ecosystem of libraries, tools, drivers and guides provided by partners, users and community contributors. We want to give an overview about what’s available and link to the original sources. We try to focus on the freely available solutions here, and provide links to commercial options where appropriate.
+
+**Common uses causes**
+
+* Social Networks
+* Recommendation Engines 
+* Geo Routing
+
+Sinfonier Neo4jEntitiesLabel Bolt allow users create uniques nodes associated to a specific label.
+
+![Figure N - Sinfonier Topologies Neo4j Neo4jEntitiesLabel](images/Module_EntitiesNeo.png "Figure N - Sinfonier Topologies Neo4jEntitiesLabel")
+
+Fields description:
+
+* **urlDatabase** are used to connect with your database. REST URL: http://Host:Port/db/data/.
+* **user:pass** authorization to database, REST USERNAME:REST PASSWORD.
+* **index** value of the index nodes, the node is created if it doesn’t exist in the unique index already.
+* **listEntities** 
+	+ *Key* : Parameter to identify the key of a node.
+	+ *Value* : Parameter to the tuple to identify a node.
+	+ *Default* : Parameter to set the label of a node.
+
+
+Sinfonier Neo4jListParams Drain allow users set parameters to a node associated to a specific key-value.
+
+![Figure N - Sinfonier Topologies Neo4j Neo4jListParams](images/Module_ParamsNeo.png "Figure N - Sinfonier Topologies Neo4jListParams")
+
+Fields description:
+
+* **urlDatabase** are used to connect with your database. REST URL: http://Host:Port/db/data/.
+* **user:pass** authorization to database, REST USERNAME:REST PASSWORD.
+* **index** value of the index nodes, the node is created if it doesn’t exist in the unique index already.
+* **listEntities** 
+	+ *Key* : Parameter to identify the key of a node.
+	+ *Value* : Parameter to the tuple to identify a node.
+* **listEntities** 
+	+ *Key* : Parameter to identify the key of a parameter.
+	+ *Value* : Parameter to the tuple to set the parameter.
+
+
+Sinfonier Neo4jRelationshipsUniqueId Drain allow users create uniques relationships between nodes.
+
+![Figure N - Sinfonier Topologies Neo4j Neo4jRelationshipsUniqueId](images/Module_RelationNeo.png "Figure N - Sinfonier Topologies Neo4jRelationshipsUniqueId")
+
+Fields description:
+
+* **urlDatabase** are used to connect with your database. REST URL: http://Host:Port/db/data/.
+* **user:pass** authorization to database, REST USERNAME:REST PASSWORD.
+* **index** value of the index nodes, the node is created if it doesn’t exist in the unique index already.
+* **key** value of the key which identify to all nodes on the relationships.
+* **listEntities** 
+	+ *Key* : Parameter to the tuple to identify a start node.
+	+ *Value* : Parameter to set the type of the relationship.
+	+ *Default* : Parameter to the tuple to identify a end node.
+
+Before you can use these modules on Sinfonier you must to create an Neo4j database, you can download it and install locally on the URL below:
+
+[NEO4J](http://neo4j.com/)
+
+Also you can use a remote database, one website with free account is: [Graphenedb](http://www.graphenedb.com/)
+
+When you have the database rigth it's time to use the modules. 
