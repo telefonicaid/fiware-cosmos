@@ -228,7 +228,7 @@ Neo4j is supported by a rich ecosystem of libraries, tools, drivers and guides p
 
 Sinfonier Neo4jEntitiesLabel Bolt allow users create uniques nodes associated to a specific label.
 
-![Figure N - Sinfonier Topologies Neo4j Neo4jEntitiesLabel](images/sinfonier_topologies_modules_neo4j_neo4jentitieslabel.png "Figure N - Sinfonier Topologies Neo4jEntitiesLabel")
+![Figure N - Sinfonier Topologies Neo4j Neo4jEntitiesLabel](images/sinfonier_topologies_modules_neo4j_neo4jentitieslabel.PNG "Figure N - Sinfonier Topologies Neo4jEntitiesLabel")
 
 Fields description:
 
@@ -243,7 +243,7 @@ Fields description:
 
 Sinfonier Neo4jListParams Drain allow users set parameters to a node associated to a specific key-value.
 
-![Figure N - Sinfonier Topologies Neo4j ParamsNeo](images/sinfonier_topologies_modules_neo4j_paramsneo.png "Figure N - Sinfonier Topologies ParamsNeo")
+![Figure N - Sinfonier Topologies Neo4j ParamsNeo](images/sinfonier_topologies_modules_neo4j_paramsneo.PNG "Figure N - Sinfonier Topologies ParamsNeo")
 
 Fields description:
 
@@ -260,7 +260,7 @@ Fields description:
 
 Sinfonier Neo4jRelationshipsUniqueId Drain allow users create uniques relationships between nodes.
 
-![Figure N - Sinfonier Topologies Neo4j RelationsNeo](images/sinfonier_topologies_modules_neo4j_relationsneo.png "Figure N - Sinfonier Topologies RelationsNeo")
+![Figure N - Sinfonier Topologies Neo4j RelationsNeo](images/sinfonier_topologies_modules_neo4j_relationsneo.PNG "Figure N - Sinfonier Topologies RelationsNeo")
 
 Fields description:
 
@@ -279,6 +279,6 @@ Before you can use these modules on Sinfonier you must to create an Neo4j databa
 
 Also you can use a remote database, one website with free account is: [Graphenedb](http://www.graphenedb.com/)
 
-![Figure N - Sinfonier Topologies Neo4j Graphene](images/sinfonier_topologies_modules_neo4j_graphene.png "Figure N - Sinfonier Topologies Graphene")
+![Figure N - Sinfonier Topologies Neo4j Graphene](images/sinfonier_topologies_modules_neo4j_graphene.PNG "Figure N - Sinfonier Topologies Graphene")
 
 When you have the database rigth it's time to use the modules. 
