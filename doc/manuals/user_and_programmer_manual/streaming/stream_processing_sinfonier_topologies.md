@@ -253,7 +253,7 @@ Fields description:
 * **listEntities** 
 	+ *Key* : Parameter to identify the key of a node.
 	+ *Value* : Parameter to the tuple to identify a node.
-* **listEntities** 
+* **listParams** 
 	+ *Key* : Parameter to identify the key of a parameter.
 	+ *Value* : Parameter to the tuple to set the parameter.
 
@@ -281,4 +281,14 @@ Also you can use a remote database, one website with free account is: [Graphened
 
 ![Figure N - Sinfonier Topologies Neo4j Graphene](images/sinfonier_topologies_modules_neo4j_graphene.PNG "Figure N - Sinfonier Topologies Graphene")
 
-When you have the database rigth it's time to use the modules. 
+When you have the database right it's time to use the modules. 
+
+This is a topology example to use in a social network.
+
+![Figure N - Sinfonier Topologies Neo4j Topology](images/sinfonier_topologies_modules_neo4j_topology.PNG "Figure N - Sinfonier Topologies Topology")
+
+In this case the source of information is twitter and all they do is collect both the user screen_name and the URLs appear and store in the database, creating two nodes with URL tags and USERTWITTER, then add some more parameters to create nodes and the relationship between them, the type TWEET.
+
+![Figure N - Sinfonier Topologies Neo4j Topology Zoom](images/sinfonier_topologies_modules_neo4j_topology2.PNG "Figure N - Sinfonier Topologies Topology Zoom")
+
+What can you do?
