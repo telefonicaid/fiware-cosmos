@@ -291,4 +291,8 @@ In this case the source of information is twitter and all they do is collect bot
 
 ![Figure N - Sinfonier Topologies Neo4j Topology Zoom](images/sinfonier_topologies_modules_neo4j_topology2.png "Figure N - Sinfonier Topologies Topology Zoom")
 
+And the result of this topology, five minutes after receiving tweets is shown below:
+
+![Figure N - Sinfonier Topologies Neo4j Topology Result](images/graph_result.png "Figure N - Sinfonier Topologies Topology Result")
+
 What can you do?
