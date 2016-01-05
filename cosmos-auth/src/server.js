@@ -31,6 +31,7 @@ var config = require('../conf/cosmos-auth.json');
 var client = require('./client.js');
 var fs = require('fs');
 var logger = require('./logger.js');
+var constants = require('constants');
 
 // Create a Hapi server with a host and port
 var server = new Hapi.Server();
@@ -39,6 +40,7 @@ server.connection({
     host: config.host,
     port: config.port,
     tls: {
+        secureOptions: constants.SSL_OP_NO_SSLv3,
         key: fs.readFileSync(config.private_key_file),
         cert: fs.readFileSync(config.certificate_file)
     }
