@@ -1,7 +1,4 @@
 #<a name="top"></a>Cosmos GUI
-[![License Badge](https://img.shields.io/badge/license-AGPL-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
-[![Documentation Status](https://readthedocs.org/projects/fiware-cosmos/badge/?version=latest)](http://fiware-cosmos.readthedocs.org/en/latest/?badge=latest)
-
 * [What is cosmos-gui](#whatis)
 * [Installation](#maininstall)
     * [Prerequisites](#prerequisites)
