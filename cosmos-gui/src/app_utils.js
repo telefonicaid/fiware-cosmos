@@ -111,6 +111,21 @@ function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdf
     })
 } // provisionCluster
 
+function provisionPassword(res, clusterPrivKey, clusterUser, clusterEndpoint, username, password) {
+    cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,
+        'echo ' + password + ' | sudo passwd ' + username + ' --stdin'], function(error, result) {
+        if (error) {
+            var boomError = boom.badData('There was an error while setting the password for user ' + username, error);
+            logger.error('There was an error while setting the password for user ' + username);
+            res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+            return;
+        } // if
+
+        logger.info('Successful command executed: \'ssh -tt -i ' + clusterPrivKey + ' ' + clusterUser + '@' + clusterEndpoint
+            + ' \"echo ' + password + ' | sudo passwd ' + username + ' --stdin | sudo bash\"\'');
+    })
+} // provisionPassword
+
 function buildUsername(username, index, callback) {
     if (usersBlacklist.indexOf(username) > -1) {
         logger.error('The base username "' + username + '" is not allowed');
@@ -132,5 +147,6 @@ function buildUsername(username, index, callback) {
 
 module.exports = {
     provisionCluster: provisionCluster,
+    provisionPassword: provisionPassword,
     buildUsername: buildUsername
 } // module.exports

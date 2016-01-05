@@ -191,7 +191,7 @@ app.post('/new_account', function(req, res) {
 
 app.post('/new_password', function(req, res) {
     var idm_username = req.session.idm_username;
-    var username = req.username;
+    var username = req.session.username;
     var password1 = req.body.password1;
     var password2 = req.body.password2;
 
@@ -207,6 +207,42 @@ app.post('/new_password', function(req, res) {
         })
     } else {
         res.redirect('/');
+    } // if else
+});
+
+app.get('/change_password', function(req, res) {
+    res.render('change_password');
+});
+
+app.post('/change_password', function(req, res) {
+    var idm_username = req.session.idm_username;
+    var username = req.session.username;
+    var password1 = req.body.password1;
+    var password2 = req.body.password2;
+
+    if (password1 === password2) {
+        mysqlDriver.addPassword(idm_username, password1, function(error, result) {
+            if (error) {
+                var boomError = boom.badData('There was an error while setting up the password for user ' + username, error);
+                logger.error('There was an error while setting up the password for user ' + username, error);
+                res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+            } else {
+                logger.info('Successful information added to the database for user ' + username);
+
+                if (scEndpoint === ccEndpoint) {
+                    // Just one provision step instead of two
+                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, username, password1);
+                } else {
+                    // Two different provision steps
+                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, username, password1);
+                    appUtils.provisionPassword(res, ccPrivKey, ccUser, ccEndpoint, username, password1);
+                } // if else
+
+                res.redirect('/profile');
+            } // if else
+        })
+    } else {
+        res.render('change_password');
     } // if else
 });
 
