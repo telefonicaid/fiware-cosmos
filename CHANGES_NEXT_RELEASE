@@ -13,3 +13,4 @@
 - [cosmos-gui] [BUG] Check the built username is about an invalid username (i.e. null) (#122)
 - [cosmos-gui] [HARDENING] Add readthedocs and AGPL badges to the README (#125)
 - [cosmos-sinfonier] [DOC] Adding documentation realted Stream component Sinfonier. Docs include how to create new topologies and modules (Spouts, Bolts and Drains).
+- [cosmos-gui] [FEATURE] Allow changing the Cosmos password (#132)

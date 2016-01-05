@@ -14,6 +14,7 @@
         * [Migration from an old version of Cosmos](#migration)
     * [Dashboard](#dashboard)
     * [Profile](#profile)
+        * [Change password](#changepassword)
 * [Administration](#administration)
     * [Logging traces](#loggingtraces)
     * [Database](#database)
@@ -332,7 +333,7 @@ The only option for the time being is to access to the profile page (see next se
 [Top](#top)
 
 ###<a name="profile"></a>Profile
-The profile section of dashboard shows the user account details and certain statistics, such as the HDFS quota usage.
+The profile section shows the user account details and certain statistics, such as the HDFS quota usage.
 
 This is useful in order to know the credentials the user has in the Cosmos platform.
 
@@ -340,8 +341,14 @@ This is useful in order to know the credentials the user has in the Cosmos platf
 
 [Top](#top)
 
-##<a name="administration"></a>Administration
+####<a name="changepassword"></a>Change password
+This option within the profile page will allow to change the Cosmos account password by simply typing (and retyping) a new one.
 
+![](doc/images/cosmos_gui__change_password.png)
+
+[Top](#top)
+
+##<a name="administration"></a>Administration
 Two are the sources of data, the logs and the database, useful for an administrator of cosmos-gui.
 
 [Top](#top)

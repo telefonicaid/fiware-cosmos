@@ -89,9 +89,3 @@ describe('[appUtils.buildUsername] build an invalid username from an invalid bas
     });
 });
 
-describe('[appUtils.provisionCluster] provision a cluster', function() {
-    it('should redirect to ' + pathAfter + ' when being called from ' + pathBefore, function () {
-        appUtils.provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdfsSuperuser, hdfsQuota, username, password);
-        assert.equal(pathAfter, res.url);
-    });
-});
