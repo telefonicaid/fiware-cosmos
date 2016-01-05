@@ -1,4 +1,7 @@
 #Cosmos
+[![License Badge](https://img.shields.io/badge/license-AGPL-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
+[![Documentation Status](https://readthedocs.org/projects/fiware-cosmos/badge/?version=latest)](http://fiware-cosmos.readthedocs.org/en/latest/?badge=latest)
+
 This project is part of [FIWARE](http://fiware.org).
 
 [Cosmos](http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos) is the code name for the Reference Implementation of the BigData Generic Enabler of FIWARE.
