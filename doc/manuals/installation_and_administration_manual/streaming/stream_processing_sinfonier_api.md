@@ -10,7 +10,9 @@ Content:<br>
 
 ##<a name="section1"></a>Sinfonier API
 
-Sinfonier API was develop to manage [Sinfonier Backend](https://github.com/sinfonier-project/sinfonier-backend) and deal with Apache Storm cluster. This software is part of [Sinfonier-Project](http://sinfonier-project.net)
+Sinfonier API was develop to manage [Sinfonier Backend](https://github.com/sinfonier-project/sinfonier-backend) and deal with Apache Storm cluster. 
+
+This software is part of [Sinfonier-Project](http://sinfonier-project.net).
 
 Main features are:
 
@@ -63,6 +65,8 @@ $ python sinfonierapicore.py
 ##<a name="section4"></a>Configure 
 
 **MONGO CONFIG**
+
+Below all configuration options located at config.py file. Ensure you config all of them wich correct values like your mongoDB host and all correct PATHS related Storm and Maven.
 
 ```python
 define("port", default=8899, help="run on the given port", type=int)

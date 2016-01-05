@@ -19,8 +19,8 @@
     * [Annex A: Creating a public-private key pair and installing the public key](./batch/annex_a_create_and_install_keypair.md)
     * [Annex B: Get a keystone auth token'](./batch/annex_b_get_keystone_auth_token.md)
 * Stream analysis
-    * [Stream processing: Sinfonier Architecture](./streaming/stream_processing_sinfonier_architecture.md)
-    * [Stream processing: Sinfonier Drawer](./streaming/stream_processing_sinfonier_drawer.md)
-    * [Stream processing: Sinfonier API](./streaming/stream_processing_sinfonier_api.md)
-    * [Stream processing: Sinfonier BackEnd](./streaming/stream_processing_sinfonier_backend.md)
+    * [Sinfonier Architecture](./streaming/stream_processing_sinfonier_architecture.md)
+    * [Sinfonier Drawer](./streaming/stream_processing_sinfonier_drawer.md)
+    * [Sinfonier API](./streaming/stream_processing_sinfonier_api.md)
+    * [Sinfonier BackEnd](./streaming/stream_processing_sinfonier_backend.md)
     * [Annex C: Deploy Apache Storm Cluster](./streaming/annex_c_deploy_storm_cluster.md)

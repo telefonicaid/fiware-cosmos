@@ -10,9 +10,9 @@ Content:<br>
 
 ##<a name="section1"></a>Sinfonier Drawer
 
-FrontEnd part of Sinfonier Project. Allow users to define Apache Storm Topologies (DAG - Directed acyclic graph) in a visual way and send it to Storm Cluster using [Sifonier API](https://github.com/sinfonier-project/sinfonier-api)
+FrontEnd part of Sinfonier Project. Allow users to define Apache Storm Topologies (DAG - Directed acyclic graph) in a visual way and send it to Storm Cluster using [Sifonier API](https://github.com/sinfonier-project/sinfonier-api).
 
-This project is a fork from webhookit [webhookit](http://neyric.github.com/webhookit)
+This project is a fork from webhookit [webhookit](http://neyric.github.com/webhookit).
 
 [Top](#top)
 
@@ -26,37 +26,35 @@ This project is a fork from webhookit [webhookit](http://neyric.github.com/webho
 
 ##<a name="section3"></a>Install
 
-    git clone https://github.com/sinfonier-project/sinfonier-drawer.git
-    cd sinfonier-drawer
-    npm install .
+    $ git clone https://github.com/sinfonier-project/sinfonier-drawer.git
+    $cd sinfonier-drawer
+    $ npm install .
 
 [Top](#top)
 
 ##<a name="section4"></a>Start
 
-* Ensure you have a MongoDB running on Localhost
-* Start Node Server
+Ensure you have a MongoDB running on Localhost. Then start Node Server
  
 ```sh
-cd /path/to/sinfonier-drawer
-node app.js    
+$ cd /path/to/sinfonier-drawer
+$ node app.js    
 ```
 
-* Browse this URL [http://localhost:8124](http://localhost:8124)
-* Create Indexes on MongoDB & supersinfonier user
+Browse this URL [http://localhost:8124](http://localhost:8124) and if you can show Sinfonier login website then create Indexes on MongoDB & supersinfonier user
 
 ```sh
-    mongo --shell sinfonier db/scripts/indexes.mongo
-    mongo --shell sinfonier db/deploy/seeds.mongo
+    $ mongo --shell sinfonier db/scripts/indexes.mongo
+    $ mongo --shell sinfonier db/deploy/seeds.mongo
 ```
 
-Now you can login using 'supersinfonier' user with 'sinfonier' as password
+Now you can login using 'supersinfonier' user with 'sinfonier' as password.
 
 [Top](#top)
 
 ##<a name="section5"></a>Integrated
 
-Sinfonier Drawer use
+Sinfonier Drawer use:
 
 * Gravatar
 * Twitter

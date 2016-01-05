@@ -9,7 +9,7 @@ Content:<br>
 
 ##<a name="section1"></a>Sinfonier Backend
 
-Sinfoner BackEnd allow to deploy Apache Storm Topologies defined using XML into Apache Storm Cluster. It's the final step on Sinfonier Project architecture and It's used by [Sinfonier API](https://github.com/sinfonier-project/sinfonier-api)
+Sinfoner BackEnd allow to deploy Apache Storm Topologies defined using XML into Apache Storm Cluster. It's the final step on Sinfonier Project architecture and It's used by [Sinfonier API](https://github.com/sinfonier-project/sinfonier-api).
 
 [Top](#top)
 
@@ -17,11 +17,11 @@ Sinfoner BackEnd allow to deploy Apache Storm Topologies defined using XML into 
 
 Sinfonier BackEnd use [Apache Maven](https://maven.apache.org/) to manage Java dependencies.
 
-    cd /tmp
-    wget http://apache.rediris.es/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-    cd /usr/local/
-    sudo unzip /tmp/apache-maven-3.3.9-bin.zip
-    sudo ln -s apache-maven-3.3.9/ maven
+    $ cd /tmp
+    $ wget http://apache.rediris.es/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+    $ cd /usr/local/
+    $ sudo unzip /tmp/apache-maven-3.3.9-bin.zip
+    $ sudo ln -s apache-maven-3.3.9/ maven
 
 [Top](#top)
 
@@ -29,28 +29,28 @@ Sinfonier BackEnd use [Apache Maven](https://maven.apache.org/) to manage Java d
 
 **Create folders**
 
-```sh
-/var/storm/lastjar
-/var/storm/src
-/var/storm/topologies
-```
+Sinfonier works with three directories:
+
+* /var/storm/lastjar -> where .jar used to deploy into Storm is.
+* /var/storm/src -> contains Sinfonier Backend classpath.
+* /var/storm/topologies -> where Sinfonier store all related Topolgies configuration.
 
 **Change owner user**
 
 ```sh
-chown storm:storm lastjar/
-chown storm:storm topologies/
-chown storm:storm src/
+$ chown storm:storm lastjar/
+$ chown storm:storm topologies/
+$ chown storm:storm src/
 ```
 
 **Clone repository into /var/storm/src**
 
-    git clone https://github.com/sinfonier-project/sinfonier-backend.git
+    $git clone https://github.com/sinfonier-project/sinfonier-backend.git
 
 **Create JAR to start deploing topologies**
 
-    <MAVEN_PATH>/bin/mvn -f /var/storm/src/sinfonier_backend/pom.xml clean compile install
-    <MAVEN_PATH>/bin/mvn -f /var/storm/src/sinfonier_backend/pom.xml package
+    $ <MAVEN_PATH>/bin/mvn -f /var/storm/src/sinfonier_backend/pom.xml clean compile install
+    $ <MAVEN_PATH>/bin/mvn -f /var/storm/src/sinfonier_backend/pom.xml package
 
 Configure this paths on Sinfonier API and start using Apache Storm in the simplest way.
 

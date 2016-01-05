@@ -13,7 +13,37 @@ This guide use [CentOS 7](https://www.centos.org/) as based system where deploy 
 
 **Add repositories**
 
-    https://github.com/CentOS/sig-atomic-buildscripts
+To add an extra repository, place a definition file in the /etc/yum.repos.d/ directory on your system.
+
+In this case we will use definitions from https://github.com/CentOS/sig-atomic-buildscripts
+
+* https://github.com/CentOS/sig-atomic-buildscripts/blob/master/CentOS-Base.repo
+
+    [CentOS-Base]
+    name=CentOS-Base
+    mirrorlist=http://mirrorlist.centos.org/?release=7&arch=$basearch&repo=os&infra=$infra
+    #baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
+    gpgcheck=0
+    gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+
+* https://github.com/CentOS/sig-atomic-buildscripts/blob/master/CentOS-extras.repo
+
+    [CentOS-extras]
+    name=CentOS-$releasever - Extras
+    mirrorlist=http://mirrorlist.centos.org/?release=7&arch=$basearch&repo=extras&infra=$infra
+    #baseurl=http://mirror.centos.org/centos/$releasever/extras/$basearch/
+    gpgcheck=0
+    gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+
+* https://github.com/CentOS/sig-atomic-buildscripts/blob/master/CentOS-updates.repo
+
+    #released updates 
+    [CentOS-updates]
+    name=CentOS-releasever - Updates
+    mirrorlist=http://mirrorlist.centos.org/?release=7&arch=$basearch&repo=updates&infra=$infra
+    #baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/
+    gpgcheck=0
+    gpgkey=http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
 
 **Update your system**
 
@@ -21,7 +51,13 @@ This guide use [CentOS 7](https://www.centos.org/) as based system where deploy 
 
 **Install Java 7 SDK**
 
+Download .rpm package from Oracle website.
+
     http://www.oracle.com/technetwork/es/java/javase/downloads/jdk7-downloads-1880260.html
+
+Install package using *yum*
+
+    $ sudo yum localinstall jdk-7u79-linux-x64.rpm
 
 **Install Development tools**
     
@@ -38,9 +74,7 @@ This guide use [CentOS 7](https://www.centos.org/) as based system where deploy 
 To download and install the CDH4 "1-click Install" package
 
     $ wget http://www.cloudera.com/content/www/en-us/documentation/archive/cdh/4-x/4-7-1/CDH4-Installation-Guide/cdh4ig_topic_4_4.html
-    
     $ sudo yum --nogpgcheck localinstall cloudera-cdh-4-0.x86_64.rpm
-
     $ sudo yum repolist | grep cloudera-cdh4
     cloudera-cdh4 Cloudera's Distribution for Hadoop, Version 4 111
 
@@ -50,8 +84,8 @@ To download and install the CDH4 "1-click Install" package
 
 **Init and Start**
 
-    service zookeeper-server init
-    service zookeeper-server start
+    $ service zookeeper-server init
+    $ service zookeeper-server start
 
 ### Storm
 
@@ -102,7 +136,7 @@ Running Storm daemons under supervision
 
 **Install RHEL EPEL repository**
 
-    $sudo yum -y install epel-release
+    $ sudo yum -y install epel-release
 
 **Install supervisord**
 
@@ -117,6 +151,8 @@ Running Storm daemons under supervision
     $ sudo chown -R storm:storm /var/log/storm
 
 **Configure supervisord for Storm**
+
+Add this configurations into /etc/supervisord.conf file.
 
     [program:storm-nimbus]
     command=/usr/local/storm/bin/storm nimbus
@@ -172,6 +208,7 @@ Running Storm daemons under supervision
 
 **Check Status**
 
+    $ supervisorctl
     supervisor> status
     storm-logviewer RUNNING pid 11933, uptime 0:00:10
     storm-nimbus RUNNING pid 11935, uptime 0:00:10
@@ -182,10 +219,10 @@ Running Storm daemons under supervision
 
 **Install binaries**
 
-    cd /tmp
-    wget http://apache.rediris.es/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
-    cd /usr/local/
-    sudo unzip /tmp/apache-maven-3.3.9-bin.zip
-    sudo ln -s apache-maven-3.3.9/ maven
+    $ cd /tmp
+    $ wget http://apache.rediris.es/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.zip
+    $ cd /usr/local/
+    $ sudo unzip /tmp/apache-maven-3.3.9-bin.zip
+    $ sudo ln -s apache-maven-3.3.9/ maven
 
-We will use /usr/local/storm and /usr/local/maven to configure Sinfonier API
+We will use /usr/local/storm and /usr/local/maven to configure Sinfonier API.
