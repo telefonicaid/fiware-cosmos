@@ -104,9 +104,9 @@ cosmos-auth typically listens in the TCP/13000 port (TLS encryption), but you ca
 ##<a name="usage"></a>Usage
 Apart from the version method, there is only one available operation in this RESTful API. Use curl this way in order to get an access token:
 
-    curl -X POST "https://<host_running_the_api>:13000/cosmos-auth/v1/token" -H "Content-Type: application/x-www-form-urlencoded" -d "grant_type=password&username=<your_idm_username>&password=<your_idm_password>"
+    curl -k -X POST "https://<host_running_the_api>:13000/cosmos-auth/v1/token" -H "Content-Type: application/x-www-form-urlencoded" -d "grant_type=password&username=<your_idm_username>&password=<your_idm_password>"
     
-Resposne have the following format (JSON encoding):
+The response should have the following format (JSON encoding):
 
     {"access_token": "M2ir2989wWhs5mAmj9OJLQdok0MeGl", "token_type": "Bearer", "expires_in": 3600, "refresh_token": "nEy34Tc74HhlA6Hk34uCihUGRppLO9"}
     
