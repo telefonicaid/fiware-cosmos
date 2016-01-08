@@ -15,3 +15,4 @@
 - [cosmos-sinfonier] [DOC] Adding documentation realted Stream component Sinfonier. Docs include how to create new topologies and modules (Spouts, Bolts and Drains).
 - [cosmos-gui] [FEATURE] Allow changing the Cosmos password (#132)
 - [cosmos-auth] [HARDENING] Force the usage of TLSv1 instead of SSLv3 (#107)
+- [cosmos-gui] [BUG] /new_password route now provisions the new password (#134)
