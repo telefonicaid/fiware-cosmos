@@ -202,6 +202,17 @@ app.post('/new_password', function(req, res) {
                 logger.error('There was an error while setting up the password for user ' + username, error);
                 res.status(boomError.output.statusCode).send(boomError.output.payload.message);
             } else {
+                logger.info('Successful information added to the database for user ' + username);
+
+                if (scEndpoint === ccEndpoint) {
+                    // Just one provision step instead of two
+                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, username, password1);
+                } else {
+                    // Two different provision steps
+                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, username, password1);
+                    appUtils.provisionPassword(res, ccPrivKey, ccUser, ccEndpoint, username, password1);
+                } // if else
+
                 res.redirect('/');
             } // if else
         })
