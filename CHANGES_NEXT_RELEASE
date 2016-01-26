@@ -16,3 +16,4 @@
 - [cosmos-gui] [FEATURE] Allow changing the Cosmos password (#132)
 - [cosmos-auth] [HARDENING] Force the usage of TLSv1 instead of SSLv3 (#107)
 - [cosmos-gui] [BUG] /new_password route now provisions the new password (#134)
+- [doc] [HARDENING] Document how Cosmos has been deployed in FIWARE Lab (#141)
