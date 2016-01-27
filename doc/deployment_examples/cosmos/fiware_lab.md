@@ -19,7 +19,10 @@ Content:
         * [Oozie](#section4.2.3)
         * [Tidoop](#section4.3.4)
         * [Cosmos Authentication server (cosmos-auth)](#section4.2.5)
-        * [HiveServer2 forward](#section4.2.6)
+        * [Hive](#section4.2.6)
+            * [HiveServer2 forward](#section4.2.6.1)
+            * [Hive configuration for OAuth2 provider](#section4.2.6.2)
+            * [OAuth2 provider installation](#section4.2.6.3)
 * [GUI](#section5)
 * [Reporting issues and contact information](#section6)
 
@@ -133,7 +136,7 @@ $ crontab -l
 ####<a name="section3.2.4"></a>Hadoop Inter-Process Communication forward
 <i>NOTE: Planned, not actually working.</i>
 
-Port TCP/8020 for Hadoop Inter-Process Communication (IPC) opened and forwarded to dev-fiwr-bignode-01.hi.inet:8020 (Active Namenode):
+Port TCP/8020 for Hadoop Inter-Process Communication (IPC) opened and forwarded to `dev-fiwr-bignode-01.hi.inet:8020` (Active Namenode):
 
 ```
 $ sudo bash -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
@@ -237,8 +240,9 @@ $ ps -ef | grep -v grep | grep 8733
 cosmos-auth      8733  8727  0 12:58 ?        00:00:00 node ./src/server.js
 ```
 
-####<a name="section4.2.6"></a>HiveServer2 forward
-Port TCP/10000 for HiveServer2 opened and forwarded to dev-fiwr-bignode-11.hi.inet:10000 (Active Namenode):
+####<a name="section4.2.6"></a>Hive
+#####<a name="section4.2.6.1"></a>HiveServer2 forward
+Port TCP/10000 for HiveServer2 opened and forwarded to `dev-fiwr-bignode-11.hi.inet:10000` (Active Namenode):
 
 ```
 $ sudo bash -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
@@ -258,6 +262,43 @@ SNAT       tcp  --  anywhere             dev-fiwr-bignode-11.hi.inet tcp dpt:ndm
 
 Chain OUTPUT (policy ACCEPT)
 target     prot opt source               destination    
+```
+
+[Top](#top)
+
+#####<a name="section4.2.6.2"></a>Hive configuration for OAuth2 provider
+
+The following properties has been added to `hive-site.xml` in order to enable a custom authentication provider, i.e. cosmos-hive-auth-provider and its `OAuth2AuthenticationProviderImpl` class:
+
+```
+<property>
+   <name>hive.server2.authentication</name>
+   <value>CUSTOM</value>
+</property>
+
+<property>
+   <name>hive.server2.custom.authentication.class</name>
+   <value>com.telefonica.iot.cosmos.hive.authprovider.OAuth2AuthenticationProviderImpl</value>
+</property>
+```
+
+This other property has been modified in order to enable impersonation (on the contrary, all the queries are executed by the user `hive` instead of the real end user):
+
+```
+<property>
+   <name>hive.server2.enable.doAs</name>
+   <value>true</value>
+</property>
+```
+
+[Top](#top)
+
+#####<a name="section4.2.6.3"></a>OAuth2 provider installation
+The cosmos-hive-auth-provider jar containing the `OAuth2AuthenticationProviderImpl` class has been copied into the installation directory of Hive:
+
+```
+$ ls /usr/lib/hive/lib/ | grep cosmos
+cosmos-hive-auth-provider-0.0.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
 [Top](#top)
