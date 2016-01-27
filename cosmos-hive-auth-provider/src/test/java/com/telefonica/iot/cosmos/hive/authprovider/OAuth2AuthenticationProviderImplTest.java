@@ -31,7 +31,7 @@ public class OAuth2AuthenticationProviderImplTest {
     
     private final String matchingUser = "frb";
     private final String notMatchingUser = "other";
-    private final String matchingToken = "8azH35GGPdapmgVCODLOtxy52f6a8o";
+    private final String matchingToken = "111111111111111111111111111111";
     private final String notMatchingToken = "000000000000000000000000000000";
     
     /**
