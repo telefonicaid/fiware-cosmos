@@ -49,12 +49,12 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
     } // OAuth2AuthenticationProviderImpl
 
     @Override
-    public void Authenticate(String user, String password) throws AuthenticationException {
+    public void Authenticate(String user, String token) throws AuthenticationException {
         // create the Http client
         HttpClient httpClient = httpClientFactory.getHttpClient(true);
         
         // create the request
-        String url = "https://account.lab.fiware.org/user?access_token=" + password;
+        String url = "https://account.lab.fiware.org/user?access_token=" + token;
         HttpRequestBase request = new HttpGet(url);
         
         // do the request
@@ -97,6 +97,11 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
         if (jsonResponse.containsKey("id") && !jsonResponse.get("id").equals(user)) {
             throw new AuthenticationException("The given token does not match the given user");
         } // if
+        
+        // release the connection
+        request.releaseConnection();
+        
+        LOGGER.debug("User " + user + " authenticated");
     } // Authenticate
     
 } // OAuth2AuthenticationProviderImpl
