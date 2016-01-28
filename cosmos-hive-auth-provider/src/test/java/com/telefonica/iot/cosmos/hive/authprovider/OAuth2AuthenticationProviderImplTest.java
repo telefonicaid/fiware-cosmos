@@ -31,8 +31,12 @@ public class OAuth2AuthenticationProviderImplTest {
     
     private final String matchingUser = "frb";
     private final String notMatchingUser = "other";
-    private final String matchingToken =    "111111111111111111111111111111";
+    private static String matchingToken;
     private final String notMatchingToken = "000000000000000000000000000000";
+    
+    static {
+        matchingToken = System.getProperty("token");
+    } // static
     
     /**
      * Tests OAuth2AuthenticationProviderImpl.Authenticate when the given user and token match.
