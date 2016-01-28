@@ -1,14 +1,16 @@
-#<a name="top"></a>OAuth2-protected REST APIs
+#<a name="top"></a>OAuth2-protected APIs
 
 Content:<br>
 
-* [Introduction](#section1)
-* [Installation](#section2)
-* [Configuration](#section3)
-* [Running](#section4)
-* [Administration](#section5)
+* [OAuth2-protected REST APIs](#section1)
+    * [Installation](#section1.1)
+    * [Configuration](#section1.2)
+    * [Running](#section1.3)
+    * [Administration](#section1.4)
+* [Other APIs protected with OAuth2](#section2)
+    * [HiveServer2](#section2.1)
 
-##<a name="section1"></a>Introduction
+##<a name="section1"></a>OAuth2-protected REST APIs
 
 Many tools from Hadoop Ecosystem, and others added by Cosmos Ecosystem, expose REST APIs. These APIs are not usually secured in terms of authentication nor authorization. Even in the case they provide any means of authenticating/authorizing the users, the mechanisms for doing so may be very heterogeneous.
 
@@ -19,7 +21,7 @@ Generator](http://github.com/telefonicaid/fiware-cosmos/tree/develop/cosmos-auth
 
 [Top](#top)
 
-##<a name="section2"></a>Installation
+###<a name="section1.1"></a>Installation
 
 Please refer to this [Installation and Administration Guide](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/PEP_Proxy_-_Wilma_-_Installation_and_Administration_Guide) in order to install Wilma PEP Proxy.
 
@@ -27,7 +29,7 @@ Please refer to the [installation section](http://github.com/telefonicaid/fiware
 
 [Top](#top)
 
-##<a name="section3"></a>Configuration
+###<a name="section1.2"></a>Configuration
 
 Please refer to this [Installation and Administration Guide](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/PEP_Proxy_-_Wilma_-_Installation_and_Administration_Guide) in order to configure Wilma PEP Proxy.
 
@@ -35,7 +37,7 @@ Please refer to the [configuration section](http://github.com/telefonicaid/fiwar
 
 [Top](#top)
 
-##<a name="section4"></a>Running
+###<a name="section1.3"></a>Running
 
 Please refer to this [Installation and Administration Guide](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/PEP_Proxy_-_Wilma_-_Installation_and_Administration_Guide) in order to run Wilma PEP Proxy.
 
@@ -43,10 +45,16 @@ Please refer to the [running section](http://github.com/telefonicaid/fiware-cosm
 
 [Top](#top)
 
-##<a name="section5"></a>Administration
+###<a name="section1.4"></a>Administration
 
 Please refer to this [Installation and Administration Guide](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/PEP_Proxy_-_Wilma_-_Installation_and_Administration_Guide) in order to administrate Wilma PEP Proxy.
 
 Please refer to the [administration section](http://github.com/telefonicaid/fiware-cosmos/blob/develop/cosmos-auth/README.md#administration) of the README in Github in order to configure the OAuth2 Tokens Generator.
+
+[Top](#top)
+
+##<a name="section2"></a>Other APIs protected with OAuth2
+###<a name="section2.1"></a>HiveServer2
+There exist the possibility to configure custom authentication providers for Hive and its server, HiveServer2. In this sense, we have developed [cosmos-hive-auth-provider](https://github.com/telefonicaid/fiware-cosmos/tree/master/cosmos-hive-auth-provider), a OAuth2-based authentication provider. Please, check the [README](https://github.com/telefonicaid/fiware-cosmos/blob/master/cosmos-hive-auth-provider/README.md) in order to learn how to install, configure, run and use it.
 
 [Top](#top)
