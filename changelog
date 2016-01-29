@@ -1,3 +1,25 @@
+* Fri Jan 29 2015 Francisco Romero <francisco.romerobueno@telefonica.com> 0.2.0
+- [cosmos-gui] [FEATURE] Add a script in charge of reporting certain alarms (#96)
+- [cosmos-admin] [FEATURE] Script in charge of gathering per-user stats (#59)
+- [doc] [BUG] Wrong link fixed in the documentation (#98)
+- [cosmos-auth] [HARDENING] Document how to create a self-signed certificate (#99)
+- [cosmos-gui] [HARDENING] Add an annex about binding applications to ports under 1024 (#103)
+- [cosmos-gui] [HARDENING] Force the usage of TLSv1 instead of SSLv3 (#106)
+- [cosmos-gui] [HARDENING] Use a pool of MySQL connections instead of a single permanent one (#109)
+- [cosmos-gui] [FEATURE] Add a user profile view (#112)
+- [general] ADD LICENSE and Contribution Policy (#114)
+- [cosmos-gui] [BUG] Fix redirection after cluster provisioning (#121)
+- [cosmos-gui] [BUG] Prevent the GUI crashes when no access_token is sent by the IdM (#117)
+- [general] [HARDENING] ADD LICENSE and Contribution Policy (#114)
+- [cosmos-gui] [BUG] Check the built username is about an invalid username (i.e. null) (#122)
+- [cosmos-gui] [HARDENING] Add readthedocs and AGPL badges to the README (#125)
+- [cosmos-sinfonier] [DOC] Adding documentation realted Stream component Sinfonier. Docs include how to create new topologies and modules (Spouts, Bolts and Drains).
+- [cosmos-gui] [FEATURE] Allow changing the Cosmos password (#132)
+- [cosmos-auth] [HARDENING] Force the usage of TLSv1 instead of SSLv3 (#107)
+- [cosmos-gui] [BUG] /new_password route now provisions the new password (#134)
+- [doc] [HARDENING] Document how Cosmos has been deployed in FIWARE Lab (#141)
+- [cosmos-hive-auth-provider] [FEATURE] Add an OAuth2-based authentication provider for Hive (#57)
+
 * Fri Oct 02 2015 Francisco Romero <francisco.romerobueno@telefonica.com> 0.1.0
 - [cosmos-gui] [FEATURE] Create a GUI for Cosmos, in charge os administrating the shared storage cluster (#2)
 - [cosmos-admin] [FEATURE] Admin tool for copying data among HDFS clusters (#8)
