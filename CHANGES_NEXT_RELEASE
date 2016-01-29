@@ -18,3 +18,4 @@
 - [cosmos-gui] [BUG] /new_password route now provisions the new password (#134)
 - [doc] [HARDENING] Document how Cosmos has been deployed in FIWARE Lab (#141)
 - [cosmos-hive-auth-provider] [FEATURE] Add an OAuth2-based authentication provider for Hive (#57)
+- [cosmos-gui] [FEATURE] Use the ID registered at the Identity Manager as Cosmos user (#118)

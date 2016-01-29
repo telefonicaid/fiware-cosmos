@@ -126,27 +126,7 @@ function provisionPassword(res, clusterPrivKey, clusterUser, clusterEndpoint, us
     })
 } // provisionPassword
 
-function buildUsername(username, index, callback) {
-    if (usersBlacklist.indexOf(username) > -1) {
-        logger.error('The base username "' + username + '" is not allowed');
-        return callback(null);
-    } // if
-
-    mysqlDriver.getUserByCosmosUser(username + (index == 0 ? '' : index), function (error, result) {
-        if (error) {
-            logger.error('There was some error when getting user information from the ' + 'database', error);
-            callback(null);
-        } else if (result[0]) {
-            index += 1;
-            return buildUsername(username, index, callback);
-        } else {
-            callback(username + (index == 0 ? '' : index));
-        } // if else
-    });
-} // buildUsername
-
 module.exports = {
     provisionCluster: provisionCluster,
-    provisionPassword: provisionPassword,
-    buildUsername: buildUsername
+    provisionPassword: provisionPassword
 } // module.exports
