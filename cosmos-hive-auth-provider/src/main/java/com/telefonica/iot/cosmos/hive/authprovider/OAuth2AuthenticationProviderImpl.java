@@ -21,6 +21,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import javax.security.sasl.AuthenticationException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hive.service.auth.PasswdAuthenticationProvider;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -36,16 +38,22 @@ import org.json.simple.parser.ParseException;
  * 
  * @author frb
  */
-public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationProvider {
+public class OAuth2AuthenticationProviderImpl extends Configured implements PasswdAuthenticationProvider {
     
     private static final Logger LOGGER = Logger.getLogger(HttpClientFactory.class);
     private final HttpClientFactory httpClientFactory;
+    private final String idmEndpoint;
     
     /**
      * Constructor.
      */
     public OAuth2AuthenticationProviderImpl() {
+        // create a factory of Http clients
         httpClientFactory = new HttpClientFactory(true);
+        
+        // get the cnfigured Identity Manager endpoint
+        Configuration conf = getConf();
+        idmEndpoint = conf.get("com.telefonica.iot.idm.endpoint", "https://account.lab.fiware.org");
     } // OAuth2AuthenticationProviderImpl
 
     @Override
@@ -54,7 +62,7 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
         HttpClient httpClient = httpClientFactory.getHttpClient(true);
         
         // create the request
-        String url = "https://account.lab.fiware.org/user?access_token=" + token;
+        String url = idmEndpoint + "/user?access_token=" + token;
         HttpRequestBase request = new HttpGet(url);
         
         // do the request
