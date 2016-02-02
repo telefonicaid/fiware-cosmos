@@ -21,8 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import javax.security.sasl.AuthenticationException;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hive.service.auth.PasswdAuthenticationProvider;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -38,7 +37,7 @@ import org.json.simple.parser.ParseException;
  * 
  * @author frb
  */
-public class OAuth2AuthenticationProviderImpl extends Configured implements PasswdAuthenticationProvider {
+public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationProvider {
     
     private static final Logger LOGGER = Logger.getLogger(HttpClientFactory.class);
     private final HttpClientFactory httpClientFactory;
@@ -52,7 +51,7 @@ public class OAuth2AuthenticationProviderImpl extends Configured implements Pass
         httpClientFactory = new HttpClientFactory(true);
         
         // get the cnfigured Identity Manager endpoint
-        Configuration conf = getConf();
+        HiveConf conf = new HiveConf();
         idmEndpoint = conf.get("com.telefonica.iot.idm.endpoint", "https://account.lab.fiware.org");
     } // OAuth2AuthenticationProviderImpl
 
