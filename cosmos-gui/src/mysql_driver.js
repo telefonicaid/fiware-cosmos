@@ -37,7 +37,7 @@ var pool = mysql.createPool({
     database: mysqlConfig.database
 });
 
-function addUser(idm_username, username, password, hdfsQuota, callback) {
+function addUser(id, email, password, hdfsQuota, callback) {
     pool.getConnection(function(error, connection) {
         if (error) {
             if (callback) {
@@ -45,9 +45,9 @@ function addUser(idm_username, username, password, hdfsQuota, callback) {
             } // if
         } else {
             var query = connection.query(
-                'INSERT INTO cosmos_user (idm_username, username, password, hdfs_quota) ' +
+                'INSERT INTO cosmos_user (id, email, password, hdfs_quota) ' +
                 'VALUES (?, ?, ?, ?)',
-                [idm_username, username, password, hdfsQuota],
+                [id, email, password, hdfsQuota],
                 function (error, result) {
                     if (error) {
                         if (callback) {
@@ -55,8 +55,8 @@ function addUser(idm_username, username, password, hdfsQuota, callback) {
                         } // if
                     } else {
                         logger.info('Successful insert: \'INSERT INTO cosmos_user ' +
-                            '(idm_username, username, password, hdfs_quota) VALUES ' +
-                            '(' + idm_username + ', ' + username + ', ' + password + ', ' + hdfsQuota + ')\'');
+                            '(id, email, password, hdfs_quota) VALUES ' +
+                            '(' + id + ', ' + email + ', ' + password + ', ' + hdfsQuota + ')\'');
                         connection.release();
 
                         if (callback) {
@@ -69,7 +69,7 @@ function addUser(idm_username, username, password, hdfsQuota, callback) {
     });
 } // addUser
 
-function addPassword(idm_username, password, callback) {
+function addPassword(id, password, callback) {
     pool.getConnection(function(error, connection) {
         if (error) {
             if (callback) {
@@ -77,7 +77,7 @@ function addPassword(idm_username, password, callback) {
             } // if
         } else {
             var query = connection.query(
-                'UPDATE cosmos_user SET password=\'' + password + '\' WHERE idm_username=\'' + idm_username + '\'',
+                'UPDATE cosmos_user SET password=\'' + password + '\' WHERE id=\'' + id + '\'',
                 function (error, result) {
                     if (error) {
                         if (callback) {
@@ -85,7 +85,7 @@ function addPassword(idm_username, password, callback) {
                         } // if
                     } else {
                         logger.info('Successful update: \'UPDATE cosmos_user SET password=\'' + password +
-                            '\' WHERE idm_username=\'' + idm_username + '\'');
+                            '\' WHERE id=\'' + id + '\'');
                         connection.release();
 
                         if (callback) {
@@ -98,7 +98,7 @@ function addPassword(idm_username, password, callback) {
     });
 } // addPassword
 
-function getUser(idm_username, callback) {
+function getUser(id, callback) {
     pool.getConnection(function(error, connection) {
         if (error) {
             if (callback) {
@@ -106,15 +106,14 @@ function getUser(idm_username, callback) {
             } // if
         } else {
             var query = connection.query(
-                'SELECT * from cosmos_user WHERE idm_username=\'' + idm_username + '\'',
+                'SELECT * from cosmos_user WHERE id=\'' + id + '\'',
                 function (error, result) {
                     if (error) {
                         if (callback) {
                             callback(error);
                         } // if
                     } else {
-                        logger.info('Successful select: \'SELECT * from cosmos_user WHERE idm_username=\'' +
-                            idm_username + '\'');
+                        logger.info('Successful select: \'SELECT * from cosmos_user WHERE id=\'' + id + '\'');
                         connection.release();
 
                         if (callback) {
@@ -127,37 +126,8 @@ function getUser(idm_username, callback) {
     });
 } // getUser
 
-function getUserByCosmosUser(username, callback) {
-    pool.getConnection(function(error, connection) {
-        if (error) {
-            if (callback) {
-                callback(error);
-            } // if
-        } else {
-            var query = connection.query(
-                'SELECT * from cosmos_user WHERE username=\'' + username + '\'',
-                function (error, result) {
-                    if (error) {
-                        if (callback) {
-                            callback(error);
-                        } // if
-                    } else {
-                        logger.info('Successful select: \'SELECT * from cosmos_user WHERE username=\'' + username + '\'');
-                        connection.release();
-
-                        if (callback) {
-                            callback(null, result);
-                        } // if
-                    } // if else
-                }
-            );
-        } // if else
-    });
-} // getUserByCosmosUser
-
 module.exports = {
     addUser: addUser,
     addPassword: addPassword,
-    getUser: getUser,
-    getUserByCosmosUser: getUserByCosmosUser
+    getUser: getUser
 } // module.exports

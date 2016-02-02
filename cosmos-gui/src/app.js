@@ -165,7 +165,7 @@ app.post('/new_account', function(req, res) {
     var password2 = req.body.password2;
 
     if (password1 === password2) {
-        mysqlDriver.addUser(user_email, user_id, password1, hdfsQuota, function(error, result) {
+        mysqlDriver.addUser(user_id, user_email, password1, hdfsQuota, function(error, result) {
             if (error) {
                 var boomError = boom.badData('There was some error when adding information in the database for user '+ user_id, error);
                 logger.error('There was some error when adding information in the database for user '+ user_id);
@@ -192,7 +192,6 @@ app.post('/new_account', function(req, res) {
 
 app.post('/new_password', function(req, res) {
     var user_id = req.session.user_id;
-    var user_email = req.session.user_email;
     var password1 = req.body.password1;
     var password2 = req.body.password2;
 
@@ -228,7 +227,6 @@ app.get('/change_password', function(req, res) {
 
 app.post('/change_password', function(req, res) {
     var user_id = req.session.user_id;
-    var user_email = req.session.user_email;
     var password1 = req.body.password1;
     var password2 = req.body.password2;
 
