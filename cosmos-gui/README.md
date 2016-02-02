@@ -262,6 +262,7 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
 * **log**:
     * **file_name**: Path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `cosmos-gui`.
     * **date_pattern**: Data pattern to be appended to the log file name when the log file is rotated.
+    * **level**: Minimum logging level to be considered. Possible values (including hierarchy) are: `OFF` > `ERROR` > `WARN` > `INFO` > `DEBUG` > `ALL`.
 
 [Top](#top)
 

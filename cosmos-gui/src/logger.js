@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Telefonica Investigación y Desarrollo, S.A.U
+ * Copyright 2016 Telefonica Investigación y Desarrollo, S.A.U
  *
  * This file is part of fiware-tidoop (FI-WARE project).
  *
@@ -23,6 +23,16 @@
  * Author: frb
  */
 
+// Logging levels
+LoggingLevel = {
+    OFF: 1,
+    ERROR: 2,
+    WARN: 3,
+    INFO: 4,
+    DEBUG: 5,
+    ALL: 6
+};
+
 // Module dependencies
 var config = require('../conf/cosmos-gui.json');
 var winston = require('winston');
@@ -30,6 +40,7 @@ var winston = require('winston');
 // Global variables
 var logFileName = config.log.file_name;
 var logDatePattern = config.log.data_pattern;
+var logLevel = toLoggingLevel(config.log.level);
 
 // Winston configuration
 winston.add(winston.transports.DailyRotateFile, {
@@ -37,25 +48,51 @@ winston.add(winston.transports.DailyRotateFile, {
     datePattern: logDatePattern
 });
 
-function info(message) {
-    winston.info(message);
-} // info
+function toLoggingLevel(level) {
+    if (level == 'OFF') {
+        return LoggingLevel.OFF;
+    } else if (level == 'ERROR') {
+        return LoggingLevel.ERROR;
+    } else if (level == 'WARN') {
+        return LoggingLevel.WARN;
+    } else if (level == 'INFO') {
+        return LoggingLevel.INFO;
+    } else if (level == 'DEBUG') {
+        return LoggingLevel.DEBUG;
+    } else if (level == 'ALL') {
+        return LoggingLevel.ALL;
+    } else {
+        return LoggingLevel.OFF;
+    } // if else
+} // toLoggingLevel
 
 function error(message) {
-    winston.error(message);
+    if (logLevel >= LoggingLevel.ERROR) {
+        winston.error(message);
+    } // if
 } // error
 
 function warn(message) {
-    winston.warn(message);
+    if (logLevel >= LoggingLevel.WARN) {
+        winston.warn(message);
+    } // if
 } // warn
 
+function info(message) {
+    if (logLevel >= LoggingLevel.INFO) {
+        winston.info(message);
+    } // if
+} // info
+
 function debug(message) {
-    winston.debug(message);
+    if (logLevel >= LoggingLevel.DEBUG) {
+        winston.debug(message);
+    } // if
 } // debug
 
 module.exports = {
-    info: info,
     error: error,
     warn: warn,
+    info: info,
     debug: debug
 } // module.exports
