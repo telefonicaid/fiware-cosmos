@@ -1,1 +1,2 @@
+- [cosmos-auth] [HARDENING] Rename server.js as cosmos_auth.js (#139)
 - [cosmos-gui] [HARDENING] Rename app.js as cosmos_gui.js (#135)
