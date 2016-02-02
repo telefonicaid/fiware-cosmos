@@ -47,12 +47,27 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
      * Constructor.
      */
     public OAuth2AuthenticationProviderImpl() {
-        // create a factory of Http clients
-        httpClientFactory = new HttpClientFactory(true);
-        
         // get the cnfigured Identity Manager endpoint
-        HiveConf conf = new HiveConf();
-        idmEndpoint = conf.get("com.telefonica.iot.idm.endpoint", "https://account.lab.fiware.org");
+        HiveConf conf = null;
+        
+        try {
+            conf = new HiveConf();
+        } catch (Exception e) {
+            LOGGER.info("Unable to read the Hive configuration, using default values");
+        } finally {
+            if (conf == null) {
+                idmEndpoint = "https://account.lab.fiware.org";
+            } else {
+                idmEndpoint = conf.get("com.telefonica.iot.idm.endpoint", "https://account.lab.fiware.org");
+            } // if else
+        } // try catch finally
+        
+        // create a factory of Http clients
+        if (idmEndpoint.startsWith("https")) {
+            httpClientFactory = new HttpClientFactory(true);
+        } else {
+            httpClientFactory = new HttpClientFactory(false);
+        } // if else
     } // OAuth2AuthenticationProviderImpl
 
     @Override

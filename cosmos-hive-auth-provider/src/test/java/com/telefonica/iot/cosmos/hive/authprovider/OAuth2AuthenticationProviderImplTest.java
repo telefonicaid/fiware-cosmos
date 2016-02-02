@@ -31,11 +31,11 @@ public class OAuth2AuthenticationProviderImplTest {
     
     private final String matchingUser = "frb";
     private final String notMatchingUser = "other";
-    private static String matchingToken;
+    private static final String MATCHING_TOKEN;
     private final String notMatchingToken = "000000000000000000000000000000";
     
     static {
-        matchingToken = System.getProperty("token");
+        MATCHING_TOKEN = System.getProperty("token");
     } // static
     
     /**
@@ -47,7 +47,7 @@ public class OAuth2AuthenticationProviderImplTest {
         
         try {
             OAuth2AuthenticationProviderImpl oapi = new OAuth2AuthenticationProviderImpl();
-            oapi.Authenticate(matchingUser, matchingToken);
+            oapi.Authenticate(matchingUser, MATCHING_TOKEN);
         } catch (AuthenticationException e) {
             fail(e.getMessage());
         } finally {
@@ -65,7 +65,7 @@ public class OAuth2AuthenticationProviderImplTest {
         
         try {
             OAuth2AuthenticationProviderImpl oapi = new OAuth2AuthenticationProviderImpl();
-            oapi.Authenticate(notMatchingUser, matchingToken);
+            oapi.Authenticate(notMatchingUser, MATCHING_TOKEN);
             assertTrue(false);
         } catch (AuthenticationException e) {
             assertTrue(true);
