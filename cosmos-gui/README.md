@@ -11,10 +11,8 @@
 * [Usage](#usage)
     * [Login](#login)
     * [Cosmos account provision](#provision)
-        * [Migration from an old version of Cosmos](#migration)
     * [Dashboard](#dashboard)
     * [Profile](#profile)
-        * [Change password](#changepassword)
 * [Administration](#administration)
     * [Logging traces](#loggingtraces)
     * [Database](#database)
@@ -299,25 +297,14 @@ The login procedure delegates in FIWARE Identity Manager. This means cosmos-gui 
 [Top](#top)
 
 ###<a name="provision"></a>Cosmos account provision
-After authentication (using your email and password registered at the Identity Manager), there are three possibilities:
+After authentication (using your email and password registered at the Identity Manager), there are two possibilities:
 
 * You are an already registered user in Cosmos. In this case, you are directly redirected to the dashboard of the GUI.
 * You are not a user in Cosmos. In this case, the GUI will provision (one and only once) an account in the managed Hadoop clusters (both storage and computing); this comprises:
-    * The creation of a Unix user based on your Identity Manager registered email address. This user, together with the password the page asks for, will allow you to ssh into the clusters (both storage and computing).
-    * The creation of a HDFS user equals to the unix one. This user will allow you to manage your own persistent private HDFS userspace within the storage cluster (with limited quota), and the temporal private HDFS userspace within the computing cluster (with limited quota).
+    * The creation of a Unix user based on your Identity Manager registered ID.
+    * The creation of a HDFS user equals to the Unix one. This user will allow you to manage your own persistent private HDFS userspace within the storage cluster (with limited quota), and the temporal private HDFS userspace within the computing cluster (with limited quota).
 
 Please observe when the storage and computing clusters are the same (it is not the recommended architecture, but it is feasible from a technical point of view) only one provisioning step is done, as it is obvious.
-
-![](doc/images/cosmos_gui__new_account.png)
-    
-* You are a user in an old Cosmos deployment. Please, see the next section for further details if your deployment will involve a migration from an old version of Cosmos to the new one. If not, you can skip it.
-
-![](doc/images/cosmos_gui__new_password.png)
-
-[Top](#top)
-
-####<a name="migration"></a>Migration from an old version of Cosmos
-Old Cosmos deployments did not stored in a database the Identity Manager email nor the ssh password, but only the Unix/HDFS username. This is a problem from the migration point of view. This special page of the GUI will provision (one and only once) such an email and password, maintaining the Unix user, the HDFS userspace and the data stored in the old cluster (which must be migrated to the new cluster).
 
 [Top](#top)
 
@@ -341,13 +328,6 @@ This is useful in order to know the credentials the user has in the Cosmos platf
 
 [Top](#top)
 
-####<a name="changepassword"></a>Change password
-This option within the profile page will allow to change the Cosmos account password by simply typing (and retyping) a new one.
-
-![](doc/images/cosmos_gui__change_password.png)
-
-[Top](#top)
-
 ##<a name="administration"></a>Administration
 Two are the sources of data, the logs and the database, useful for an administrator of cosmos-gui.
 
@@ -367,10 +347,8 @@ Within the log it is expected to find many `info` messages, and a few of `warn` 
 * ***There was some error when connecting to MySQL database. The server will not be run***: This message may appear when starting the GUI. Most probably the MySQL endpoint is not correct, the MySQL user is not allowed to remotely connect, of there is some network error like a port filtering.
 * ***There was some error when getting user information from the database***: This message may appear when a user gets the main page and his/her session has not yet expired; then, his/her information is retrieved from the database. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful. 
 * ***There was some error when getting user information from the IdM***: This message may appear when a user signs in using his/her Identity Manager (IdM) credentials. Most probably the IdM endpoint is not correct, the client id and secret related to cosmos-gui are not correct or the callback URL has not been propertly set.
-* ***There was an error while setting up the password for user \<unix_user\>***: This message may appear when a user from the old Cosmos deployment has accessed the GUI for the first time. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful.
 * ***There was some error when adding information in the database for user \<cosmos_user>***: This message may appear when a new fresh user has accessed the GUI for the first time. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful.
 * ***There was an error while adding the Unix user \<unix_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
-* ***There was an error while setting the password for user \<unix_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
 * ***There was an error while creating the HDFS folder for user \<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
 * ***There was an error while changing the ownership of /user/\<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the superuser configured for HDFS is not a superuser, or there is some network error with the ssh access.
 * ***There was an error while changing the permissions to /user/\<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the superuser configured for HDFS is not a superuser, or there is some network error with the ssh access.
@@ -414,12 +392,12 @@ Information regarding registered users in Cosmos can be found in a MySQL table n
     2 rows in set (0.00 sec)
 
     mysql> select * from cosmos_user;
-    +------------------------------------------------+---------------------------+----------+---------------------+
-    | idm_username                                   | username                  | password | registration_time   |
-    +------------------------------------------------+---------------------------+----------+---------------------+
-    | francisco.romerobueno@telefonica.com           | francisco.romerobueno     | 12345    | 2015-06-26 12:14:21 |
-    ...
-    +------------------------------------------------+---------------------------+----------+---------------------+
+    +----------------------------------+--------------------------------------+------------+-----------+---------+---------------------+---------------------+-----------------+-------------------+
+    | id                               | email                                | hdfs_quota | hdfs_used | fs_used | registration_time   | last_access_time    | num_ssh_conn_ok | num_ssh_conn_fail |
+    +----------------------------------+--------------------------------------+------------+-----------+---------+---------------------+---------------------+-----------------+-------------------+
+    | e170190b41724b298862fdc89d32f8e7 | francisco.romerobueno@telefonica.com | 5368709120 |         0 |       0 | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |               0 |                 0 |
+    +----------------------------------+--------------------------------------+------------+-----------+---------+---------------------+---------------------+-----------------+-------------------+
+
     368 rows in set (0.00 sec)
 
 [Top](#top)
