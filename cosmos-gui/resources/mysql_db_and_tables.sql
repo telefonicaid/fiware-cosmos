@@ -2,8 +2,9 @@ CREATE DATABASE IF NOT EXISTS cosmos;
 USE cosmos;
 
 CREATE TABLE cosmos_user (
-	idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE,
-	username TEXT NOT NULL, password TEXT NOT NULL,
+	id VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE,
+	email TEXT NOT NULL,
+	password TEXT NOT NULL,
 	hdfs_quota BIGINT NOT NULL,
 	hdfs_used BIGINT NOT NULL,
 	fs_used BIGINT NOT NULL,

@@ -106,11 +106,14 @@ app.get('/', function (req, res) {
                 res.status(boomError.output.statusCode).send(boomError.output.payload.message);
             } else {
                 // Get the user's IdM email (username)
-                var idm_username = JSON.parse(response).email;
-                req.session.idm_username = idm_username;
+                var jsonResponse = JSON.parse(response);
+                var user_id = jsonResponse.id;
+                var user_email = jsonResponse.email;
+                req.session.user_email = user_email;
+                req.session.user_id = user_id;
 
-                // Check if the user, given its IdM username, has a Cosmos account
-                mysqlDriver.getUser(idm_username, function(error, result) {
+                // Check if the user, given its IdM id, has a Cosmos account
+                mysqlDriver.getUser(user_id, function(error, result) {
                     if (error) {
                         var boomError = boom.badData('There was some error when getting user information from the ' + 'database', error);
                         logger.error('There was some error when getting user information from the ' + 'database', error);
@@ -156,61 +159,58 @@ app.get('/auth', function(req, res) {
 });
 
 app.post('/new_account', function(req, res) {
-    var idm_username = req.session.idm_username;
-
-    appUtils.buildUsername(idm_username.split('@')[0], 0, function(username) {
-        var password1 = req.body.password1;
-        var password2 = req.body.password2;
-
-        if ((password1 === password2) && (username != null)) {
-            mysqlDriver.addUser(idm_username, username, password1, hdfsQuota, function(error, result) {
-                if (error) {
-                    var boomError = boom.badData('There was some error when adding information in the database for user '+ username, error);
-                    logger.error('There was some error when adding information in the database for user '+ username);
-                    res.status(boomError.output.statusCode).send(boomError.output.payload.message);
-                } else {
-                    logger.info('Successful information added to the database for user ' + username);
-
-                    if (scEndpoint === ccEndpoint) {
-                        // Just one provision step instead of two
-                        appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
-                    } else {
-                        // Two different provision steps
-                        appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
-                        appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, username, password1);
-                    } // if else
-
-                    res.redirect('/');
-                } // if else
-            });
-        } else {
-            res.redirect('/');
-        } // if else
-    });
-});
-
-app.post('/new_password', function(req, res) {
-    var idm_username = req.session.idm_username;
-    var username = req.session.username;
+    var user_id = req.session.user_id;
+    var user_email = req.session.user_email;
     var password1 = req.body.password1;
     var password2 = req.body.password2;
 
     if (password1 === password2) {
-        mysqlDriver.addPassword(idm_username, password1, function(error, result) {
+        mysqlDriver.addUser(user_id, user_email, password1, hdfsQuota, function(error, result) {
             if (error) {
-                var boomError = boom.badData('There was an error while setting up the password for user ' + username, error);
-                logger.error('There was an error while setting up the password for user ' + username, error);
+                var boomError = boom.badData('There was some error when adding information in the database for user '+ user_id, error);
+                logger.error('There was some error when adding information in the database for user '+ user_id);
                 res.status(boomError.output.statusCode).send(boomError.output.payload.message);
             } else {
-                logger.info('Successful information added to the database for user ' + username);
+                logger.info('Successful information added to the database for user ' + user_id);
 
                 if (scEndpoint === ccEndpoint) {
                     // Just one provision step instead of two
-                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, username, password1);
+                    appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, user_id, password1);
                 } else {
                     // Two different provision steps
-                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, username, password1);
-                    appUtils.provisionPassword(res, ccPrivKey, ccUser, ccEndpoint, username, password1);
+                    appUtils.provisionCluster(res, scPrivKey, scUser, scEndpoint, hdfsSuperuser, hdfsQuota, user_id, password1);
+                    appUtils.provisionCluster(res, ccPrivKey, ccUser, ccEndpoint, hdfsSuperuser, hdfsQuota, user_id, password1);
+                } // if else
+
+                res.redirect('/');
+            } // if else
+        });
+    } else {
+        res.redirect('/');
+    } // if else
+});
+
+app.post('/new_password', function(req, res) {
+    var user_id = req.session.user_id;
+    var password1 = req.body.password1;
+    var password2 = req.body.password2;
+
+    if (password1 === password2) {
+        mysqlDriver.addPassword(user_id, password1, function(error, result) {
+            if (error) {
+                var boomError = boom.badData('There was an error while setting up the password for user ' + user_id, error);
+                logger.error('There was an error while setting up the password for user ' + user_id, error);
+                res.status(boomError.output.statusCode).send(boomError.output.payload.message);
+            } else {
+                logger.info('Successful information added to the database for user ' + user_id);
+
+                if (scEndpoint === ccEndpoint) {
+                    // Just one provision step instead of two
+                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, user_id, password1);
+                } else {
+                    // Two different provision steps
+                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, user_id, password1);
+                    appUtils.provisionPassword(res, ccPrivKey, ccUser, ccEndpoint, user_id, password1);
                 } // if else
 
                 res.redirect('/');
@@ -226,27 +226,26 @@ app.get('/change_password', function(req, res) {
 });
 
 app.post('/change_password', function(req, res) {
-    var idm_username = req.session.idm_username;
-    var username = req.session.username;
+    var user_id = req.session.user_id;
     var password1 = req.body.password1;
     var password2 = req.body.password2;
 
     if (password1 === password2) {
-        mysqlDriver.addPassword(idm_username, password1, function(error, result) {
+        mysqlDriver.addPassword(user_id, password1, function(error, result) {
             if (error) {
-                var boomError = boom.badData('There was an error while setting up the password for user ' + username, error);
-                logger.error('There was an error while setting up the password for user ' + username, error);
+                var boomError = boom.badData('There was an error while setting up the password for user ' + user_id, error);
+                logger.error('There was an error while setting up the password for user ' + user_id, error);
                 res.status(boomError.output.statusCode).send(boomError.output.payload.message);
             } else {
-                logger.info('Successful information added to the database for user ' + username);
+                logger.info('Successful information added to the database for user ' + user_id);
 
                 if (scEndpoint === ccEndpoint) {
                     // Just one provision step instead of two
-                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, username, password1);
+                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, user_id, password1);
                 } else {
                     // Two different provision steps
-                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, username, password1);
-                    appUtils.provisionPassword(res, ccPrivKey, ccUser, ccEndpoint, username, password1);
+                    appUtils.provisionPassword(res, scPrivKey, scUser, scEndpoint, user_id, password1);
+                    appUtils.provisionPassword(res, ccPrivKey, ccUser, ccEndpoint, user_id, password1);
                 } // if else
 
                 res.redirect('/profile');
@@ -262,12 +261,12 @@ app.get('/dashboard', function(req, res) {
 });
 
 app.get('/profile', function(req, res) {
-    var idm_username = req.session.idm_username;
+    var user_id = req.session.user_id;
 
-    mysqlDriver.getUser(idm_username, function(error, result) {
+    mysqlDriver.getUser(user_id, function(error, result) {
         if (error) {
-            var boomError = boom.badData('There was an error while retrieving profile for user ' + idm_username, error);
-            logger.error('There was an error while retrieving profile for user ' + idm_username, error);
+            var boomError = boom.badData('There was an error while retrieving profile for user ' + user_id, error);
+            logger.error('There was an error while retrieving profile for user ' + user_id, error);
             res.status(boomError.output.statusCode).send(boomError.output.payload.message);
         } else {
             res.render('profile', { "results": result });
