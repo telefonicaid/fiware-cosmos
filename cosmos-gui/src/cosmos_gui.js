@@ -153,11 +153,11 @@ app.get('/auth', function(req, res) {
     });
 });
 
-app.post('/new_account', function(req, res) {
+app.get('/new_account', function(req, res) {
     var user_id = req.session.user_id;
     var user_email = req.session.user_email;
 
-    mysqlDriver.addUser(user_id, user_email, password1, hdfsQuota, function(error, result) {
+    mysqlDriver.addUser(user_id, user_email, hdfsQuota, function(error, result) {
         if (error) {
             var boomError = boom.badData('There was some error when adding information in the database for user '+ user_id, error);
             logger.error('There was some error when adding information in the database for user '+ user_id);
