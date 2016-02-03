@@ -126,9 +126,8 @@ Alternatively, you can copy&paste the SQL sentences and execute them:
     mysql> CREATE DATABASE IF NOT EXISTS cosmos;
     mysql> USE cosmos;
     mysql> CREATE TABLE cosmos_user (
-        -> idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE,
-        -> username TEXT NOT NULL,
-        -> password TEXT NOT NULL,
+        -> id VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE,
+        -> email TEXT NOT NULL,
         -> hdfs_quota BIGINT NOT NULL,
         -> hdfs_used BIGINT NOT NULL,
         -> fs_used BIGINT NOT NULL,
@@ -219,30 +218,10 @@ The tests are running by invoking the `make` command:
     $ make
     ***** STARTING TESTS *****
 
-      ․ [appUtils.buildUsername] build a username from a valid base string should return frb1 when frb is used as base string: 1ms
-        [appUtils.buildUsername] build an invalid username from an invalid base string should return null when fiware is used as base string: error: The base username "fiware" is not allowed
-      ․ [appUtils.buildUsername] build an invalid username from an invalid base string should return null when fiware is used as base string: 3ms
-    [appUtils.provisionCluster] provision a cluster should redirect to /after when being called from /before: info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo useradd frb' | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 12345 | sudo passwd frb --stdin | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop fs -mkdir /user/frb' | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop fs -chown -R frb:frb /user/frb' | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop fs -chmod -R 740 /user/frb' | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop dfsadmin -setSpaceQuota 5g /user/frb' | sudo bash"'
-      ․ [appUtils.provisionCluster] provision a cluster should redirect to /after when being called from /before: 2ms
+      ․ [mysqlDriver.addUser] add a new user should return null error and an empty result set: 5ms
+      ․ [mysqlDriver.getUser] get a user by his/her id should return null error and a result set containing frb: 1ms
 
-      3 passing (30ms)
-
-
-        [mysqlDriver.connect] create a MySQL connection should return null error: info: Connected to http://:3306/cosmos
-      ․ [mysqlDriver.connect] create a MySQL connection should return null error: 3ms
-        [mysqlDriver.addUser] add a new user should return null error and an empty result set: info: Successful insert: 'INSERT INTO cosmos_user (idm_username, username, password, hdfs_quota) VALUES (frb@tid.es, frb1, 12345, 5)'
-      ․ [mysqlDriver.addUser] add a new user should return null error and an empty result set: 1ms
-      ․ [mysqlDriver.addPassword] add a new password should return null error and an empty result set: 0ms
-      ․ [mysqlDriver.getUser] get a user by the idm user should return null error and a result set containing frb1: 0ms
-      ․ [mysqlDriver.getUserByCosmosUser] get a user by the cosmos user should return null error and a result set containing frb1: 0ms
-      ․ [mysqlDriver.close] close a connection should finish: 0ms
-
-      6 passing (23ms)
+      2 passing (15ms)
 
     ****** TESTS ENDED *******
 
@@ -294,7 +273,7 @@ The GUI implemented by cosmos-gui is run as (assuming your current directory is 
 This command invokes the start script within `package.josn`:
 
     "scripts": {
-        "start": "sudo node ./src/app.js"
+        "start": "sudo node ./src/cosmos_gui.js"
     }
 
 Please observe the usage of `sudo`. This is because the GUI must be able to execute certain priviledged Unix and Hadoop commands when setting up Cosmos accounts. **Never run cosmos-gui (nor any other service) as the `root` user.**
@@ -515,6 +494,7 @@ There are several channels suited for reporting issues and asking for doubts in 
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [fermin.galanmarquez@telefonica.com](mailto:fermin.galanmarquez@telefonica.com) **[Contributor]**
+    * [pablo.coellovillalba@telefonica.com](mailto:pablo.coellovillalba@telefonica.com) **[Contributor]**
     * [german.torodelvalle@telefonica.com](german.torodelvalle@telefonica.com) **[Contributor]**
 
 **NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
