@@ -5,6 +5,7 @@
     * [Installing the GUI](#gui)
     * [Installing the database](#database)
         * [Upgrading from 0.1.0 to 0.2.0](#upgrade010to020)
+        * [Upgrading from 0.2.0 to 0.3.0](#upgrade020to030)
     * [Unit tests](#unittests)
 * [Configuration](#configuration)
 * [Running](#running)
@@ -143,9 +144,9 @@ Alternatively, you can copy&paste the SQL sentences and execute them:
 
 You are visiting this section since you already installed Cosmos GUI 0.1.0 and want to upgrade to 0.2.0. If you never installed the GUI before, please go to the <i>[Installing the database](#database)</i> section.
 
-Cosmos GUI 0.2.0 adds some columns to the `cosmos_user` table, and many others are modified. In order to do the upgrade, please execute the `resource/mysql_upgrade_0.1.0-0.2.0.sql` file:
+Cosmos GUI 0.2.0 adds some columns to the `cosmos_user` table, and many others are modified. In order to do the upgrade, please execute the `resources/mysql_upgrade_0.1.0-0.2.0.sql` file:
 
-    mysql> SOURCE resource/mysql_upgrade_0.1.0-0.2.0.sql
+    mysql> SOURCE resources/mysql_upgrade_0.1.0-0.2.0.sql
     
 Or type the sentences within that file into a mysql shell:
 
@@ -158,6 +159,28 @@ Or type the sentences within that file into a mysql shell:
     mysql> ALTER TABLE cosmos_user ADD COLUMN num_ssh_conn_fail BIGINT NOT NULL;
     mysql> ALTER TABLE cosmos_user MODIFY hdfs_quota BIGINT NOT NULL;
     mysql> UPDATE cosmos_user SET hdfs_quota=1073741824*hdfs_quota;
+
+[Top](#top)
+
+####<a name="upgrade020to030"></a>Upgrading from 0.2.0 to 0.3.0
+**NOTE**: It is highly recommended you backup your `cosmos` database before performing any upgrade operation.
+
+You are visiting this section since you already installed Cosmos GUI 0.2.0 and want to upgrade to 0.3.0. If you never installed the GUI before, please go to the <i>[Installing the database](#database)</i> section.
+
+Please observe moving from 0.2.0 to 0.3.0 implies a hard change of behaviour regarding the Cosmos user provision and the Cosmos usage itself:
+
+* On the one hand, Cosmos passwords are not necessary anymore, thus, `ssh` accesses to the clusters are not allowed anymore.
+* On the other hand, the Cosmos users are not based on the Identity Manager (IdM) registered email, but the ID of the user at the IdM.
+
+Both changes have direct implications on the database, where the `idm_username` and `username` are replaced by `email` and `id`, respectively. In order to do the upgrade, please execute the `resources/mysql_upgrade_0.2.0-0.3.0.sql` file:
+
+    mysql> SOURCE resources/mysql_upgrade_0.2.0-0.3.0.sql
+    
+Or type the sentences within that file into a mysql shell:
+
+    mysql> USE cosmos;
+    mysql> ALTER TABLE cosmos_user RENAME idm_username TO email;
+    mysql> ALTER TABLE cosmos_user RENAME username TO id;
 
 [Top](#top)
 
