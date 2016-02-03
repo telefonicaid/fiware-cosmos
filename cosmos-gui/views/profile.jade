@@ -40,10 +40,6 @@ block content
                 td
                     b &nbsp;#{result.email}
             tr
-                td Password:
-                td
-                    b &nbsp;#{result.password}
-            tr
                 td HDFS quota:
                 td
                     b &nbsp;#{result.hdfs_quota}
@@ -68,9 +64,6 @@ block sidebar
         ul
             li
                 a(href="dashboard") - Dashboard
-            li
-                a(href="change_password") - Change password
-
 
         form(name="logout", action="logout", method="get")
             div.actions

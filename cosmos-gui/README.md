@@ -5,16 +5,15 @@
     * [Installing the GUI](#gui)
     * [Installing the database](#database)
         * [Upgrading from 0.1.0 to 0.2.0](#upgrade010to020)
+        * [Upgrading from 0.2.0 to 0.3.0](#upgrade020to030)
     * [Unit tests](#unittests)
 * [Configuration](#configuration)
 * [Running](#running)
 * [Usage](#usage)
     * [Login](#login)
     * [Cosmos account provision](#provision)
-        * [Migration from an old version of Cosmos](#migration)
     * [Dashboard](#dashboard)
     * [Profile](#profile)
-        * [Change password](#changepassword)
 * [Administration](#administration)
     * [Logging traces](#loggingtraces)
     * [Database](#database)
@@ -127,9 +126,8 @@ Alternatively, you can copy&paste the SQL sentences and execute them:
     mysql> CREATE DATABASE IF NOT EXISTS cosmos;
     mysql> USE cosmos;
     mysql> CREATE TABLE cosmos_user (
-        -> idm_username VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE,
-        -> username TEXT NOT NULL,
-        -> password TEXT NOT NULL,
+        -> id VARCHAR(128) NOT NULL PRIMARY KEY UNIQUE,
+        -> email TEXT NOT NULL,
         -> hdfs_quota BIGINT NOT NULL,
         -> hdfs_used BIGINT NOT NULL,
         -> fs_used BIGINT NOT NULL,
@@ -145,9 +143,9 @@ Alternatively, you can copy&paste the SQL sentences and execute them:
 
 You are visiting this section since you already installed Cosmos GUI 0.1.0 and want to upgrade to 0.2.0. If you never installed the GUI before, please go to the <i>[Installing the database](#database)</i> section.
 
-Cosmos GUI 0.2.0 adds some columns to the `cosmos_user` table, and many others are modified. In order to do the upgrade, please execute the `resource/mysql_upgrade_0.1.0-0.2.0.sql` file:
+Cosmos GUI 0.2.0 adds some columns to the `cosmos_user` table, and many others are modified. In order to do the upgrade, please execute the `resources/mysql_upgrade_0.1.0-0.2.0.sql` file:
 
-    mysql> SOURCE resource/mysql_upgrade_0.1.0-0.2.0.sql
+    mysql> SOURCE resources/mysql_upgrade_0.1.0-0.2.0.sql
     
 Or type the sentences within that file into a mysql shell:
 
@@ -160,6 +158,28 @@ Or type the sentences within that file into a mysql shell:
     mysql> ALTER TABLE cosmos_user ADD COLUMN num_ssh_conn_fail BIGINT NOT NULL;
     mysql> ALTER TABLE cosmos_user MODIFY hdfs_quota BIGINT NOT NULL;
     mysql> UPDATE cosmos_user SET hdfs_quota=1073741824*hdfs_quota;
+
+[Top](#top)
+
+####<a name="upgrade020to030"></a>Upgrading from 0.2.0 to 0.3.0
+**NOTE**: It is highly recommended you backup your `cosmos` database before performing any upgrade operation.
+
+You are visiting this section since you already installed Cosmos GUI 0.2.0 and want to upgrade to 0.3.0. If you never installed the GUI before, please go to the <i>[Installing the database](#database)</i> section.
+
+Please observe moving from 0.2.0 to 0.3.0 implies a hard change of behaviour regarding the Cosmos user provision and the Cosmos usage itself:
+
+* On the one hand, Cosmos passwords are not necessary anymore, thus, `ssh` accesses to the clusters are not allowed anymore.
+* On the other hand, the Cosmos users are not based on the Identity Manager (IdM) registered email, but the ID of the user at the IdM.
+
+Both changes have direct implications on the database, where the `idm_username` and `username` are replaced by `email` and `id`, respectively. In order to do the upgrade, please execute the `resources/mysql_upgrade_0.2.0-0.3.0.sql` file:
+
+    mysql> SOURCE resources/mysql_upgrade_0.2.0-0.3.0.sql
+    
+Or type the sentences within that file into a mysql shell:
+
+    mysql> USE cosmos;
+    mysql> ALTER TABLE cosmos_user RENAME idm_username TO email;
+    mysql> ALTER TABLE cosmos_user RENAME username TO id;
 
 [Top](#top)
 
@@ -198,30 +218,10 @@ The tests are running by invoking the `make` command:
     $ make
     ***** STARTING TESTS *****
 
-      ․ [appUtils.buildUsername] build a username from a valid base string should return frb1 when frb is used as base string: 1ms
-        [appUtils.buildUsername] build an invalid username from an invalid base string should return null when fiware is used as base string: error: The base username "fiware" is not allowed
-      ․ [appUtils.buildUsername] build an invalid username from an invalid base string should return null when fiware is used as base string: 3ms
-    [appUtils.provisionCluster] provision a cluster should redirect to /after when being called from /before: info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo useradd frb' | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 12345 | sudo passwd frb --stdin | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop fs -mkdir /user/frb' | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop fs -chown -R frb:frb /user/frb' | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop fs -chmod -R 740 /user/frb' | sudo bash"'
-    info: Successful command executed: 'ssh -tt -i ./priv_key admin@fake.cosmos.lab.fiware.org "echo 'sudo -u hdfs hadoop dfsadmin -setSpaceQuota 5g /user/frb' | sudo bash"'
-      ․ [appUtils.provisionCluster] provision a cluster should redirect to /after when being called from /before: 2ms
+      ․ [mysqlDriver.addUser] add a new user should return null error and an empty result set: 5ms
+      ․ [mysqlDriver.getUser] get a user by his/her id should return null error and a result set containing frb: 1ms
 
-      3 passing (30ms)
-
-
-        [mysqlDriver.connect] create a MySQL connection should return null error: info: Connected to http://:3306/cosmos
-      ․ [mysqlDriver.connect] create a MySQL connection should return null error: 3ms
-        [mysqlDriver.addUser] add a new user should return null error and an empty result set: info: Successful insert: 'INSERT INTO cosmos_user (idm_username, username, password, hdfs_quota) VALUES (frb@tid.es, frb1, 12345, 5)'
-      ․ [mysqlDriver.addUser] add a new user should return null error and an empty result set: 1ms
-      ․ [mysqlDriver.addPassword] add a new password should return null error and an empty result set: 0ms
-      ․ [mysqlDriver.getUser] get a user by the idm user should return null error and a result set containing frb1: 0ms
-      ․ [mysqlDriver.getUserByCosmosUser] get a user by the cosmos user should return null error and a result set containing frb1: 0ms
-      ․ [mysqlDriver.close] close a connection should finish: 0ms
-
-      6 passing (23ms)
+      2 passing (15ms)
 
     ****** TESTS ENDED *******
 
@@ -273,7 +273,7 @@ The GUI implemented by cosmos-gui is run as (assuming your current directory is 
 This command invokes the start script within `package.josn`:
 
     "scripts": {
-        "start": "sudo node ./src/app.js"
+        "start": "sudo node ./src/cosmos_gui.js"
     }
 
 Please observe the usage of `sudo`. This is because the GUI must be able to execute certain priviledged Unix and Hadoop commands when setting up Cosmos accounts. **Never run cosmos-gui (nor any other service) as the `root` user.**
@@ -299,25 +299,14 @@ The login procedure delegates in FIWARE Identity Manager. This means cosmos-gui 
 [Top](#top)
 
 ###<a name="provision"></a>Cosmos account provision
-After authentication (using your email and password registered at the Identity Manager), there are three possibilities:
+After authentication (using your email and password registered at the Identity Manager), there are two possibilities:
 
 * You are an already registered user in Cosmos. In this case, you are directly redirected to the dashboard of the GUI.
 * You are not a user in Cosmos. In this case, the GUI will provision (one and only once) an account in the managed Hadoop clusters (both storage and computing); this comprises:
-    * The creation of a Unix user based on your Identity Manager registered email address. This user, together with the password the page asks for, will allow you to ssh into the clusters (both storage and computing).
-    * The creation of a HDFS user equals to the unix one. This user will allow you to manage your own persistent private HDFS userspace within the storage cluster (with limited quota), and the temporal private HDFS userspace within the computing cluster (with limited quota).
+    * The creation of a Unix user based on your Identity Manager registered ID.
+    * The creation of a HDFS user equals to the Unix one. This user will allow you to manage your own persistent private HDFS userspace within the storage cluster (with limited quota), and the temporal private HDFS userspace within the computing cluster (with limited quota).
 
 Please observe when the storage and computing clusters are the same (it is not the recommended architecture, but it is feasible from a technical point of view) only one provisioning step is done, as it is obvious.
-
-![](doc/images/cosmos_gui__new_account.png)
-    
-* You are a user in an old Cosmos deployment. Please, see the next section for further details if your deployment will involve a migration from an old version of Cosmos to the new one. If not, you can skip it.
-
-![](doc/images/cosmos_gui__new_password.png)
-
-[Top](#top)
-
-####<a name="migration"></a>Migration from an old version of Cosmos
-Old Cosmos deployments did not stored in a database the Identity Manager email nor the ssh password, but only the Unix/HDFS username. This is a problem from the migration point of view. This special page of the GUI will provision (one and only once) such an email and password, maintaining the Unix user, the HDFS userspace and the data stored in the old cluster (which must be migrated to the new cluster).
 
 [Top](#top)
 
@@ -341,13 +330,6 @@ This is useful in order to know the credentials the user has in the Cosmos platf
 
 [Top](#top)
 
-####<a name="changepassword"></a>Change password
-This option within the profile page will allow to change the Cosmos account password by simply typing (and retyping) a new one.
-
-![](doc/images/cosmos_gui__change_password.png)
-
-[Top](#top)
-
 ##<a name="administration"></a>Administration
 Two are the sources of data, the logs and the database, useful for an administrator of cosmos-gui.
 
@@ -367,10 +349,8 @@ Within the log it is expected to find many `info` messages, and a few of `warn` 
 * ***There was some error when connecting to MySQL database. The server will not be run***: This message may appear when starting the GUI. Most probably the MySQL endpoint is not correct, the MySQL user is not allowed to remotely connect, of there is some network error like a port filtering.
 * ***There was some error when getting user information from the database***: This message may appear when a user gets the main page and his/her session has not yet expired; then, his/her information is retrieved from the database. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful. 
 * ***There was some error when getting user information from the IdM***: This message may appear when a user signs in using his/her Identity Manager (IdM) credentials. Most probably the IdM endpoint is not correct, the client id and secret related to cosmos-gui are not correct or the callback URL has not been propertly set.
-* ***There was an error while setting up the password for user \<unix_user\>***: This message may appear when a user from the old Cosmos deployment has accessed the GUI for the first time. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful.
 * ***There was some error when adding information in the database for user \<cosmos_user>***: This message may appear when a new fresh user has accessed the GUI for the first time. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful.
 * ***There was an error while adding the Unix user \<unix_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
-* ***There was an error while setting the password for user \<unix_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
 * ***There was an error while creating the HDFS folder for user \<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
 * ***There was an error while changing the ownership of /user/\<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the superuser configured for HDFS is not a superuser, or there is some network error with the ssh access.
 * ***There was an error while changing the permissions to /user/\<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the superuser configured for HDFS is not a superuser, or there is some network error with the ssh access.
@@ -414,12 +394,12 @@ Information regarding registered users in Cosmos can be found in a MySQL table n
     2 rows in set (0.00 sec)
 
     mysql> select * from cosmos_user;
-    +------------------------------------------------+---------------------------+----------+---------------------+
-    | idm_username                                   | username                  | password | registration_time   |
-    +------------------------------------------------+---------------------------+----------+---------------------+
-    | francisco.romerobueno@telefonica.com           | francisco.romerobueno     | 12345    | 2015-06-26 12:14:21 |
-    ...
-    +------------------------------------------------+---------------------------+----------+---------------------+
+    +----------------------------------+--------------------------------------+------------+-----------+---------+---------------------+---------------------+-----------------+-------------------+
+    | id                               | email                                | hdfs_quota | hdfs_used | fs_used | registration_time   | last_access_time    | num_ssh_conn_ok | num_ssh_conn_fail |
+    +----------------------------------+--------------------------------------+------------+-----------+---------+---------------------+---------------------+-----------------+-------------------+
+    | e170190b41724b298862fdc89d32f8e7 | francisco.romerobueno@telefonica.com | 5368709120 |         0 |       0 | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |               0 |                 0 |
+    +----------------------------------+--------------------------------------+------------+-----------+---------+---------------------+---------------------+-----------------+-------------------+
+
     368 rows in set (0.00 sec)
 
 [Top](#top)
@@ -514,6 +494,7 @@ There are several channels suited for reporting issues and asking for doubts in 
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [fermin.galanmarquez@telefonica.com](mailto:fermin.galanmarquez@telefonica.com) **[Contributor]**
+    * [pablo.coellovillalba@telefonica.com](mailto:pablo.coellovillalba@telefonica.com) **[Contributor]**
     * [german.torodelvalle@telefonica.com](german.torodelvalle@telefonica.com) **[Contributor]**
 
 **NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
