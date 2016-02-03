@@ -4,7 +4,6 @@ MOCHA_OPTIONS = --ui tdd
 test:
 	@clear
 	@echo "***** STARTING TESTS *****"
-	@./node_modules/mocha/bin/mocha --reporter $(REPORTER) $(MOCHA_OPTIONS) test/node/app_utils_test.js
 	@./node_modules/mocha/bin/mocha --reporter $(REPORTER) $(MOCHA_OPTIONS) test/node/mysql_driver_test.js
 	@./node_modules/mocha/bin/mocha --reporter $(REPORTER) $(MOCHA_OPTIONS) test/node/logger_test.js
 	@echo "****** TESTS ENDED *******"

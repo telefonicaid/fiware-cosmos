@@ -32,17 +32,13 @@ block content
     table(border=0)
         - each result in results
             tr
-                td IdM username:
+                td IdM ID / Cosmos username:
                 td
-                    b &nbsp;#{result.idm_username}
+                    b &nbsp;#{result.id}
             tr
-                td Cosmos username:
+                td IdM email:
                 td
-                    b &nbsp;#{result.username}
-            tr
-                td Password:
-                td
-                    b &nbsp;#{result.password}
+                    b &nbsp;#{result.email}
             tr
                 td HDFS quota:
                 td
@@ -68,9 +64,6 @@ block sidebar
         ul
             li
                 a(href="dashboard") - Dashboard
-            li
-                a(href="change_password") - Change password
-
 
         form(name="logout", action="logout", method="get")
             div.actions
