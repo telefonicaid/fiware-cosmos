@@ -49,17 +49,17 @@ winston.add(winston.transports.DailyRotateFile, {
 });
 
 function toLoggingLevel(level) {
-    if (level == 'OFF') {
+    if (level === 'OFF') {
         return LoggingLevel.OFF;
-    } else if (level == 'ERROR') {
+    } else if (level === 'ERROR') {
         return LoggingLevel.ERROR;
-    } else if (level == 'WARN') {
+    } else if (level === 'WARN') {
         return LoggingLevel.WARN;
-    } else if (level == 'INFO') {
+    } else if (level === 'INFO') {
         return LoggingLevel.INFO;
-    } else if (level == 'DEBUG') {
+    } else if (level === 'DEBUG') {
         return LoggingLevel.DEBUG;
-    } else if (level == 'ALL') {
+    } else if (level === 'ALL') {
         return LoggingLevel.ALL;
     } else {
         return LoggingLevel.OFF;
