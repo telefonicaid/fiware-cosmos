@@ -60,6 +60,8 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
             } else {
                 idmEndpoint = conf.get("com.telefonica.iot.idm.endpoint", "https://account.lab.fiware.org");
             } // if else
+            
+            LOGGER.info("Identity Manager endpoint: " + idmEndpoint);
         } // try catch finally
         
         // create a factory of Http clients
