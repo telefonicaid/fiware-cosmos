@@ -88,7 +88,7 @@ cosmos-hive-auth-provider-0.0.0-SNAPSHOT-jar-with-dependencies.jar
 The unit tests are run by invoking this parameterized `mvn test` command:
 
 ```
-$ mvn test -DmatchingToken=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+$ mvn test -Duser=frb -Dtoken=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 [INFO] Scanning for projects...
 [INFO]                                                                         
 [INFO] ------------------------------------------------------------------------

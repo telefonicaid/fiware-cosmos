@@ -29,12 +29,13 @@ import org.junit.Test;
  */
 public class OAuth2AuthenticationProviderImplTest {
     
-    private final String matchingUser = "frb";
+    private static final String MATCHING_USER;
     private final String notMatchingUser = "other";
     private static final String MATCHING_TOKEN;
     private final String notMatchingToken = "000000000000000000000000000000";
     
     static {
+        MATCHING_USER = System.getProperty("user");
         MATCHING_TOKEN = System.getProperty("token");
     } // static
     
@@ -47,7 +48,7 @@ public class OAuth2AuthenticationProviderImplTest {
         
         try {
             OAuth2AuthenticationProviderImpl oapi = new OAuth2AuthenticationProviderImpl();
-            oapi.Authenticate(matchingUser, MATCHING_TOKEN);
+            oapi.Authenticate(MATCHING_USER, MATCHING_TOKEN);
         } catch (AuthenticationException e) {
             fail(e.getMessage());
         } finally {
@@ -82,7 +83,7 @@ public class OAuth2AuthenticationProviderImplTest {
         
         try {
             OAuth2AuthenticationProviderImpl oapi = new OAuth2AuthenticationProviderImpl();
-            oapi.Authenticate(matchingUser, notMatchingToken);
+            oapi.Authenticate(MATCHING_USER, notMatchingToken);
             assertTrue(false);
         } catch (AuthenticationException e) {
             assertTrue(true);
