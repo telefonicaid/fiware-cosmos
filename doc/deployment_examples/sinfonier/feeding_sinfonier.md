@@ -3,13 +3,13 @@ Content:
 
 * [Introduction](#section1)
 * [Architecture](#section2)
-    * [Orion contextBroker](#section2.1)
-    * [Cygnus](#section2.2)
-    * [Kafka](#section2.3)
-        * [Zookeeper](#section2.3.1)
-        * [Brokers](#section2.3.2)
-    * [Sinfonier](#section2.4)
-* [Reporting issues and contact information](#section3)
+* [Orion contextBroker](#section3)
+* [Cygnus](#section4)
+* [Kafka](#section5)
+    * [Zookeeper](#section5.1)
+    * [Brokers](#section5.2)
+* [Sinfonier](#section6)
+* [Reporting issues and contact information](#section7)
 
 ##<a name="section1"></a>Introduction
 To be done.
@@ -21,37 +21,37 @@ To be done.
 
 [Top](#top)
 
-###<a name="section2.1"></a>Orion contextBroker
+###<a name="section3"></a>Orion contextBroker
 To be done.
 
 [Top](#top)
 
-###<a name="section2.2"></a>Cygnus
+###<a name="section4"></a>Cygnus
 To be done.
 
 [Top](#top)
 
-###<a name="section2.3"></a>Kafka
+###<a name="section5"></a>Kafka
 To be done.
 
 [Top](#top)
 
-####<a name="section2.3.1"></a>Zookeeper
+####<a name="section5.1"></a>Zookeeper
 To be done.
 
 [Top](#top)
 
-####<a name="section2.3.2"></a>Brokers
+####<a name="section5.2"></a>Brokers
 To be done.
 
 [Top](#top)
 
-###<a name="section2.4"></a>Sinfonier
+###<a name="section6"></a>Sinfonier
 To be done.
 
 [Top](#top)
 
-##<a name="section3"></a> Reporting issues and contact information
+##<a name="section7"></a> Reporting issues and contact information
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cygnus` tag.
