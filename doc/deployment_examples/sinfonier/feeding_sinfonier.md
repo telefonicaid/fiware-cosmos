@@ -35,10 +35,10 @@ In next paragraphs all the needed configuration will be described in order to kn
 
 ##<a name="section3"></a>Orion contextBroker
 First of all [Orion](https://github.com/telefonicaid/fiware-orion/blob/develop/doc/manuals/admin/install.md) must be installed in the system. In addition, `Orion` needs `MongoDB` for storage so must be installed too. 
-`Orion` have context information that it's going to be translated through Cygnus to Kafka. Context information is stored in `Entities` with `Attributes`. 
+`Orion` have context information that it's going to be translated through `Cygnus` to `Kafka`. Context information is stored in `Entities` with `Attributes`. 
 This structure allow to subscribe to entities for wait the changes in them. Once subscribed all changes are sent to `Cygnus` through a specific port (selected in subscription curl).
 Same as subscribing, unsubscription is possible if don't need more changes or if a new subscription is required to another entity.
-All this procedures use 'curl'for transfering somo data to `Orion` in JSON format.
+All this procedures use `curl` for transfering somo data to `Orion` in `JSON` format.
 
 Let's write an example of use creating a new entity with attributes and a subscription to it. 
 Follow the general procedure below for create this entity and receive changes in its values.
@@ -46,10 +46,11 @@ Follow the general procedure below for create this entity and receive changes in
 * Entity: Book1
 * Attributes: Title, Pages and Price.
 
-1. Check if Orion is running properly, asking Orion for its version:
+1. Check if `Orion` is running properly, asking `Orion` for its version:
 ```
 curl -X GET http://localhost:1026/version 
 ```
+
 2. Create a subscription to the entity `Book1`
 ```
 (curl localhost:1026/v1/subscribeContext -s -S --header 'Content-type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
@@ -79,8 +80,9 @@ curl -X GET http://localhost:1026/version
 }
 EOF
 ```
+
 There are two JSON special parameters when a susbscription is sent:
-* `attributes`: Refers to the attributes that will be notified to Cygnus. If empty, all attributes will be notified to Cygnus. If not empty, only the attributes wrote here will be notified. In this case, if Orion receive a change for the attribute `price` in entity `Book1` all the attributes (`title`, `pages` and `price`) will be sent to Cygnys. 
+* `attributes`: Refers to the attributes that will be notified to `Cygnus`. If empty, all attributes will be notified to `Cygnus`. If not empty, only the attributes wrote here will be notified. In this case, if `Orion` receive a change for the attribute `price` in entity `Book1` all the attributes (`title`, `pages` and `price`) will be sent to `Cygnys`. 
 * `condValues`: List of attributes that `Book1` has. When a subscription is done to an entity their attributes must be sent to `Orion`
 
 3. Append some values in entity `Book1`.
@@ -118,7 +120,7 @@ EOF
 ```
 This action only store a value in the attributes, isn't a change for notify to `Cygnus`.
 
-After all, there a subscription to `Book1` that will notify all attributes to 'Cygnus' in the moment that a value changes (one, two or all attributes). If get a bad subscription or want to change the subscription to another entity or change the notified values, can easily unsubscribe. Only needs the subscription ID previously saved:
+After all, there a subscription to `Book1` that will notify all attributes to `Cygnus` in the moment that a value changes (one, two or all attributes). If get a bad subscription or want to change the subscription to another entity or change the notified values, can easily unsubscribe. Only needs the subscription ID previously saved:
 ```
 (curl localhost:1026/v1/unsubscribeContext -s -S --header 'Content-Type: application/json' \
     --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
@@ -129,7 +131,7 @@ EOF
 ```
 In addition, there are a way to know all subscriptions and obtain the ID: 
 ```
-curl -X GET http://0.0.0.0:1026/v2/subscriptions
+curl -X GET http://localhost:1026/v2/subscriptions
 
 ```
 
