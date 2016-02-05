@@ -21,7 +21,7 @@ Content:
 ##<a name="section1"></a>Introduction
 This document describes how `Sinfonier` can consume stored context information from [Orion](http://catalogue.fiware.org/enablers/publishsubscribe-context-broker-orion-context-broker).
 
-The purpose is consuming information with `Sinfonier`. `Orion` has context information that could be useful, but we need a way to connect both elements. The use of `Cygnus` and `Kafka`, for traslate and storage the information in a data structure, show the the connection between `Orion` and `Sinfonier`.
+The purpose is consuming information with `Sinfonier`. `Orion` has context information that could be useful, but we need a way to connect both elements. The use of `Cygnus` and `Kafka`, for traslate and storage the information in a data structure, show the connection between `Orion` and `Sinfonier`.
 
 [Top](#top)
 ##<a name="section2"></a>Architecture
@@ -38,9 +38,9 @@ In next paragraphs all the needed configuration will be described in order to kn
 ##<a name="section3"></a>Orion contextBroker
 First of all, [Orion](https://github.com/telefonicaid/fiware-orion/blob/develop/doc/manuals/admin/install.md) must be installed in the system. In addition, `Orion` needs `MongoDB` for storage, so must be installed too.
 `Orion` have context information that it's going to be translated through `Cygnus` to `Kafka`. Context information is stored in `Entities` with `Attributes`.
-This structure allow to subscribe to entities for wait the changes in them. Once subscribed all changes are sent to `Cygnus` through a specific port (selected in subscription curl).
+This structure allow to subscribe to entities for wait the changes in them. Once subscribed all changes are sent to `Cygnus` through a specific port (set in subscription curl).
 Same as subscribing, unsubscription is possible if you don't need more changes or if a new subscription is required to another entity.
-All this procedures use `curl` for transfering some data to `Orion` in `JSON` format.
+All these procedures use `curl` for transferring some data to `Orion` in `JSON` format.
 
 Let's write an example of use creating a new entity with attributes and a subscription to it.
 Follow the general procedure below for create this entity and receive changes in its values.
@@ -66,7 +66,7 @@ Follow the general procedure below for create this entity and receive changes in
       ],
       "attributes": [
       ],
-      "reference": "cygnus_destination",
+      "reference": "http://localhost:5050/notify",
       "duration": "P1M",
       "notifyConditions": [
           {
@@ -83,9 +83,10 @@ Follow the general procedure below for create this entity and receive changes in
   EOF
   ```
 
-  There are two JSON special parameters when a susbscription is sent:
+  There are three JSON special parameters when a susbscription is sent:
   * `attributes`: Refers to the attributes that will be notified to `Cygnus`. If empty, all attributes will be notified to `Cygnus`. If not, only the attributes wrote here will be notified. In this case, if `Orion` receive a change for the attribute `price` in entity `Book1` all the attributes (`title`, `pages` and `price`) will be sent to `Cygnys`.
   * `condValues`: List of attributes that `Book1` has. When a subscription is done to an entity their attributes must be sent to `Orion`
+  * `reference`: Destination of notifications. In this case we use `http://localhost:5050/notify` but you can configure it with your own destination. This parameter involve that our `Cygnus` must be configured as destination.
 
   Once sent, you will receive something like that:
   ```
@@ -96,12 +97,10 @@ Follow the general procedure below for create this entity and receive changes in
           "throttling": "PT5S"
       }
   }  
-
-
   ```
   The value `subscriptionId` is very important. It's highly recommended to save it in case of you need to unsubscribe to the entity in the future.
 
-  If you receive another answer from `Orion` check your curl: `JSON Parse Error` is a typical error. In this case you will receive this message:
+  If you receive another answer from `Orion` check your curl: `JSON Parse Error` is a typical error. In that case you will receive this message:
   ```
   {
       "subscribeError": {
@@ -112,7 +111,6 @@ Follow the general procedure below for create this entity and receive changes in
           }
       }
   }   
-
   ```
 
 3. Append some values in entity `Book1`.
@@ -229,9 +227,7 @@ Follow the general procedure below for create this entity and receive changes in
   In addition, there are a way to know all subscriptions and obtain the ID:
   ```
   curl -X GET http://localhost:1026/v2/subscriptions
-
   ```
-
 
 [Top](#top)
 
@@ -277,8 +273,8 @@ cygnusagent.sinks.kafka-sink.batch_size = 1
 cygnusagent.sinks.kafka-sink.batch_timeout = 10
 ```
 Some important details:
-* `cygnusagent.sinks.kafka-sink.broker_list` : Need the ip and port of your `Kafka` `Brokers`. See [next section](#section5) for more information.
-* `cygnusagent.sinks.kafka-sink.zookeeper_endpoint`: In this case, we are running `Zookeeper` in `localhost` with port 2181 (`Zookeeper` port). See [next section](#section5) for more information.
+* `cygnusagent.sinks.kafka-sink.broker_list` : Need the ip and port of your `Kafka` `Brokers`. See [next section](#section5.1) for more information about kafka.
+* `cygnusagent.sinks.kafka-sink.zookeeper_endpoint`: In this case, we are running `Zookeeper` in `localhost` with port 2181 (`Zookeeper` port). See [next section](#section5.2) for more information about zookeeper.
 * `cygnusagent.sinks.kafka-sink.data_model`: `Cygnus` parameter. Use dm-by-entity for a descriptive storage.
 
 Running properly all the structure (See [general procedure step-by-step](#section7) for do it properly) and updating some values in our `Entity` you can see how `Cygnus` persist the information.
@@ -376,15 +372,18 @@ nohup bin/kafka-server-start.sh config/server1.properties &
 [Top](#top)
 
 ##<a name="section6"></a>Sinfonier
-To be done.
+Finally we reach the last element of our architecture: The consumer of the stored data. `Sinfonier` works as consumer, asking `Kafka` for information translated from `Orion`.
+
+`Kafka` use producers for create new messages into the `topics` and a consumer for show them. We have changed the roles in this architecture, making `Cygnus` work as producer and `Sinfonier` as a consumer.
+
 [Top](#top)
 
 ##<a name="section7"></a>General procedure step-by-step
 The following steps will help you to run all the procedure properly. A specific order is required because the architecture need some services before others. Let's start:
   1. `Orion` context broker: First step in order to create the subscriptions and receive the entity changes, that will be redirected to `Cygnus`. `Mongo` must be running too.
   2. Kafka: `Zookeeper` and `Brokers`. Previous to `Cygnus`. And consequently:
-    1. [Zookeeper](#section5): Section 5.1.2.
-    2. [Brokers](#section5): Section 5.2.2.
+    1. [Zookeeper](#section5): Running zookeeper ection.
+    2. [Brokers](#section5): Running brokers section.
   3. Cygnus: Connect to `Zookeeper` in order to persist the information on `Kafka`.
   4. Sinfonier.
 
