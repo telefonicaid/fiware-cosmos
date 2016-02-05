@@ -381,12 +381,12 @@ To be done.
 
 ##<a name="section7"></a>General procedure step-by-step
 The following steps will help you to run all the procedure properly. A specific order is required because the architecture need some services before others. Let's start:
-1. `Orion` context broker: First step in order to create the subscriptions and receive the entity changes, that will be redirected to `Cygnus`. `Mongo` must be running too.
-2. Kafka: `Zookeeper` and `Brokers`. Previous to `Cygnus`. And consequently:
-  1. [Zookeeper](#section5): Section 5.1.2.
-  2. [Brokers](#section5): Section 5.2.2.
-3. Cygnus: Connect to `Zookeeper` in order to persist the information on `Kafka`.
-4. Sinfonier.
+  1. `Orion` context broker: First step in order to create the subscriptions and receive the entity changes, that will be redirected to `Cygnus`. `Mongo` must be running too.
+  2. Kafka: `Zookeeper` and `Brokers`. Previous to `Cygnus`. And consequently:
+    1. [Zookeeper](#section5): Section 5.1.2.
+    2. [Brokers](#section5): Section 5.2.2.
+  3. Cygnus: Connect to `Zookeeper` in order to persist the information on `Kafka`.
+  4. Sinfonier.
 
 [Top](#top)
 
