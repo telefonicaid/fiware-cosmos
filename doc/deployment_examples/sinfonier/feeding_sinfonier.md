@@ -9,11 +9,11 @@ Content:
     * [Running](#section4.2)
 * [Kafka](#section5)
     * [Zookeeper](#section5.1)
-	      * [Configuration](#section5.1.1)
-	      * [Running](#section5.1.2)
+	   * [Configuration](#section5.1.1)
+	   * [Running](#section5.1.2)
     * [Brokers](#section5.2)
-        * [Configuration](#section5.2.1)
-	      * [Running](#section5.2.2)
+      * [Configuration](#section5.2.1)
+      * [Running](#section5.2.2)
 * [Sinfonier](#section6)
 * [General procedure step-by-step](#section7)
 * [Reporting issues and contact information](#section8)
@@ -183,7 +183,7 @@ Follow the general procedure below for create this entity and receive changes in
   }   
   ```
 
-  When you have your subscription and some appended values it's time to update them. This updates are going to be sent to Cygnus. The way to update is similiar to `APPEND` but you need to write `UPDATE` in curl. Let's see:
+4.  When you have your subscription and some appended values it's time to update them. This updates are going to be sent to Cygnus. The way to update is similiar to `APPEND` but you need to write `UPDATE` in curl. Let's see:
   ```
   (curl localhost:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
   {
@@ -277,8 +277,8 @@ cygnusagent.sinks.kafka-sink.batch_size = 1
 cygnusagent.sinks.kafka-sink.batch_timeout = 10
 ```
 Some important details:
-* `cygnusagent.sinks.kafka-sink.broker_list` : Need the ip and port of your `Kafka` `Brokers`. See [next section](#section5.1.1) for more information.
-* `cygnusagent.sinks.kafka-sink.zookeeper_endpoint`: In this case, we are running `Zookeeper` in `localhost` with port 2181 (`Zookeeper` port). See [next section](#section5.2.1) for more information.
+* `cygnusagent.sinks.kafka-sink.broker_list` : Need the ip and port of your `Kafka` `Brokers`. See [next section](#section5) for more information.
+* `cygnusagent.sinks.kafka-sink.zookeeper_endpoint`: In this case, we are running `Zookeeper` in `localhost` with port 2181 (`Zookeeper` port). See [next section](#section5) for more information.
 * `cygnusagent.sinks.kafka-sink.data_model`: `Cygnus` parameter. Use dm-by-entity for a descriptive storage.
 
 Running properly all the structure (See [general procedure step-by-step](#section7) for do it properly) and updating some values in our `Entity` you can see how `Cygnus` persist the information.
@@ -381,12 +381,12 @@ To be done.
 
 ##<a name="section7"></a>General procedure step-by-step
 The following steps will help you to run all the procedure properly. A specific order is required because the architecture need some services before others. Let's start:
-1. Orion context broker: First step in order to create the subscriptions and receive the entity changes, that will be redirected to Cygnus. Mongo must be running too.
-2. Kafka: Zookeeper and brokers. Previous to Cygnus. And consequently:
-..1. [Zookeeper](#section5.1.2)
-..2. [Brokers](#section5.2.2)
-3. Cygnus: Connect to Zookeeper in order to persist the information on Kafka.
-4. Sinfonier: WAITING PROCEDURE.
+1. `Orion` context broker: First step in order to create the subscriptions and receive the entity changes, that will be redirected to `Cygnus`. `Mongo` must be running too.
+2. Kafka: `Zookeeper` and `Brokers`. Previous to `Cygnus`. And consequently:
+  1. [Zookeeper](#section5): Section 5.1.2.
+  2. [Brokers](#section5): Section 5.2.2.
+3. Cygnus: Connect to `Zookeeper` in order to persist the information on `Kafka`.
+4. Sinfonier.
 
 [Top](#top)
 
