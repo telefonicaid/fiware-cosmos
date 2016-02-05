@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import javax.security.sasl.AuthenticationException;
+import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hive.service.auth.PasswdAuthenticationProvider;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -40,12 +41,35 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
     
     private static final Logger LOGGER = Logger.getLogger(HttpClientFactory.class);
     private final HttpClientFactory httpClientFactory;
+    private final String idmEndpoint;
     
     /**
      * Constructor.
      */
     public OAuth2AuthenticationProviderImpl() {
-        httpClientFactory = new HttpClientFactory(true);
+        // get the cnfigured Identity Manager endpoint
+        HiveConf conf = null;
+        
+        try {
+            conf = new HiveConf();
+        } catch (Exception e) {
+            LOGGER.info("Unable to read the Hive configuration, using default values");
+        } finally {
+            if (conf == null) {
+                idmEndpoint = "https://account.lab.fiware.org";
+            } else {
+                idmEndpoint = conf.get("com.telefonica.iot.idm.endpoint", "https://account.lab.fiware.org");
+            } // if else
+            
+            LOGGER.info("Identity Manager endpoint: " + idmEndpoint);
+        } // try catch finally
+        
+        // create a factory of Http clients
+        if (idmEndpoint.startsWith("https")) {
+            httpClientFactory = new HttpClientFactory(true);
+        } else {
+            httpClientFactory = new HttpClientFactory(false);
+        } // if else
     } // OAuth2AuthenticationProviderImpl
 
     @Override
@@ -54,7 +78,7 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
         HttpClient httpClient = httpClientFactory.getHttpClient(true);
         
         // create the request
-        String url = "https://account.lab.fiware.org/user?access_token=" + token;
+        String url = idmEndpoint + "/user?access_token=" + token;
         HttpRequestBase request = new HttpGet(url);
         
         // do the request

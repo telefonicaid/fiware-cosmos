@@ -88,7 +88,7 @@ cosmos-hive-auth-provider-0.0.0-SNAPSHOT-jar-with-dependencies.jar
 The unit tests are run by invoking this parameterized `mvn test` command:
 
 ```
-$ mvn test -DmatchingToken=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+$ mvn test -Duser=frb -Dtoken=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 [INFO] Scanning for projects...
 [INFO]                                                                         
 [INFO] ------------------------------------------------------------------------
@@ -157,7 +157,16 @@ The following properties must be added to `hive-site.xml` in order to enable a c
 </property>
 ```
 
-This other property must be modified in order to enable impersonation (on the contrary, all the queries are executed by the user `hive` instead of the real end user):
+This other property must be added to `hive-site.xml` if we want to overwrite the default value for the Identity Manager endpoint (the one validating the OAuth2 authentication tokens):
+
+```
+<property>
+   <name>com.telefonica.iot.idm.endpoint</name>
+   <value>https://account.lab.fiware.org</value>
+</property>
+```
+
+Finally, this property must be modified in order to enable impersonation (on the contrary, all the queries are executed by the user `hive` instead of the real end user):
 
 ```
 <property>
@@ -206,7 +215,7 @@ luke,jedi,32
 leia,princess,28
 r2d2,robot,15
 remotehive>
-``
+```
 
 [Top](#top)
 

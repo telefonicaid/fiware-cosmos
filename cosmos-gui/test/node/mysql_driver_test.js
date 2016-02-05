@@ -29,9 +29,8 @@ var rewire = require('rewire');
 var mysqlDriver = rewire('../../src/mysql_driver.js');
 
 // Testing variables
-var idm_username = 'frb@tid.es';
-var username = 'frb1';
-var password = '12345';
+var id = 'frb';
+var email = 'frb@tid.es';
 var hdfsQuota = 5;
 
 // Mock the mysql connection
@@ -44,14 +43,10 @@ var connectionMock = {
         values = values || [];
         callback = callback || function(error, result) {};
 
-        if (query.indexOf('INSERT INTO cosmos_user (idm_username, username, password, hdfs_quota)') > -1) {
+        if (query.indexOf('INSERT INTO cosmos_user (id, email, hdfs_quota)') > -1) {
             return callback(null, []);
-        } else if (query.indexOf('UPDATE cosmos_user SET password') > -1) {
-            return callback(null, []);
-        } else if (query.indexOf('SELECT * from cosmos_user WHERE idm_username') > -1) {
-            return callback(null, [username]);
-        } else if (query.indexOf('SELECT * from cosmos_user WHERE username') > -1) {
-            return callback(null, [username]);
+        } else if (query.indexOf('SELECT * from cosmos_user WHERE id') > -1) {
+            return callback(null, [id]);
         } else {
             return callback('error', null);
         } // if else if
@@ -63,34 +58,16 @@ mysqlDriver.__set__('connection', connectionMock);
 // Tests suite
 describe('[mysqlDriver.addUser] add a new user', function() {
     it('should return null error and an empty result set', function() {
-        mysqlDriver.addUser(idm_username, username, password, hdfsQuota, function(error, result) {
+        mysqlDriver.addUser(id, email, hdfsQuota, function(error, result) {
             assert.equal(null, error);
             assert.equal(0, result.length);
         });
     });
 });
 
-describe('[mysqlDriver.addPassword] add a new password', function() {
-    it('should return null error and an empty result set', function() {
-        mysqlDriver.addPassword(idm_username, password, function(error, result) {
-            assert.equal(null, error);
-            assert.equal(0, result.length);
-        });
-    });
-});
-
-describe('[mysqlDriver.getUser] get a user by the idm user', function() {
-    it('should return null error and a result set containing ' + username, function() {
-        mysqlDriver.addPassword(idm_username, password, function(error, result) {
-            assert.equal(null, error);
-            assert.equal(username, result[0]);
-        });
-    });
-});
-
-describe('[mysqlDriver.getUserByCosmosUser] get a user by the cosmos user', function() {
-    it('should return null error and a result set containing ' + username, function() {
-        mysqlDriver.addPassword(idm_username, password, function(error, result) {
+describe('[mysqlDriver.getUser] get a user by his/her id', function() {
+    it('should return null error and a result set containing ' + id, function() {
+        mysqlDriver.getUser(id, function(error, result) {
             assert.equal(null, error);
             assert.equal(username, result[0]);
         });
