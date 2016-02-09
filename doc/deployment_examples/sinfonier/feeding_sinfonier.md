@@ -19,28 +19,31 @@ Content:
 * [Reporting issues and contact information](#section8)
 
 ##<a name="section1"></a>Introduction
-This document describes how `Sinfonier` can consume stored context information from [Orion](http://catalogue.fiware.org/enablers/publishsubscribe-context-broker-orion-context-broker).
+This document describes how Sinfonier can consume historic context information handled by [Orion](http://catalogue.fiware.org/enablers/publishsubscribe-context-broker-orion-context-broker) and stored by Cygnus.
 
-The purpose is consuming information with `Sinfonier`. `Orion` has context information that could be useful, but we need a way to connect both elements. The use of `Cygnus` and `Kafka`, for traslate and storage the information in a data structure, show the connection between `Orion` and `Sinfonier`.
+The purpose is consuming information with Sinfonier. Orion has context information that could be useful, but we need a way to connect both elements. The deployment of Cygnus and Kafka, for translating and storing the information in a data structure, implements the connection between Orion and Sinfonier.
 
 [Top](#top)
 ##<a name="section2"></a>Architecture
-The architecture for feeding `Sinfonier` needs some elements as shown in next image:
+The architecture for feeding Sinfonier needs some elements as shown in next image:
 
 ![architecture][Architecture]
 
-The objective of this architecture is get a processed information from `Orion` to `Sinfonier`, using `Cygnus` for translate and `Kafka` for store the information that will be consumed.
+The objective of this architecture is get a processed information from Orion to Sinfonier, using Cygnus for translate and Kafka for store the information that will be consumed.
 
-In next paragraphs all the needed configuration will be described in order to know how it works.
+There are two ways to run the architecture:
+* All components in the same machine.
+* All components in a distributed fashion.
 
 [Top](#top)
 
 ##<a name="section3"></a>Orion contextBroker
-First of all, [Orion](https://github.com/telefonicaid/fiware-orion/blob/develop/doc/manuals/admin/install.md) must be installed in the system. In addition, `Orion` needs `MongoDB` for storage, so must be installed too.
-`Orion` have context information that it's going to be translated through `Cygnus` to `Kafka`. Context information is stored in `Entities` with `Attributes`.
-This structure allow to subscribe to entities for wait the changes in them. Once subscribed all changes are sent to `Cygnus` through a specific port (set in subscription curl).
+First of all, [Orion](https://github.com/telefonicaid/fiware-orion/blob/develop/doc/manuals/admin/install.md) must be installed in the system. In addition, Orion needs MongoDB for storage, so must be installed too.
+
+Orion handles context information which is stored as `entities` holding `attributes`.
+
+This structure allows to subscribe to `entities` and wait for changes in them. Once subscribed all changes are sent to Cygnus through a specific port (set in subscription curl).
 Same as subscribing, unsubscription is possible if you don't need more changes or if a new subscription is required to another entity.
-All these procedures use `curl` for transferring some data to `Orion` in `JSON` format.
 
 Let's write an example of use creating a new entity with attributes and a subscription to it.
 Follow the general procedure below for create this entity and receive changes in its values.
@@ -48,10 +51,11 @@ Follow the general procedure below for create this entity and receive changes in
 * Entity: Book1
 * Attributes: Title, Pages and Price.
 
-1. Check if `Orion` is running properly, asking `Orion` for its version:
+1. Check if Orion is running properly, asking Orion for its version:
   ```
   curl -X GET http://localhost:1026/version
   ```
+  (Note that `curl` is just one option for sending the requests).
 
 2. Create a subscription to the entity `Book1`
   ```
@@ -84,11 +88,11 @@ Follow the general procedure below for create this entity and receive changes in
   ```
 
   There are three JSON special parameters when a susbscription is sent:
-  * `attributes`: Refers to the attributes that will be notified to `Cygnus`. If empty, all attributes will be notified to `Cygnus`. If not, only the attributes wrote here will be notified. In this case, if `Orion` receive a change for the attribute `price` in entity `Book1` all the attributes (`title`, `pages` and `price`) will be sent to `Cygnys`.
-  * `condValues`: List of attributes that `Book1` has. When a subscription is done to an entity their attributes must be sent to `Orion`
-  * `reference`: Destination of notifications. In this case we use `http://localhost:5050/notify` but you can configure it with your own destination. This parameter involve that our `Cygnus` must be configured as destination.
+  * `attributes`: Refers to the attributes that will be notified to Cygnus. If empty, all attributes will be notified to Cygnus. If not, only the attributes wrote here will be notified. In this case, if Orion receive a change for the attribute `price` in entity `Book1` all the attributes (`title`, `pages` and `price`) will be sent to Cygnus.
+  * `condValues`: List of attributes that `Book1` has. When a subscription is done to an entity their attributes must be sent to Orion
+  * `reference`: Destination of notifications. In this case we use `http://localhost:5050/notify` but you can configure it with your own destination. This parameter involve that our Cygnus must be configured as destination.
 
-  Once sent, you will receive something like that:
+  Once sent, you will receive something like this:
   ```
   {
       "subscribeResponse": {
@@ -100,7 +104,7 @@ Follow the general procedure below for create this entity and receive changes in
   ```
   The value `subscriptionId` is very important. It's highly recommended to save it in case of you need to unsubscribe to the entity in the future.
 
-  If you receive another answer from `Orion` check your curl: `JSON Parse Error` is a typical error. In that case you will receive this message:
+  If you receive another answer from Orion check your curl: `JSON Parse Error` is a typical error. In that case you will receive this message:
   ```
   {
       "subscribeError": {
@@ -113,7 +117,7 @@ Follow the general procedure below for create this entity and receive changes in
   }   
   ```
 
-3. Append some values in entity `Book1`.
+3. Create an entity `Book1` in Orion; we will use the `updateContext` operation of the Orion API with the `APPEND` option for creating:
   ```
   (curl localhost:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
   {  
@@ -145,7 +149,7 @@ Follow the general procedure below for create this entity and receive changes in
   }
   EOF
   ```
-  This action only store a value in the attributes, isn't a change for notify to `Cygnus`. You will receive:
+  This action only store a value in the attributes, isn't a change for notify to Cygnus. You will receive:
   ```
   {
       "contextResponses": [
@@ -181,7 +185,7 @@ Follow the general procedure below for create this entity and receive changes in
   }   
   ```
 
-4.  When you have your subscription and some appended values it's time to update them. This updates are going to be sent to Cygnus. The way to update is similiar to `APPEND` but you need to write `UPDATE` in curl. Let's see:
+4.  When you have your subscription and some appended values it's time to update them. This updates are going to be sent to Cygnus. The way for updating is through the `updateContext` operation, but using the `UPDATE` option. Let's see:
   ```
   (curl localhost:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
   {
@@ -215,7 +219,7 @@ Follow the general procedure below for create this entity and receive changes in
   ```
   As you can see we send differents values. The response is the same as `APPEND`.
 
-  After all, there a subscription to `Book1` that will notify all attributes to `Cygnus` in the moment that a value changes (one, two or all attributes). If you got a bad subscription or want to change it to another entity or change the notified values, you can easily unsubscribe. Only needs the subscription ID previously saved:
+  After all, there a subscription to `Book1` that will notify all attributes to Cygnus in the moment that a value changes (one, two or all attributes). If you got a bad subscription or want to change it to another entity or change the notified values, you can easily unsubscribe. Only needs the subscription ID previously saved:
   ```
   (curl localhost:1026/v1/unsubscribeContext -s -S --header 'Content-Type: application/json' \
       --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
@@ -233,12 +237,12 @@ Follow the general procedure below for create this entity and receive changes in
 
 ##<a name="section4"></a>Cygnus
 ####<a name=”section4.1></a>Configuration
-[Cygnus](https://github.com/telefonicaid/fiware-cygnus) is a connector in charge of persisting `Orion` context data in certain configured third-party storages, creating a historical view of such data. In other words, `Orion` only stores the last value regarding an entity's attribute, and if an older value is required then you will have to persist it in other storage, value by value, using `Cygnus`.
+[Cygnus](https://github.com/telefonicaid/fiware-cygnus) is a connector in charge of persisting Orion context data in certain configured third-party storages, creating a historical view of such data. In other words, Orion only stores the last value regarding an entity's attribute, and if an older value is required then you will have to persist it in other storage, value by value, using Cygnus.
 
-In this architecture `Cygnus` do the translation between `Orion` and `Kafka`. First of all you have to follow a [quick start guide](https://github.com/telefonicaid/fiware-cygnus/blob/master/doc/quick_start_guide.md#installing-cygnus) for install it. Next step is create a properly agent for `Kafka`. Every agent has to configure three main elements:
-* Source: Where `Orion` notifications are received. In our case we use port 5050 and HTTP protocol.
+In this architecture Cygnus do the translation between Orion and Kafka. First of all you have to follow a [quick start guide](https://github.com/telefonicaid/fiware-cygnus/blob/master/doc/quick_start_guide.md#installing-cygnus) for install it. Next step is create a properly agent for Kafka. Every agent has to configure three main elements:
+* Source: Where Orion notifications are received. In our case we use port 5050 and HTTP protocol.
 * Channel: The bridge between Source and Sink. Here we can set the channel capacity and transaction capacity.
-* Sink: Catch the notifications sent from Source through channel and persist it into Kafka (in this case, but `Cygnus` is able to persist `Orion` context data in `HDFS`, `MySQL`, `CKAN`, `MongoDB`, `STH` and `DynamoDB`).
+* Sink: Catch the notifications sent from Source through channel and persist it into Kafka (in this case, but Cygnus is able to persist Orion context data in HDFS, MySQL, CKAN, MongoDB, STH and DynamoDB).
 
 Configure the agent like this:
 ```
@@ -273,45 +277,46 @@ cygnusagent.sinks.kafka-sink.batch_size = 1
 cygnusagent.sinks.kafka-sink.batch_timeout = 10
 ```
 Some important details:
-* `cygnusagent.sinks.kafka-sink.broker_list` : Need the ip and port of your `Kafka` `Brokers`. See [next section](#section5.1) for more information about kafka.
-* `cygnusagent.sinks.kafka-sink.zookeeper_endpoint`: In this case, we are running `Zookeeper` in `localhost` with port 2181 (`Zookeeper` port). See [next section](#section5.2) for more information about zookeeper.
-* `cygnusagent.sinks.kafka-sink.data_model`: `Cygnus` parameter. Use dm-by-entity for a descriptive storage.
+* `cygnusagent.sinks.kafka-sink.broker_list` : Need the ip and port of your Kafka `brokers`. See [next section](#section5.1) for more information about kafka.
+* `cygnusagent.sinks.kafka-sink.zookeeper_endpoint`: In this case, we are running Zookeeper in `localhost` with port 2181 (Zookeeper port). See [next section](#section5.2) for more information about zookeeper.
+* `cygnusagent.sinks.kafka-sink.data_model`: Cygnus parameter. Use dm-by-entity for a descriptive storage.
 
-Running properly all the structure (See [general procedure step-by-step](#section7) for do it properly) and updating some values in our `Entity` you can see how `Cygnus` persist the information.
+Running properly all the structure (See [general procedure step-by-step](#section7) for do it properly) and updating some values in our `Entity` you can see how Cygnus persist the information.
 
 ####<a name=”section4.2></a>Running
-Run `Cygnus` is possible with a command:
+Cygnus is run through this command:
 ```
 /path/to/flume/folder/bin/flume-ng agent --conf /path/to/flume/folder/conf -f /path/to/flume/folder/conf/kafka_agents/your_agent.conf -n cygnusagent -Dflume.root.logger=INFO,console
 ```
-An own terminal is required for this service. Another way is using `nohup` at the start and `&`at the end for running the server in background (Use restricted when brokers are running properly and if you know how `nohup` works)
+An own shell is required for this service. Another way is using `nohup` at the start and `&`at the end for running the server in background (Use restricted when brokers are running properly and if you know how `nohup` works)
 ```
 nohup /path/to/flume/folder/bin/flume-ng agent --conf /path/to/flume/folder/conf -f /path/to/flume/folder/conf/kafka_agents/your_agent.conf -n cygnusagent -Dflume.root.logger=INFO,console &
 ```
 
-Once you have your `Cygnus` running and update some values on `Orion` the notification will be persisted. You will see logs like:
+Once you have your Cygnus running and update some values on Orion the notification will be persisted. You will see logs like:
 ```
 2016-XX-XX 09:13:57,365 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - com.telefonica.iot.cygnus.sinks.OrionKafkaSink.persistAggregation(OrionKafkaSink.java:264)] [kafka-sink] Persisting data at OrionKafkaSink. Topic (Book1_Book), Data ({"headers":[{"fiware-service":"def_serv"},{"fiware-servicePath":"def_servpath"},{"timestamp":1451981636718}],"body":{"attributes":[{"name":"title","type":"text","value":"Game of thrones: A song of ice and fire"},{"name":"pages","type":"integer","value":"985"},{"name":"price","type":"float","value":"23.50"}],"type":"Book","isPattern":"false","id":"Book1"}})
 2016-XX-XX 09:13:57,414 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - com.telefonica.iot.cygnus.sinks.OrionSink.process(OrionSink.java:196)] Finishing transaction (1451981632-289-0000000000)
 ```
-As you can see, the information is persisted in a `topic` "Book1_Book" with `attributes` title, pages and price. The values match with the last update that we did in `Orion`.
+As you can see, the information is persisted in a `topic` "Book1_Book" with `attributes` title, pages and price. The values match with the last update that we did in Orion.
 
 [Top](#top)
 
 ##<a name="section5"></a>Kafka
 [Apache Kafka](http://kafka.apache.org/documentation.html#quickstart) is a distributed, partitioned, replicated commit log service. It provides the funcionality of a messaging system, but with a unique design.
-The use of `Kafka` for that purpose have two main pieces: `Zookeeper` and `brokers` (or servers, both names are correct). `Kafka` is needed for storage the translated information received from `Cygnus`.
-`Kafka` manage the information with `topics` distributed in `brokers` (or servers) running into `Zookeeper`. The use of `brokers` is an user election, so can have one or more than one.
+The use of Kafka for that purpose have two main pieces: Zookeeper and `brokers` (or servers, both names are correct). Kafka is needed for storing the context information handled by the combination of Orion and Cygnus.
 
-An important detail is that `Zookeeper` must be running before `Brokers`. Commands for `Brokers` will fail if there isn't a `Zookeeper` running already. A [general procedure step-by-step](#section7) is described in this document.
+Kafka manages the information through `topics` distributed in `brokers` (or servers) running into Zookeeper. The number of `brokers` to be used is up to the user.
+
+An important detail is that Zookeeper must be running before `brokers`. Commands for `brokers` will fail if there isn't a Zookeeper running already. A [general procedure step-by-step](#section7) is described in this document.
 
 [Top](#top)
 
 ###<a name="section5.1"></a>Zookeeper
 ####<a name=”section5.1.1></a>Configuration
-`ZooKeeper` is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. The connections to `Zookeeper` use the port 2181 and provides the link between itself and brokers. Using the API we can create and ask for information about topics, produce some messages and consume, but the most of the actions are done automatically by `Cygnus`. The only action required for this architecture is to consume, that will carry out Sinfonier.
+Zookeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. The connections to Zookeeper use the port 2181 and provides the link between itself and brokers. Using the API we can create and ask for information about topics, produce some messages and consume, but the most of the actions are done automatically by Cygnus. The only action required for this architecture is to consume, that will carry out Sinfonier.
 
-`Zookeeper`is configured through the following parameters:
+Zookeeper is configured through the following parameters:
 
 | Parameter | Mandatory | Value | Comments |
 |---|---|---|---|
@@ -319,15 +324,16 @@ An important detail is that `Zookeeper` must be running before `Brokers`. Comman
 | clientPort | yes | 2181 | Default port for Zookeeper |
 | maxClientCnxns | yes | 0 | Default value |
 
-`Zookeeper`configuration must be stored in a file called `zookeeper.properties`
+Zookeeper configuration must be stored in a file called `zookeeper.properties`
 
+[Top](#top)
 
 ####<a name=”section5.1.2></a>Running
-Run `Zookeeper`is possible with a command:
+Zookeeper is run throughthis command:
 ```
 bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
-An own terminal is required for this service. Another way is using `nohup` at the start and `&`at the end for running the server in background (Use restricted when brokers are running properly and if you know how `nohup` works)
+An own shell is required for this service. Another way is using `nohup` at the start and `&`at the end for running the server in background (Use restricted when brokers are running properly and if you know how `nohup` works)
 ```
 nohup bin/zookeeper-server-start.sh config/zookeeper.properties &
 ```
@@ -336,7 +342,7 @@ nohup bin/zookeeper-server-start.sh config/zookeeper.properties &
 
 ###<a name="section5.2"></a>Brokers
 ####<a name=”section5.2.1></a>Configuration
-`Brokers` are used to distribute the information stored in `Kafka` and you can use one or several of them. This example use three `Brokers` and its configuration is described in this section. `Brokers` are implemented into `Zookeeper`, each one with its own port, i.e, a `Broker` with port 9092, another broker with port 9093, etc.
+`Brokers` are used to distribute the information stored in Kafka and you can use one or several of them. This example use three `brokers` and its configuration is described in this section. `Brokers` are implemented into Zookeeper, each one with its own port, i.e, a `Broker` with port 9092, another broker with port 9093, etc.
 A single `Broker` is configured through the following parameters:
 
 | Parameter | Mandatory | Value | Comments |
@@ -344,17 +350,17 @@ A single `Broker` is configured through the following parameters:
 | broker.id | yes | 1 | An unique integer that define a broker |
 | port | yes | 9092 |  Port assigned to broker 1 |
 | host.name | yes | 0.0.0.0 |  For local connections must be `localhost`. For remote connections `0.0.0.0` allow them |
-| zookeeper.connect | yes | localhost:2181 | Usually zookeeper is running on a local machine. In other case, remote ip access is required with port 2181 |
+| zookeeper.connect | yes | localhost:2181 | Usually Zookeeper is running on a local machine. In other case, remote ip access is required with port 2181 |
 | log.dirs | yes | /tmp/kafka-logs-1 | kafka-logs-x, being x the broker.id |
 | advertised.host.name | no | your_remote_ip |  For remote connections of a known ip that allow it to access to the `broker` |
 | advertised.port | no | 9092 | For use a remote port different from the port broker set previously |
 
-A “multibroker” configuration can be configured creating different files, one by `Broker`, and setting same parameters like first, but changing `broker.id`, `port` and `logs.dir`.
+A “multibroker” configuration can be configured by creating different files, one per `Broker`, and setting same parameters like the first one, but changing `broker.id`, `port` and `logs.dir`.
 
 `Brokers` configurations must be stored in files like `serverx.properties`, being "x" the `broker.id` of each `Broker`.
 
 ####<a name=”section5.2.2></a>Running
-Run a server is possible with a command:
+A single server is run through this command:
 ```
 bin/kafka-server-start.sh config/server1.properties
 ```
@@ -364,7 +370,7 @@ bin/kafka-server-start.sh config/server1.properties
 bin/kafka-server-start.sh config/server2.properties
 bin/kafka-server-start.sh config/server3.properties
 ```
-Differents terminals are required for each server. Another way is using `nohup` at the start and `&`at the end for running the server in background (Use restricted when brokers are running properly and if you know how `nohup` works)
+Different shells are required for each server. Another way is using `nohup` at the start and `&`at the end for running the server in background (Use restricted when brokers are running properly and if you know how `nohup` works).
 ```
 nohup bin/kafka-server-start.sh config/server1.properties &
 ```
@@ -372,19 +378,19 @@ nohup bin/kafka-server-start.sh config/server1.properties &
 [Top](#top)
 
 ##<a name="section6"></a>Sinfonier
-Finally we reach the last element of our architecture: The consumer of the stored data. `Sinfonier` works as consumer, asking `Kafka` for information translated from `Orion`.
+Finally we reach the last element of our architecture: The consumer of the stored data. Sinfonier works as consumer, asking Kafka for information coming from Orion.
 
-`Kafka` use producers for create new messages into the `topics` and a consumer for show them. We have changed the roles in this architecture, making `Cygnus` work as producer and `Sinfonier` as a consumer.
+Kafka works as a queue, receiving data from the producers and sending it to the consumers. Regarding this particular architecture, Cygnus works as a producer, while Sinfonier works as a consumer.
 
 [Top](#top)
 
 ##<a name="section7"></a>General procedure step-by-step
-The following steps will help you to run all the procedure properly. A specific order is required because the architecture need some services before others. Let's start:
-  1. `Orion` context broker: First step in order to create the subscriptions and receive the entity changes, that will be redirected to `Cygnus`. `Mongo` must be running too.
-  2. Kafka: `Zookeeper` and `Brokers`. Previous to `Cygnus`. And consequently:
-    1. [Zookeeper](#section5): Running zookeeper ection.
+The following steps will help you to run all the procedure properly. A specific order is required because the architecture need some services running before the others:
+  1. Orion context broker: First step in order to create the subscriptions and receive the entity updates, that will be redirected to Cygnus. `Mongo` must be running too.
+  2. Kafka: Zookeeper and `brokers`, and consequently:
+    1. [Zookeeper](#section5): Running Zookeeper section.
     2. [Brokers](#section5): Running brokers section.
-  3. Cygnus: Connect to `Zookeeper` in order to persist the information on `Kafka`.
+  3. Cygnus: Connect to Zookeeper in order to persist the information on Kafka.
   4. Sinfonier.
 
 [Top](#top)
