@@ -10,6 +10,7 @@ theme: readthedocs
 extra_css: ["https://fiware.org/style/fiware_readthedocs.css"]
 pages:
   - Home: index.md
+  - 'Quick Start Guide': 'quick_start_guide.md'
   - 'Installation and Administration manual':
       - 'Introduction': 'installation_and_administration_manual/introduction.md'
       - 'Batch processing: Some words about Cosmos and its ecosystem': 'installation_and_administration_manual/batch/some_words_about_cosmos_and_ecosystem.md'
