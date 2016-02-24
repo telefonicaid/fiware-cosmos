@@ -48,18 +48,18 @@ function connect(callback) {
     });
 } // connect
 
-function addJob(jobId, jobType, callback) {
+function addJob(jobId, className, callback) {
     var query = connection.query(
-        'INSERT INTO tidoop_job (jobId, jobType, startTime, mapProgress, reduceProgress) ' +
+        'INSERT INTO tidoop_job (jobId, className, startTime, mapProgress, reduceProgress) ' +
         'VALUES (?, ?, NOW(), ?, ?)',
-        [jobId, jobType, 0, 0],
+        [jobId, className, 0, 0],
         function (error, result) {
             if (error) {
                 callback(error)
             } else {
                 logger.info('Successful insert: \'INSERT INTO tidoop_job ' +
-                    '(jobId, jobType, startTime, mapProgress, reduceProgress) VALUES' +
-                    '(' + jobId + ', ' + jobType + ', NOW(), 0, 0)\'');
+                    '(jobId, className, startTime, mapProgress, reduceProgress) VALUES' +
+                    '(' + jobId + ', ' + className + ', NOW(), 0, 0)\'');
                 callback(null, result);
             } // if else
         }
