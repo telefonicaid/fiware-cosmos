@@ -93,7 +93,7 @@ server.route({
                 );
 
                 // Create the response
-                var response = '{job_id: ' + jobId + '}';
+                var response = '{"job_id": "' + jobId + '"}';
                 logger.info("Response: " + response);
 
                 // Return the response
