@@ -1,0 +1,15 @@
+{
+  "host": "localhost",
+  "port": 12000,
+  "mysql": {
+    "host": "",
+    "port": 3306,
+    "user": "",
+    "password": "",
+    "database": "cosmos"
+  },
+  "log": {
+    "file_name": "/var/log/tidoop/tidoop-api/tidoop-api.log",
+    "date_pattern": ".dd-MM-yyyy"
+  }
+}
