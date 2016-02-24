@@ -9,7 +9,7 @@
     "database": "cosmos"
   },
   "log": {
-    "file_name": "/var/log/tidoop/tidoop-api/tidoop-api.log",
+    "file_name": "/var/log/cosmos/cosmos-tidoop-api/cosmos-tidoop-api.log",
     "date_pattern": ".dd-MM-yyyy"
   }
 }
