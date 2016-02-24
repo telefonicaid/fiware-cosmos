@@ -4,4 +4,5 @@
 - [cosmos-gui] [HARDENING] Rename app.js as cosmos_gui.js (#135)
 - [cosmos-gui] [HARDENING] Configurable logging level support (#45)
 - [cosmos-gui] [FEATURE] Remove ssh provision for users (#152)
+- [cosmos] [HARDENING] Add a Quick Start Guide (#157)
 - [cosmos-tidoop-api] [FEATURE] Create initial version (#158)
