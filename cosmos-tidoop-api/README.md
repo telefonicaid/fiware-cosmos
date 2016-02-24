@@ -12,7 +12,7 @@
 * [Administration](#section6)
     * [Logging traces](#section6.1)
     * [Database](#section6.2)
-* [Contact](#secton7)
+* [Contact](#section7)
 
 ##<a name="section1"></a>What is cosmos-tidoop-api
 cosmos-tidoop-api exposes a RESTful API for running MapReduce jobs in a shared Hadoop environment.
@@ -29,7 +29,7 @@ This is a software written in JavaScript, specifically suited for [Node.js](http
 ###<a name="section2.1"></a>Prerequisites
 This REST API has no sense if tidoop-mr-lib is not installed. And tidoop-mr-lib has only sense in a [Hadoop](http://hadoop.apache.org/) cluster, thus both the library and Hadoop are required.
 
-As said, cosmos-tidoop-api is a Node.js application, therefore install it from the official [download](https://nodejs.org/download/). An advanced alternative is to install [Node Version Manager](https://github.com/creationix/nvm) (nvm) by creationix/Tim Caswell, whcih will allow you to have several versions of Node.js and switch among them.
+As said, cosmos-tidoop-api is a Node.js application, therefore install it from the official [download](https://nodejs.org/download/). An advanced alternative is to install [Node Version Manager](https://github.com/creationix/nvm) (nvm) by creationix/Tim Caswell, which will allow you to have several versions of Node.js and switch among them.
 
 Launched MapReduce jobs are tracked by means of a MySQL database, thus a MySQL server must be installed somewhere of your choice and be accessible by the API.
 
@@ -120,7 +120,7 @@ cosmos-tidoop-api typically listens in the TCP/12000 port, but you can change if
 ##<a name="section5"></a>Usage
 Please refer to this [Apiary](http://docs.tidoopmrlibapi.apiary.io/#) documentation.
 
-Please observe the MapReduce jobs usually take some time to return a result. This is why the cosmos-tidoop-api operations run the job, but do not return any result, except a `200 OK` (if the job could be successfully run) and a job identifier. In order to get the result of the opearion (or its progress), such a job identifier must be used for querying the API later.
+Please observe the MapReduce jobs usually take some time to return a result. This is why the cosmos-tidoop-api operations run the job, but do not return any result, except a `200 OK` (if the job could be successfully run) and a job identifier. In order to get the result of the operation (or its progress), such a job identifier must be used for querying the API later.
 
 [Top](#top)
 
@@ -149,7 +149,7 @@ Within the log it is expected to find many `info` messages, and a few of `warn` 
 [Top](#top)
 
 ###<a name="section6.2"></a>Database
-Information regarding launched jobs can be found in a MySQL table named `tidoop_job` within a database named `cosmos` in the MySQL deployment you did when installing cosmos-tidoop-api. Such a table contains the jod ID, the job type, the stating and ending timestamp the progress in terms of map and reduce percentage.
+Information regarding launched jobs can be found in a MySQL table named `tidoop_job` within a database named `cosmos` in the MySQL deployment you did when installing cosmos-tidoop-api. Such a table contains the jod ID, the job type, the starting and ending timestamp the progress in terms of map and reduce percentage.
 
     $ mysql -u cb -p
     Enter password: 
