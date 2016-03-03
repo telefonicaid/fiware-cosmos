@@ -105,21 +105,13 @@ server.route({
 
         logger.info('Request: POST /tidoop/v1' + inputData + ' ' + JSON.stringify(request.payload));
 
-        // Create a new job entry in the database
-        mysqlDriver.addJob(jobId, userId, className, function(error, result) {
+        // Run the job; the callback function will receive the complete output once it finishes
+        cmdRunner.runHadoop(jobId, jarPath, className, jarPath, inputData, outputData, function(error, result) {
             if (error) {
-                logger.error('The new job could not be added to the database');
-                reply(boom.internal('The new job could not be added to the database', error));
+                logger.error('The MR job could not be run');
+                reply(boom.internal('The MR job could not be run', error));
             } else {
-                // Run the job; the callback function will receive the complete output once it finishes
-                cmdRunner.runHadoop(jobId, jarPath, className, jarPath, inputData, outputData, function(error, result) {
-                    if (error) {
-                        logger.error('The MR job could not be run');
-                        reply(boom.internal('The MR job could not be run', error));
-                    } else {
-                        logger.info(result);
-                    } // if else
-                });
+                logger.info('hadoop jar run with exiting code ' + result);
 
                 // Create the response
                 var response = '{"success":"true","job_id": "' + jobId + '"}';
@@ -127,7 +119,7 @@ server.route({
 
                 // Return the response
                 reply(response);
-            }
+            } // if else
         });
     } // handler
 });
