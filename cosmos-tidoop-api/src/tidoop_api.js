@@ -102,26 +102,25 @@ server.route({
         var className = request.payload.class_name;
         var libJars = request.payload.lib_jars;
         var jobId = 'tidoop_job_' + Date.now();
-        var outputData = '/user/' + userId + '/jobs/' + jobId + '/output';
 
         logger.info('Request: POST /tidoop/v1' + inputData + ' ' + JSON.stringify(request.payload));
 
         // Run the job; the callback function will receive the complete output once it finishes
-        cmdRunner.runHadoopJar(jar, className, libJars, inputData, outputData, function(error, result) {
+        cmdRunner.runHadoopJar(jar, className, libJars, inputData, userId, jobId, function(error, result) {
             if (error) {
                 logger.error('The MR job could not be run');
                 reply(boom.internal('The MR job could not be run', error));
             } else {
-                logger.info('hadoop jar run with exiting code ' + result);
-
-                // Create the response
-                var response = '{"success":"true","job_id": "' + jobId + '"}';
-                logger.info("Response: " + response);
-
-                // Return the response
-                reply(response);
+                logger.info('hadoop jar exiting with code ' + result);
             } // if else
         });
+
+        // Create the response
+        var response = '{"success":"true","job_id": "' + jobId + '"}';
+        logger.info("Response: " + response);
+
+        // Return the response
+        reply(response);
     } // handler
 });
 
