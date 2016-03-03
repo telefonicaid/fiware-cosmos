@@ -1,16 +1,16 @@
 /**
  * Copyright 2016 Telefonica Investigación y Desarrollo, S.A.U
  *
- * This file is part of fiware-tidoop (FI-WARE project).
+ * This file is part of fiware-cosmos (FI-WARE project).
  *
- * fiware-tidoop is free software: you can redistribute it and/or modify it under the terms of the GNU Affero
+ * fiware-cosmos is free software: you can redistribute it and/or modify it under the terms of the GNU Affero
  * General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * fiware-tidoop is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * fiware-cosmos is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
- * You should have received a copy of the GNU Affero General Public License along with fiware-tidoop. If not, see
+ * You should have received a copy of the GNU Affero General Public License along with fiware-cosmos. If not, see
  * http://www.gnu.org/licenses/.
  *
  * For those usages not covered by the GNU Affero General Public License please contact with
@@ -48,18 +48,18 @@ function connect(callback) {
     });
 } // connect
 
-function addJob(jobId, className, callback) {
+function addJob(jobId, userId, className, callback) {
     var query = connection.query(
-        'INSERT INTO tidoop_job (jobId, className, startTime, mapProgress, reduceProgress) ' +
-        'VALUES (?, ?, NOW(), ?, ?)',
-        [jobId, className, 0, 0],
+        'INSERT INTO tidoop_job (jobId, userId, className, startTime, mapProgress, reduceProgress) ' +
+        'VALUES (?, ?, ?, NOW(), ?, ?)',
+        [jobId, userId, className, 0, 0],
         function (error, result) {
             if (error) {
                 callback(error)
             } else {
                 logger.info('Successful insert: \'INSERT INTO tidoop_job ' +
-                    '(jobId, className, startTime, mapProgress, reduceProgress) VALUES' +
-                    '(' + jobId + ', ' + className + ', NOW(), 0, 0)\'');
+                    '(jobId, userId, className, startTime, mapProgress, reduceProgress) VALUES' +
+                    '(' + jobId + ', ' +  userId + ', ' + className + ', NOW(), 0, 0)\'');
                 callback(null, result);
             } // if else
         }
@@ -114,6 +114,48 @@ function getJob(jobId, callback) {
     );
 } // getJob
 
+function getJobs(userId, callback) {
+    var query = connection.query(
+        'SELECT * from tidoop_job WHERE userId=\'' + userId + '\'',
+        function (error, result) {
+            if (error) {
+                callback(error);
+            } else {
+                logger.info('Successful select: \'SELECT * from tidoop_job WHERE userId=\'' + userId + '\'\'');
+                callback(null, result);
+            } // if else
+        }
+    );
+} // getJobs
+
+function deleteJob(jobId, callback) {
+    var query = connection.query(
+        'DELETE FROM tidoop_job WHERE jobId=\'' + jobId + '\'',
+        function (error, result) {
+            if (error) {
+                callback(error);
+            } else {
+                logger.info('Successful delete: \'DELETE FROM tidoop_job WHERE jobId=\'' + jobId + '\'\'');
+                callback(null, result);
+            } // if else
+        }
+    );
+} // deleteJob
+
+function deleteJobs(userId, callback) {
+    var query = connection.query(
+        'DELETE FROM tidoop_job WHERE userId=\'' + userId + '\'',
+        function (error, result) {
+            if (error) {
+                callback(error);
+            } else {
+                logger.info('Successful delete: \'DELETE FROM tidoop_job WHERE userId=\'' + userId + '\'\'');
+                callback(null, result);
+            } // if else
+        }
+    );
+} // deleteJobs
+
 function close(callback) {
     connection.end(function(error) {
         if (error) {
@@ -129,5 +171,8 @@ module.exports = {
     addJob: addJob,
     updateJobStatus: updateJobStatus,
     getJob: getJob,
+    getJobs: getJobs,
+    deleteJob: deleteJob,
+    deleteJobs: deleteJobs,
     close: close
 } // module.exports
