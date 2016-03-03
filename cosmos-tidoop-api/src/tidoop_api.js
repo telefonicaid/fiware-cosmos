@@ -1,16 +1,16 @@
 /**
  * Copyright 2016 Telefonica Investigación y Desarrollo, S.A.U
  *
- * This file is part of fiware-tidoop (FI-WARE project).
+ * This file is part of fiware-cosmos (FI-WARE project).
  *
- * fiware-tidoop is free software: you can redistribute it and/or modify it under the terms of the GNU Affero
+ * fiware-cosmos is free software: you can redistribute it and/or modify it under the terms of the GNU Affero
  * General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
- * fiware-tidoop is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * fiware-cosmos is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
- * You should have received a copy of the GNU Affero General Public License along with fiware-tidoop. If not, see
+ * You should have received a copy of the GNU Affero General Public License along with fiware-cosmos. If not, see
  * http://www.gnu.org/licenses/.
  *
  * For those usages not covered by the GNU Affero General Public License please contact with
@@ -46,7 +46,7 @@ server.route({
     path: '/tidoop/v1/version',
     handler: function (request, reply) {
         logger.info("Request: GET /tidoop/v1/version");
-        var response = '{"version": "' + packageJson.version + '"}';
+        var response = '{"success":"true","version": "' + packageJson.version + '"}';
         logger.info("Response: " + response);
         reply(response);
     } // handler
@@ -56,8 +56,39 @@ server.route({
     method: 'GET',
     path: '/tidoop/v1/user/{userId}/jobs',
     handler: function(request, reply) {
-        logger.info('Request: GET /tidoop/v1/user/' + request.params.userId + '/jobs/');
-        reply(boom.notImplemented('Unsupported operation'));
+        var userId = request.params.userId;
+
+        logger.info('Request: GET /tidoop/v1/user/' + userId + '/jobs/');
+
+        // Get the job status
+        var result = mysqlDriver.getJobs(userId, function (error, result) {
+            if (error) {
+                logger.error('Could not get job information for the given user ID');
+                reply(boom.internal('Could not get job information for the given user ID', error));
+            } else if (result[0]) {
+                // Create the response
+                var response = '{"success":"true","jobs":[';
+
+                // Iterate on the results
+                for (var i = 0, len = results.length; i < len; i++) {
+                    if (i != 0) {
+                        response += ',';
+                    } // if
+
+                    response += '{"job_id": "' + jobId + '", "job_type": "' + result[0].jobType + '", "start_time": "' +
+                        result[0].startTime + '", "end_time": "' + result[0].endTime + '", "map_progress": ' +
+                        result[0].mapProgress + ', "reduce_progress": ' + result[0].reduceProgress + '}';
+                } // for
+
+                response += ']}';
+
+                // Return the response
+                logger.info("Response: " + response);
+                reply(response);
+            } else {
+                reply(boom.badRequest('The given user ID=' + jobId + ' does not exist'));
+            } // if else
+        });
     } // handler
 });
 
@@ -75,25 +106,23 @@ server.route({
         logger.info('Request: POST /tidoop/v1' + inputData + ' ' + JSON.stringify(request.payload));
 
         // Create a new job entry in the database
-        mysqlDriver.addJob(jobId, className, function(error, result) {
+        mysqlDriver.addJob(jobId, userId, className, function(error, result) {
             if (error) {
                 logger.error('The new job could not be added to the database');
                 reply(boom.internal('The new job could not be added to the database', error));
             } else {
                 // Run the job; the callback function will receive the complete output once it finishes
-                cmdRunner.run(jobId, 'hadoop', ['jar', jarPath, className, '-libjars', jarPath, inputData, outputData],
-                    function(error, result) {
-                        if (error) {
-                            logger.error('The MR job could not be run');
-                            reply(boom.internal('The MR job could not be run', error));
-                        } else {
-                            logger.info(result);
-                        } // if else
-                    }
-                );
+                cmdRunner.runHadoop(jobId, jarPath, className, jarPath, inputData, outputData, function(error, result) {
+                    if (error) {
+                        logger.error('The MR job could not be run');
+                        reply(boom.internal('The MR job could not be run', error));
+                    } else {
+                        logger.info(result);
+                    } // if else
+                });
 
                 // Create the response
-                var response = '{"job_id": "' + jobId + '"}';
+                var response = '{"success":"true","job_id": "' + jobId + '"}';
                 logger.info("Response: " + response);
 
                 // Return the response
@@ -115,19 +144,42 @@ server.route({
         // Get the job status
         var result = mysqlDriver.getJob(jobId, function (error, result) {
             if (error) {
-                logger.error('Could not get job information for the given job_id');
-                reply(boom.internal('Could not get job information for the given job_id', error));
+                logger.error('Could not get job information for the given job ID');
+                reply(boom.internal('Could not get job information for the given job ID', error));
             } else if (result[0]) {
                 // Create the response
-                var response = '{"job_id": "' + jobId + '", "job_type": "' + result[0].jobType + '", "start_time": "' +
+                var response = '{"success":"true","job":{"job_id": "' + jobId + '", "job_type": "' + result[0].jobType + '", "start_time": "' +
                     result[0].startTime + '", "end_time": "' + result[0].endTime + '", "map_progress": ' +
-                    result[0].mapProgress + ', "reduce_progress": ' + result[0].reduceProgress + '}';
+                    result[0].mapProgress + ', "reduce_progress": ' + result[0].reduceProgress + '}}';
                 logger.info("Response: " + response);
 
                 // Return the response
                 reply(response);
             } else {
-                reply(boom.badRequest('The given job_id=' + jobId + ' does not exist'));
+                reply(boom.badRequest('The given job ID=' + jobId + ' does not exist'));
+            } // if else
+        });
+    } // handler
+});
+
+server.route({
+    method: 'DELETE',
+    path: '/tidoop/v1/user/{userId}/jobs',
+    handler: function(request, reply) {
+        var userId = request.params.userId;
+
+        logger.info('Request: DELETE /tidoop/v1/user/' + userId + '/jobs/' + jobId);
+
+        var result = mysqlDriver.deleteJobs(userId, function (error, result) {
+            if (error) {
+                logger.error('Could not delete the jobs for the given user ID');
+                reply(boom.internal('Could not delete the jobs for the given user ID', error));
+            } else {
+                var response = '{"success":"true"}';
+                logger.info("Response: " + response);
+
+                // Return the response
+                reply(response);
             } // if else
         });
     } // handler
@@ -142,7 +194,28 @@ server.route({
 
         logger.info('Request: DELETE /tidoop/v1/user/' + userId + '/jobs/' + jobId);
 
-        reply(boom.notImplemented('Unsupported operation'));
+        var result = mysqlDriver.deleteJob(jobId, function (error, result) {
+            if (error) {
+                logger.error('Could not delete the job for the given job ID');
+                reply(boom.internal('Could not delete the job for the given job ID', error));
+            } else {
+                // Run the job; the callback function will receive the complete output once it finishes
+                cmdRunner.runKill(jobId, function(error, result) {
+                    if (error) {
+                        logger.error('The MR job could not be run');
+                        reply(boom.internal('The MR job could not be run', error));
+                    } else {
+                        logger.info(result);
+                    } // if else
+                });
+
+                var response = '{"success":"true"}';
+                logger.info("Response: " + response);
+
+                // Return the response
+                reply(response);
+            } // if else
+        });
     } // handler
 });
 
