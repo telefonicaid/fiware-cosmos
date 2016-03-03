@@ -25,11 +25,11 @@
 
 // Module dependencies
 var spawn = require('child_process').spawn;
-var mysqlDriver = require('./mysql_driver.js');
 
-function runHadoopJar(jar, className, jarPath, inputData, outputData, callback) {
-    var params = ['jar', jar, className, '-libjars', jarPath, inputData, outputData];
-    var job = spawn('hadoop', params);
+function runHadoopJar(jar, className, jarPath, inputData, userId, jobId, callback) {
+    var outputData = '/user/' + userId + '/jobs/' + jobId + '/output';
+    var params = ['-u', userId, 'hadoop', 'jar', jar, className, '-libjars', jarPath, inputData, outputData];
+    var job = spawn('sudo', params);
 
     job.on('close', function (code) {
         return callback(null, code);
