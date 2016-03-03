@@ -1,6 +1,10 @@
 {
   "host": "localhost",
   "port": 12000,
+  "hdfs": {
+    "super_user": "hdfs",
+    "password": ""
+  },
   "mysql": {
     "host": "",
     "port": 3306,
