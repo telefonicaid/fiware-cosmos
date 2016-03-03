@@ -98,15 +98,16 @@ server.route({
     handler: function (request, reply) {
         var userId = request.params.userId;
         var inputData = '/user/' + userId + '/' + request.params.inputDataPath;
-        var jarPath = request.payload.jar_path;
+        var jar = request.payload.jar;
         var className = request.payload.class_name;
+        var libJars = request.payload.lib_jars;
         var jobId = 'tidoop_job_' + Date.now();
         var outputData = '/user/' + userId + '/jobs/' + jobId + '/output';
 
         logger.info('Request: POST /tidoop/v1' + inputData + ' ' + JSON.stringify(request.payload));
 
         // Run the job; the callback function will receive the complete output once it finishes
-        cmdRunner.runHadoop(jobId, jarPath, className, jarPath, inputData, outputData, function(error, result) {
+        cmdRunner.runHadoopJar(jar, className, libJars, inputData, outputData, function(error, result) {
             if (error) {
                 logger.error('The MR job could not be run');
                 reply(boom.internal('The MR job could not be run', error));
