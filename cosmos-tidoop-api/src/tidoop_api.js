@@ -25,11 +25,9 @@
 
 // Module dependencies
 var Hapi = require('hapi');
-var boom = require('boom');
 var cmdRunner = require('./cmd_runner.js');
 var packageJson = require('../package.json');
 var config = require('../conf/cosmos-tidoop-api.json');
-var mysqlDriver = require('./mysql_driver.js');
 var logger = require('./logger.js');
 
 // Create a Hapi server with a host and port
@@ -53,46 +51,6 @@ server.route({
 });
 
 server.route({
-    method: 'GET',
-    path: '/tidoop/v1/user/{userId}/jobs',
-    handler: function(request, reply) {
-        var userId = request.params.userId;
-
-        logger.info('Request: GET /tidoop/v1/user/' + userId + '/jobs/');
-
-        // Get the job status
-        var result = mysqlDriver.getJobs(userId, function (error, result) {
-            if (error) {
-                logger.error('Could not get job information for the given user ID');
-                reply(boom.internal('Could not get job information for the given user ID', error));
-            } else if (result[0]) {
-                // Create the response
-                var response = '{"success":"true","jobs":[';
-
-                // Iterate on the results
-                for (var i = 0, len = results.length; i < len; i++) {
-                    if (i != 0) {
-                        response += ',';
-                    } // if
-
-                    response += '{"job_id": "' + jobId + '", "job_type": "' + result[0].jobType + '", "start_time": "' +
-                        result[0].startTime + '", "end_time": "' + result[0].endTime + '", "map_progress": ' +
-                        result[0].mapProgress + ', "reduce_progress": ' + result[0].reduceProgress + '}';
-                } // for
-
-                response += ']}';
-
-                // Return the response
-                logger.info("Response: " + response);
-                reply(response);
-            } else {
-                reply(boom.badRequest('The given user ID=' + jobId + ' does not exist'));
-            } // if else
-        });
-    } // handler
-});
-
-server.route({
     method: 'POST',
     path: '/tidoop/v1/user/{userId}/{inputDataPath}',
     handler: function (request, reply) {
@@ -101,26 +59,44 @@ server.route({
         var jar = request.payload.jar;
         var className = request.payload.class_name;
         var libJars = request.payload.lib_jars;
-        var jobId = 'tidoop_job_' + Date.now();
+        var input = '/user/' + userId + '/' + request.payload.input;
+        var output = '/user/' + userId + '/' + request.payload.output;
 
-        logger.info('Request: POST /tidoop/v1' + inputData + ' ' + JSON.stringify(request.payload));
+        logger.info('Request: POST /tidoop/v1' + inputData + ' ' + request.payload);
 
-        // Run the job; the callback function will receive the complete output once it finishes
-        cmdRunner.runHadoopJar(jar, className, libJars, inputData, userId, jobId, function(error, result) {
-            if (error) {
-                logger.error('The MR job could not be run');
-                reply(boom.internal('The MR job could not be run', error));
+        cmdRunner.runHadoopJar(userId, jar, className, libJars, input, output, function(error, result) {
+            if (error && error >= 0) {
+                var response = '{"success":"false","error":' + error + '}';
+                logger.info(response);
+                reply(response);
             } else {
-                logger.info('hadoop jar exiting with code ' + result);
+                var response = '{"success":"true","job_id": "' + result + '"}';
+                logger.info("Response: " + response);
+                reply(response);
             } // if else
         });
+    } // handler
+});
 
-        // Create the response
-        var response = '{"success":"true","job_id": "' + jobId + '"}';
-        logger.info("Response: " + response);
+server.route({
+    method: 'GET',
+    path: '/tidoop/v1/user/{userId}/jobs',
+    handler: function(request, reply) {
+        var userId = request.params.userId;
 
-        // Return the response
-        reply(response);
+        logger.info('Request: GET /tidoop/v1/user/' + userId + '/jobs/');
+
+        cmdRunner.runHadoopJobList(userId, function (error, result) {
+            if (error) {
+                var response = '{"success":"false","error":"The user ID does not exist"}';
+                logger.info(response);
+                reply(response);
+            } else {
+                var response = '{"success":"true","jobs":' + result + '}';
+                logger.info(response);
+                reply(response);
+            } // if else
+        });
     } // handler
 });
 
@@ -133,22 +109,30 @@ server.route({
 
         logger.info('Request: GET /tidoop/v1/user/' + userId + '/jobs/' + jobId);
 
-        // Get the job status
-        var result = mysqlDriver.getJob(jobId, function (error, result) {
+        cmdRunner.runHadoopJobList(userId, function (error, result) {
             if (error) {
-                logger.error('Could not get job information for the given job ID');
-                reply(boom.internal('Could not get job information for the given job ID', error));
-            } else if (result[0]) {
-                // Create the response
-                var response = '{"success":"true","job":{"job_id": "' + jobId + '", "job_type": "' + result[0].jobType + '", "start_time": "' +
-                    result[0].startTime + '", "end_time": "' + result[0].endTime + '", "map_progress": ' +
-                    result[0].mapProgress + ', "reduce_progress": ' + result[0].reduceProgress + '}}';
-                logger.info("Response: " + response);
-
-                // Return the response
+                var response = '{"success":"false","error":"The user ID does not exist"}';
+                logger.info(response);
                 reply(response);
             } else {
-                reply(boom.badRequest('The given job ID=' + jobId + ' does not exist'));
+                var jsonResult = JSON.parse(result);
+                var job = null;
+
+                for (i in jsonResult) {
+                    if (jsonResult[i].job_id === jobId) {
+                        job = jsonResult[i];
+                    } // if
+                } // for
+
+                if (job === null) {
+                    var response = '{"success":"false","error":"The job ID does not exist"}';
+                    logger.info(response);
+                    reply(response);
+                } else {
+                    var response = '{"success":"true","job":' + JSON.stringify(job) + '}';
+                    logger.info(response);
+                    reply(response);
+                } // if else
             } // if else
         });
     } // handler
@@ -162,18 +146,9 @@ server.route({
 
         logger.info('Request: DELETE /tidoop/v1/user/' + userId + '/jobs/' + jobId);
 
-        var result = mysqlDriver.deleteJobs(userId, function (error, result) {
-            if (error) {
-                logger.error('Could not delete the jobs for the given user ID');
-                reply(boom.internal('Could not delete the jobs for the given user ID', error));
-            } else {
-                var response = '{"success":"true"}';
-                logger.info("Response: " + response);
-
-                // Return the response
-                reply(response);
-            } // if else
-        });
+        var response = '{"success":"false","error":"Not yet supported"}';
+        logger.info("Response: " + response);
+        reply(response);
     } // handler
 });
 
@@ -186,44 +161,25 @@ server.route({
 
         logger.info('Request: DELETE /tidoop/v1/user/' + userId + '/jobs/' + jobId);
 
-        var result = mysqlDriver.deleteJob(jobId, function (error, result) {
+        cmdRunner.runHadoopJobKill(jobId, function(error) {
             if (error) {
-                logger.error('Could not delete the job for the given job ID');
-                reply(boom.internal('Could not delete the job for the given job ID', error));
+                var response = '{"success":"false","error":"The job ID does not exist"}';
+                logger.info("Response: " + response);
+                reply(response);
             } else {
-                // Run the job; the callback function will receive the complete output once it finishes
-                cmdRunner.runKill(jobId, function(error, result) {
-                    if (error) {
-                        logger.error('The MR job could not be run');
-                        reply(boom.internal('The MR job could not be run', error));
-                    } else {
-                        logger.info(result);
-                    } // if else
-                });
-
                 var response = '{"success":"true"}';
                 logger.info("Response: " + response);
-
-                // Return the response
                 reply(response);
             } // if else
         });
     } // handler
 });
 
-// Create a connection to the MySQL server, and start the Hapi server
-mysqlDriver.connect(function(error) {
-    if (error) {
-        logger.error('There was some error when connecting to MySQL database. The server will not be run. ' +
-            'Details: ' + error);
+// Start the Hapi server
+server.start(function(error) {
+    if(error) {
+        logger.error("Some error occurred during the starting of the Hapi server. Details: " + error);
     } else {
-        // Start the Hapi server
-        server.start(function(error) {
-            if(error) {
-                logger.error("Some error occurred during the starting of the Hapi server. Details: " + error);
-            } else {
-                logger.info("tidoop-mr-lib-api running at http://" + config.host + ":" + config.port);
-            } // if else
-        });
+        logger.info("tidoop-mr-lib-api running at http://" + config.host + ":" + config.port);
     } // if else
 });
