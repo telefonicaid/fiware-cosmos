@@ -8,8 +8,6 @@
   },
   "dependencies": {
     "hapi": "^8.5.1",
-    "mysql": "^2.7.0",
-    "boom": "^2.8.0",
     "winston": "^1.0.1"
   },
   "scripts": {
