@@ -26,21 +26,117 @@
 // Module dependencies
 var spawn = require('child_process').spawn;
 
-function runHadoopJar(jar, className, jarPath, inputData, userId, jobId, callback) {
-    var outputData = '/user/' + userId + '/jobs/' + jobId + '/output';
-    var params = ['-u', userId, 'hadoop', 'jar', jar, className, '-libjars', jarPath, inputData, outputData];
-    var job = spawn('sudo', params);
+function runHadoopJar(userId, jar, className, jarPath, input, output, callback) {
+    var params = ['-u', userId, 'hadoop', 'jar', jar, className, '-libjars', jarPath, input, output];
+    var command = spawn('sudo', params);
+    var jobId = null;
 
-    job.on('close', function (code) {
-        return callback(null, code);
+    // This function catches the stderr as it is being produced (console logs are printed in the stderr). At the moment
+    // of receiving the line containing the job ID, get it and return with no error (no error means the job could be
+    // run, independently of the final result of the job)
+    command.stderr.on('data', function (data) {
+        var dataStr = data.toString();
+        var magicString = 'Submitting tokens for job: ';
+        var indexOfJobId = dataStr.indexOf(magicString);
+
+        if(indexOfJobId >= 0) {
+            jobId = dataStr.substring(indexOfJobId + magicString.length, indexOfJobId + magicString.length + 22);
+            return callback(null, jobId);
+        } // if
+    });
+
+    // This function catches the moment the command finishes. Return the error code if the job ID was never got
+    command.on('close', function (code) {
+        if (jobId === null) {
+            return callback(code, null);
+        } // if
     });
 } // runHadoopJar
 
-function runKill(jobId, callback) {
-    // TBD
-} // runKill
+function runHadoopJobList(userId, callback) {
+    var params = ['job', '-list', 'all'];
+    var command = spawn('hadoop', params);
+    var jobInfos = null;
+
+    command.stdout.on('data', function (data) {
+        var dataStr = data.toString();
+        jobInfos = '[';
+        var firstJobInfo = true;
+        var lines = dataStr.split("\n");
+
+        for (i in lines) {
+            if(i > 1) {
+                var fields = lines[i].split("\t");
+
+                if (fields.length > 3 && fields[3].replace(/ /g,'') === userId) {
+                    var jobInfo = '{';
+
+                    for (j in fields) {
+                        if (fields[j].length > 0) {
+                            var value = fields[j].replace(/ /g,'');
+
+                            if (j == 0) {
+                                jobInfo += '"job_id":"' + value + '"';
+                            } else if (j == 1) {
+                                jobInfo += ',"state":"' + value + '"';
+                            } else if (j == 2) {
+                                jobInfo += ',"start_time":"' + value + '"';
+                            } else if (j == 3) {
+                                jobInfo += ',"user_id":"' + value + '"';
+                            } // if else
+                        } // if
+                    } // for
+
+                    jobInfo += '}';
+
+                    if (firstJobInfo) {
+                        jobInfos += jobInfo;
+                        firstJobInfo = false;
+                    } else {
+                        jobInfos += ',' + jobInfo;
+                    } // if else
+                } // if
+            } // if
+        } // for
+
+        jobInfos += ']';
+        return callback(null, jobInfos);
+    });
+
+    // This function catches the moment the command finishes. Return the error code if the jobs information was never
+    // got
+    command.on('close', function (code) {
+        if (jobInfos === null) {
+            return callback(code, null);
+        } // if
+    });
+} // runHadoopJobList
+
+function runHadoopJobKill(jobId, callback) {
+    var params = ['job', '-kill', jobId];
+    var command = spawn('hadoop', params);
+
+    command.stderr.on('data', function (data) {
+        var dataStr = data.toString();
+        var magicString = 'Application with id';
+
+        if(dataStr.indexOf(magicString) >= 0) {
+            return callback('Application does not exist');
+        } // if
+    });
+
+    command.stdout.on('data', function (data) {
+        var dataStr = data.toString();
+        var magicString = 'Killed job';
+
+        if (dataStr.indexOf(magicString) >= 0) {
+            return callback(null);
+        } // if
+    });
+} // runHadoopJobKill
 
 module.exports = {
     runHadoopJar: runHadoopJar,
-    runKill: runKill
+    runHadoopJobList: runHadoopJobList,
+    runHadoopJobKill: runHadoopJobKill
 } // module.exports
