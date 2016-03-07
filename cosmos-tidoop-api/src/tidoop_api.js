@@ -52,17 +52,16 @@ server.route({
 
 server.route({
     method: 'POST',
-    path: '/tidoop/v1/user/{userId}/{inputDataPath}',
+    path: '/tidoop/v1/user/{userId}/jobs',
     handler: function (request, reply) {
         var userId = request.params.userId;
-        var inputData = '/user/' + userId + '/' + request.params.inputDataPath;
         var jar = request.payload.jar;
         var className = request.payload.class_name;
         var libJars = request.payload.lib_jars;
         var input = '/user/' + userId + '/' + request.payload.input;
         var output = '/user/' + userId + '/' + request.payload.output;
 
-        logger.info('Request: POST /tidoop/v1' + inputData + ' ' + request.payload);
+        logger.info('Request: POST /tidoop/v1/user' + userId + '/jobs ' + request.payload);
 
         cmdRunner.runHadoopJar(userId, jar, className, libJars, input, output, function(error, result) {
             if (error && error >= 0) {
@@ -84,7 +83,7 @@ server.route({
     handler: function(request, reply) {
         var userId = request.params.userId;
 
-        logger.info('Request: GET /tidoop/v1/user/' + userId + '/jobs/');
+        logger.info('Request: GET /tidoop/v1/user/' + userId + '/jobs');
 
         cmdRunner.runHadoopJobList(userId, function (error, result) {
             if (error) {
@@ -144,7 +143,7 @@ server.route({
     handler: function(request, reply) {
         var userId = request.params.userId;
 
-        logger.info('Request: DELETE /tidoop/v1/user/' + userId + '/jobs/' + jobId);
+        logger.info('Request: DELETE /tidoop/v1/user/' + userId + '/jobs');
 
         var response = '{"success":"false","error":"Not yet supported"}';
         logger.info("Response: " + response);
