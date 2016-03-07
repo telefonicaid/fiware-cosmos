@@ -4,14 +4,13 @@
 * [Installation](#section2)
     * [Prerequisites](#section2.1)
     * [API installation](#section2.2)
-    * [MySQL database installation](#section2.3)
-    * [Unit tests](#section2.4)
+    * [Unit tests](#section2.3)
 * [Configuration](#section3)
 * [Running](#section4)
 * [Usage](#section5)
 * [Administration](#section6)
     * [Logging traces](#section6.1)
-    * [Database](#section6.2)
+    * [Submitted jobs](#section6.2)
 * [Contact](#section7)
 
 ##<a name="section1"></a>What is cosmos-tidoop-api
@@ -31,8 +30,6 @@ This REST API has no sense if tidoop-mr-lib is not installed. And tidoop-mr-lib 
 
 As said, cosmos-tidoop-api is a Node.js application, therefore install it from the official [download](https://nodejs.org/download/). An advanced alternative is to install [Node Version Manager](https://github.com/creationix/nvm) (nvm) by creationix/Tim Caswell, which will allow you to have several versions of Node.js and switch among them.
 
-Launched MapReduce jobs are tracked by means of a MySQL database, thus a MySQL server must be installed somewhere of your choice and be accessible by the API.
-
 Of course, common tools such as `git` and `curl` are needed.
 
 [Top](#top)
@@ -47,8 +44,13 @@ While you are a sudoer user, create a folder for saving the cosmos-tidoop-api lo
 
     $ sudo mkdir -p /var/log/cosmos/cosmos-tidoop-api
     $ sudo chown -R cosmos-tidoop:cosmos-tidoop /var/log/cosmos
+    
+Now it is time to enable the `cosmos-tidoop` user to run Hadoop commands as the requesting user. This can be done in two ways:
 
-Now, change to the new fresh `cosmos-tidoop` user:
+* Adding the `cosmos-tidoop` user to the sudoers list. This is the easiest way, but the most dangerous one.
+* Adding the `cosmos-tidoop` user to all the user groups (by default, for any user there exists a group with the same name than the user). This is only useful if, and only if, the group permissions are as wide open as the user ones (i.e. `77X`).
+
+Once , change to the new fresh `cosmos-tidoop` user:
 
     $ su - cosmos-tidoop
 
@@ -65,23 +67,7 @@ That must download all the dependencies under a `node_modules` directory.
 
 [Top](#top)
 
-###<a name="section2.3."></a>MySQL database installation
-Use the file `resources/mysql_db_and_tables.sql` for creating both `cosmos` database (if not yet existing) and `tidoop_job` table.
-
-    $ mysql -u <mysql_user> -p < resources/mysql_db_and_tables.sql
-
-The `tidoop_job` table tracks, for each MapReduce job:
-
-* The job id, with format `tidoop_job_<timestamp>`.
-* The class name of the MapReduce job to be run.
-* The timestamp when the job was launched.
-* The timestamp when the job finished.
-* The mapping progress, in percentage.
-* The reducing progress, in percentage.
-
-[Top](#top)
-
-###<a name="section2.4"></a>Unit tests
+###<a name="section2.3"></a>Unit tests
 To be done.
 
 [Top](#top)
@@ -91,12 +77,6 @@ cosmos-tidoop-api is configured through a JSON file (`conf/cosmos-tidoop-api.jso
 
 * **host**: FQDN or IP address of the host running the service. Do not use `localhost` unless you want only local clients may access the service.
 * **port**: TCP listening port for incomming API methods invocation. 12000 by default.
-* **mysql**:
-    * **host**: FQDN or IP address of the host running the service.
-    * **port**: TCP listening port for the MySQL service, typically 3306.
-    * **user**: A valid user allowed to write and read the MySQL database.
-    * **password**: Password for above user.
-    * **database**: Database used to track information regarding the launched MR jobs; "cosmos" by default.
 * **log**:
     * **file_name**: path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `tidoop`.
     * **date_pattern**: data pattern to be appended to the log file name when the log file is rotated.
@@ -120,12 +100,10 @@ cosmos-tidoop-api typically listens in the TCP/12000 port, but you can change if
 ##<a name="section5"></a>Usage
 Please refer to this [Apiary](http://docs.tidoopmrlibapi.apiary.io/#) documentation.
 
-Please observe the MapReduce jobs usually take some time to return a result. This is why the cosmos-tidoop-api operations run the job, but do not return any result, except a `200 OK` (if the job could be successfully run) and a job identifier. In order to get the result of the operation (or its progress), such a job identifier must be used for querying the API later.
-
 [Top](#top)
 
 ##<a name="section6"></a>Administration
-Two are the sources of data, the logs and the database, useful for an administrator of cosmos-tidoop-api.
+Two are the sources of data for administration purposes, the logs and the list of jobs launched.
 
 [Top](#top)
 
@@ -140,57 +118,12 @@ Logging levels follow this hierarchy:
     
 Within the log it is expected to find many `info` messages, and a few of `warn` or `error` types. Of special interest are the errors:
 
-* ***There was some error when connecting to MySQL database. The server will not be run***: This message may appear when starting the API. Most probably the MySQL endpoint is not correct, the MySQL user is not allowed to remotely connect, of there is some network error like a port filtering.
 * ***Some error occurred during the starting of the Hapi server***: This message may appear when starting the API. Most probably the configured host IP address/FQDN does not belongs to the physical machine the service is running, or the configured port is already used.
-* ***The new job could not be added to the database***: This message may appear once a MapReduce job has been launched and it is wanted to be tracked throught the database. Most probably the connection with database has been lost, or the MySQL service is unavailable.
-* ***The MR job could not be run***: This message may appear when a new MapReduce job from tidoop-mr-lib is wanted to be run. Please check the logs generated by the library since it is not a problem related to the API.
-* ***Could not get job information for the given job_id***: This message may appear when the status/progress of a job is requested. Most probably the connection with database has been lost, or the MySQL service is unavailable.
 
 [Top](#top)
 
-###<a name="section6.2"></a>Database
-Information regarding launched jobs can be found in a MySQL table named `tidoop_job` within a database named `cosmos` in the MySQL deployment you did when installing cosmos-tidoop-api. Such a table contains the jod ID, the job type, the starting and ending timestamp the progress in terms of map and reduce percentage.
-
-    $ mysql -u cb -p
-    Enter password: 
-    Welcome to the MySQL monitor.  Commands end with ; or \g.
-    ...
-    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-    mysql> show databases;
-    +-----------------------+
-    | Database              |
-    +-----------------------+
-    | information_schema    |
-    | cosmos                |
-    | mysql                 |
-    | test                  |
-    +-----------------------+
-    4 rows in set (0.00 sec)
-
-    mysql> use cosmos;
-    Reading table information for completion of table and column names
-    You can turn off this feature to get a quicker startup with -A
-
-    Database changed
-    mysql> show tables;
-    +------------------+
-    | Tables_in_cosmos |
-    +------------------+
-    | cosmos_user      |
-    | tidoop_job       |
-    +------------------+
-    2 rows in set (0.00 sec)
-
-    mysql> select * from tidoop_job;
-    +--------------------------+------------+---------------------+---------------------+-------------+----------------+
-    | jobId                    | className  | startTime           | endTime             | mapProgress | reduceProgress |
-    +--------------------------+------------+---------------------+---------------------+-------------+----------------+
-    | tidoop_job_1434361958111 | filter     | 2015-06-15 12:53:24 | 2015-06-15 12:53:46 |         100 |            100 |
-    | tidoop_job_1435387171279 | map_only   | 2015-06-27 09:40:20 | 0000-00-00 00:00:00 |         100 |              0 |
-    ...
-    +--------------------------+------------+---------------------+---------------------+-------------+----------------+
-    30 rows in set (0.00 sec)
+###<a name="section6.2"></a>Submitted jobs
+As an administrator, information regarding submitted jobs can be retrieved via the `hadoop job` command (it must be said such a command is the underlying mechanism the REST API uses in order to return information regarding MapReduce jobs). A complete reference for this command can be found in the official [Hadoop documentation](https://hadoop.apache.org/docs/r1.2.1/commands_manual.html#job). 
 
 [Top](#top)
 
