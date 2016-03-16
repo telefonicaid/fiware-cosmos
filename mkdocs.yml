@@ -9,7 +9,7 @@ use_directory_urls: false
 theme: readthedocs
 extra_css: ["https://fiware.org/style/fiware_readthedocs.css"]
 pages:
-  - Home: index.md
+  - Home: manuals/index.md
   - 'Quick Start Guide': 'quick_start_guide.md'
   - 'Installation and Administration manual':
       - 'Introduction': 'manuals/installation_and_administration_manual/introduction.md'
