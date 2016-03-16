@@ -16,13 +16,13 @@ Content:
     * [Services node details](#section4.2)
         * [Some tools version](#section4.2.1)
         * [Opened ports summary](#section4.2.2)
-        * [Oozie](#section4.2.3)
-        * [Tidoop](#section4.3.4)
-        * [Cosmos Authentication server (cosmos-auth)](#section4.2.5)
-        * [Hive](#section4.2.6)
-            * [HiveServer2 forward](#section4.2.6.1)
-            * [Hive configuration for OAuth2 provider](#section4.2.6.2)
-            * [OAuth2 provider installation](#section4.2.6.3)
+        * [Tidoop](#section4.2.3)
+            * [FIWARE PEP Proxy (Wilma)](#section4.2.3.1)
+        * [Cosmos Authentication server (cosmos-auth)](#section4.2.4)
+        * [Hive](#section4.2.5)
+            * [HiveServer2 forward](#section4.2.5.1)
+            * [Hive configuration for OAuth2 provider](#section4.2.5.2)
+            * [OAuth2 provider installation](#section4.2.5.3)
 * [GUI](#section5)
 * [Reporting issues and contact information](#section6)
 
@@ -170,7 +170,6 @@ $ sudo bash -c "echo 'iptables-restore < /etc/iptables.conf' >> /etc/rc.local"
 * HDFS version: 2.4.0.2.1
 * YARN + MapReduce version: 2.4.0.2.1
 * Hive version: 0.13.0.2.1
-* Oozie version: 4.0.0.2.1
 
 |Private FQDN|Public IP and FQDN|Role|HDD (1)|RAM (2)|Installed software|
 |---|---|---|---|---|---|
@@ -212,7 +211,6 @@ cc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-11)
 |From|To|Comment|
 |---|---|---|
 |Internet|computing.cosmos.lab.fiware.org:10000|HiveServer2|
-|Internet|computing.cosmos.lab.fiware.org:11000|Oozie|
 |Internet|computing.cosmos.lab.fiware.org:12000|Tidoop|
 |Internet|computing.cosmos.lab.fiware.org:13000|cosmos-auth|
 |TID's intranet|computing.cosmos.lab.fiware.org:22|ssh-based management interface|
@@ -220,17 +218,53 @@ cc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-11)
 
 [Top](#top)
 
-####<a name="section4.2.3"></a>Oozie
-To be done.
+####<a name="section4.2.3"></a>Tidoop API
+It is running on port TCP/21000, user `cosmos-tidoop`:
+
+```
+$ sudo netstat -nap | grep 21000
+tcp        0      0 0.0.0.0:21000               0.0.0.0:*                   LISTEN      5628/node           
+$ ps -ef | grep -v grep | grep 5628
+1013      5628  5622  0 12:08 ?        00:00:00 node ./src/tidoop_api.js
+```
+
+Installation path is at `/home/cosmos-tidoop/fiware-cosmos/cosmos-tidoop-api`.
+
+This process has been added to `cosmos-tidoop`'s crontab in order to start it on reboot:
+
+```
+$ cat /home/cosmos-tidoop/crontab_lines 
+@reboot /usr/bin/nohup /usr/local/bin/npm start &
+$ crontab -l
+@reboot /usr/bin/nohup /usr/local/bin/npm start &
+```
+
+Port TCP/21000 is not publicly exposed, but TCP/12000. Wilma PEP proxy is in charge of forwarding from TCP/12000 to TCP21000 (see below).
 
 [Top](#top)
 
-####<a name="section4.2.4"></a>Tidoop
-To be done.
+#####<a name="section4.2.3.1"></a>FIWARE PEP Proxy (Wilma)
+It is running on port TCP/12000, user `wilma`, for OAuth2-based authentication and authorization about the Tidoop API connections (see above).
+
+```
+$ sudo netstat -nap |grep 12000
+tcp        0      0 0.0.0.0:12000               0.0.0.0:*                   LISTEN      5084/node
+$ ps -ef | grep -v grep | grep 5084
+wilma     5084     1  0 12:02 ?        00:00:00 /usr/local/bin/node /home/wilma/fiware-pep-proxy/server.js
+```
+
+This process has been added to `wilma`'s crontab in order to start it on reboot:
+
+```
+$ cat /home/wilma/crontab_lines 
+@reboot /usr/bin/nohup /usr/local/bin/node /home/wilma/fiware-pep-proxy/server.js > /home/wilma/fiware-pep-proxy/wilma.log &
+$ crontab -l
+@reboot /usr/bin/nohup /usr/local/bin/node /home/wilma/fiware-pep-proxy/server.js > /home/wilma/fiware-pep-proxy/wilma.log &
+```
 
 [Top](#top)
 
-####<a name="section4.2.5"></a>Cosmos Authentication server (cosmos-auth)
+####<a name="section4.2.4"></a>Cosmos Authentication server (cosmos-auth)
 It is running on port TCP/13000, user `cosmos-auth`:
 
 ```
@@ -240,8 +274,10 @@ $ ps -ef | grep -v grep | grep 8733
 cosmos-auth      8733  8727  0 12:58 ?        00:00:00 node ./src/server.js
 ```
 
-####<a name="section4.2.6"></a>Hive
-#####<a name="section4.2.6.1"></a>HiveServer2 forward
+Installation path is at `/home/cosmos-tidoop/fiware-cosmos/cosmos-ath`.
+
+####<a name="section4.2.5"></a>Hive
+#####<a name="section4.2.5.1"></a>HiveServer2 forward
 Port TCP/10000 for HiveServer2 opened and forwarded to `dev-fiwr-bignode-11.hi.inet:10000` (Active Namenode):
 
 ```
@@ -266,7 +302,7 @@ target     prot opt source               destination
 
 [Top](#top)
 
-#####<a name="section4.2.6.2"></a>Hive configuration for OAuth2 provider
+#####<a name="section4.2.5.2"></a>Hive configuration for OAuth2 provider
 
 The following properties has been added to `hive-site.xml` in order to enable a custom authentication provider, i.e. cosmos-hive-auth-provider and its `OAuth2AuthenticationProviderImpl` class:
 
@@ -293,7 +329,7 @@ This other property has been modified in order to enable impersonation (on the c
 
 [Top](#top)
 
-#####<a name="section4.2.6.3"></a>OAuth2 provider installation
+#####<a name="section4.2.5.3"></a>OAuth2 provider installation
 The cosmos-hive-auth-provider jar containing the `OAuth2AuthenticationProviderImpl` class has been copied into the installation directory of Hive:
 
 ```
