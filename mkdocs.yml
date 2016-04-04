@@ -2,40 +2,40 @@ site_name: fiware-cosmos
 site_url: https://fiware-cosmos.readthedocs.org
 repo_url: https://github.com/telefonicaid/fiware-cosmos.git
 site_description: Cosmos Documentation
-docs_dir: doc
+docs_dir: doc/manuals
 site_dir: html
 markdown_extensions: [toc,fenced_code]
 use_directory_urls: false
 theme: readthedocs
 extra_css: ["https://fiware.org/style/fiware_readthedocs.css"]
 pages:
-  - Home: manuals/index.md
+  - Home: index.md
   - 'Quick Start Guide': 'quick_start_guide.md'
   - 'Installation and Administration manual':
-      - 'Introduction': 'manuals/installation_and_administration_manual/introduction.md'
-      - 'Batch processing: Some words about Cosmos and its ecosystem': 'manuals/installation_and_administration_manual/batch/some_words_about_cosmos_and_ecosystem.md'
-      - 'Batch processing: HAAS engine (Shara version)': 'manuals/installation_and_administration_manual/batch/haas_engine_sahara.md'
-      - 'Batch processing: HAAS engine (shared Hadoop version)': 'manuals/installation_and_administration_manual/batch/haas_engine_shared_hadoop.md'
-      - 'Batch processing: Storage cluster': 'manuals/installation_and_administration_manual/batch/storage_cluster.md'
-      - 'Batch processing: Cosmos GUI': 'manuals/installation_and_administration_manual/batch/cosmos_gui.md'
-      - 'Batch processing: OAuth2-protected APIs': 'manuals/installation_and_administration_manual/batch/oauth2_protected_apis.md'
-      - 'Batch processing: Tidoop': 'manuals/installation_and_administration_manual/batch/tidoop.md'
-      - 'Batch processing: Cygnus': 'manuals/installation_and_administration_manual/batch/cygnus.md'
-      - 'Batch processing: Sanity Check Procedures': 'manuals/installation_and_administration_manual/batch/sanity_check_procedures.md'
-      - 'Batch processing: Diagnosis Procedures': 'manuals/installation_and_administration_manual/batch/diagnosis_procedures.md'
-      - 'Stream processing: Sinfonier Architecture Overview': 'manuals/installation_and_administration_manual/streaming/stream_processing_sinfonier_architecture.md'
-      - 'Stream processing: Sinfonier Drawer': 'manuals/installation_and_administration_manual/streaming/stream_processing_sinfonier_drawer.md'
-      - 'Stream processing: Sinfonier API': 'manuals/installation_and_administration_manual/streaming/stream_processing_sinfonier_api.md'
-      - 'Stream processing: Sinfonier BackEnd': 'manuals/installation_and_administration_manual/streaming/stream_processing_sinfonier_backend.md'
-      - 'Annex A: Creating a public-private key pair and installing the public key': 'manuals/installation_and_administration_manual/batch/annex_a_create_and_install_keypair.md'
-      - 'Annex B: Get a keystone auth token': 'manuals/installation_and_administration_manual/batch/annex_b_get_keystone_auth_token.md'
-      - 'Annex C: Deploy Apache Storm Cluster': 'manuals/installation_and_administration_manual/streaming/annex_c_deploy_storm_cluster.md'
+      - 'Introduction': 'installation_and_administration_manual/introduction.md'
+      - 'Batch processing: Some words about Cosmos and its ecosystem': 'installation_and_administration_manual/batch/some_words_about_cosmos_and_ecosystem.md'
+      - 'Batch processing: HAAS engine (Shara version)': 'installation_and_administration_manual/batch/haas_engine_sahara.md'
+      - 'Batch processing: HAAS engine (shared Hadoop version)': 'installation_and_administration_manual/batch/haas_engine_shared_hadoop.md'
+      - 'Batch processing: Storage cluster': 'installation_and_administration_manual/batch/storage_cluster.md'
+      - 'Batch processing: Cosmos GUI': 'installation_and_administration_manual/batch/cosmos_gui.md'
+      - 'Batch processing: OAuth2-protected APIs': 'installation_and_administration_manual/batch/oauth2_protected_apis.md'
+      - 'Batch processing: Tidoop': 'installation_and_administration_manual/batch/tidoop.md'
+      - 'Batch processing: Cygnus': 'installation_and_administration_manual/batch/cygnus.md'
+      - 'Batch processing: Sanity Check Procedures': 'installation_and_administration_manual/batch/sanity_check_procedures.md'
+      - 'Batch processing: Diagnosis Procedures': 'installation_and_administration_manual/batch/diagnosis_procedures.md'
+      - 'Stream processing: Sinfonier Architecture Overview': 'installation_and_administration_manual/streaming/stream_processing_sinfonier_architecture.md'
+      - 'Stream processing: Sinfonier Drawer': 'installation_and_administration_manual/streaming/stream_processing_sinfonier_drawer.md'
+      - 'Stream processing: Sinfonier API': 'installation_and_administration_manual/streaming/stream_processing_sinfonier_api.md'
+      - 'Stream processing: Sinfonier BackEnd': 'installation_and_administration_manual/streaming/stream_processing_sinfonier_backend.md'
+      - 'Annex A: Creating a public-private key pair and installing the public key': 'installation_and_administration_manual/batch/annex_a_create_and_install_keypair.md'
+      - 'Annex B: Get a keystone auth token': 'installation_and_administration_manual/batch/annex_b_get_keystone_auth_token.md'
+      - 'Annex C: Deploy Apache Storm Cluster': 'installation_and_administration_manual/streaming/annex_c_deploy_storm_cluster.md'
   - 'User and Programmer manual':
-      - 'Introduction': 'manuals/user_and_programmer_manual/introduction.md'
-      - 'Batch processing: Data management and I/O': 'manuals/user_and_programmer_manual/batch/data_management_and_io.md'
-      - 'Batch processing: Requesting computing resources': 'manuals/user_and_programmer_manual/batch/request_computing_resources.md'
-      - 'Batch processing: Using Hadoop and its ecosystem': 'manuals/user_and_programmer_manual/batch/using_hadoop_and_ecosystem.md'
-      - 'Batch processing: OAuth2-protected REST APIs': 'manuals/user_and_programmer_manual/batch/oauth2_rest_apis.md'
-      - 'Stream processing: Apche Storm & Sinfonier': 'manuals/user_and_programmer_manual/streaming/stream_processing_storm_sinfonier.md'
-      - 'Stream processing: Sinfonier Topologies': 'manuals/user_and_programmer_manual/streaming/stream_processing_sinfonier_topologies.md'
-      - 'Stream processing: Sinfonier Modules': 'manuals/user_and_programmer_manual/streaming/stream_processing_sinfonier_modules.md'
+      - 'Introduction': 'user_and_programmer_manual/introduction.md'
+      - 'Batch processing: Data management and I/O': 'user_and_programmer_manual/batch/data_management_and_io.md'
+      - 'Batch processing: Requesting computing resources': 'user_and_programmer_manual/batch/request_computing_resources.md'
+      - 'Batch processing: Using Hadoop and its ecosystem': 'user_and_programmer_manual/batch/using_hadoop_and_ecosystem.md'
+      - 'Batch processing: OAuth2-protected REST APIs': 'user_and_programmer_manual/batch/oauth2_rest_apis.md'
+      - 'Stream processing: Apche Storm & Sinfonier': 'user_and_programmer_manual/streaming/stream_processing_storm_sinfonier.md'
+      - 'Stream processing: Sinfonier Topologies': 'user_and_programmer_manual/streaming/stream_processing_sinfonier_topologies.md'
+      - 'Stream processing: Sinfonier Modules': 'user_and_programmer_manual/streaming/stream_processing_sinfonier_modules.md'
