@@ -20,6 +20,8 @@ Why emphasize in <i>a shared Hadoop environment</i>? Because shared Hadoops requ
 
 The key point is to relate all the MapReduce operations (run, kill, retrieve status, etc) to the user space in HDFS. This way, simple but effective authorization policies can be stablished per user space (in the most basic approach, allowing only a user to access it own user space). This can be easily combined with authentication mechanisms such as [OAuth2](http://oauth.net/2/).
 
+Finally, it is important to remark cosmos-tidoop is being designed to run in a computing cluster, but in charge of analyzing the data within a storage cluster. Sometimes, of course, both storage and computing cluster may be the same, but they could be splited and this software is ready for that.
+
 [Top](#top)
 
 ##<a name="section2"></a>Installation
@@ -77,9 +79,12 @@ cosmos-tidoop-api is configured through a JSON file (`conf/cosmos-tidoop-api.jso
 
 * **host**: FQDN or IP address of the host running the service. Do not use `localhost` unless you want only local clients may access the service.
 * **port**: TCP listening port for incomming API methods invocation. 12000 by default.
+* **storage_cluster**:
+    * **namenode_host**: FQDN or IP address of the Namenode of the storage cluster.
+    * **namenode_ipc_port**: TCP listening port for Inter-Process Communication used by the Namenode of the storage cluster. 8020 by default.
 * **log**:
-    * **file_name**: path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `tidoop`.
-    * **date_pattern**: data pattern to be appended to the log file name when the log file is rotated.
+    * **file_name**: Path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `tidoop`.
+    * **date_pattern**: Data pattern to be appended to the log file name when the log file is rotated.
 
 [Top](#top)
 
@@ -98,7 +103,143 @@ cosmos-tidoop-api typically listens in the TCP/12000 port, but you can change if
 [Top](#top)
 
 ##<a name="section5"></a>Usage
-Please refer to this [Apiary](http://docs.tidoopmrlibapi.apiary.io/#) documentation.
+###<a name="section5.1"></a>`GET /tidoop/v1/version`
+Gets the running version of cosmos-tidoop.
+
+Request example:
+
+```
+GET http://<tidoop_host>:<tidoop_port>/tidoop/v1/version HTTP/1.1
+```
+
+Response example:
+
+```
+HTTP/1.1 200 OK
+
+{
+    "success": "true", 
+    "version": "0.2.0-next"
+}
+```
+
+[Top](#top)
+
+###<a name="section5.2"></a>`POST /tidoop/v1/user/{userId}/jobs`
+Runs a MapReduce job given the following parameters:
+
+* Java jar containing the desired MapReduce application.
+* The name of the MapReduce application.
+* Any additional library jars required by the application.
+* The input HDFS directory in the storage cluster.
+* The output HDFS directory in the storeage cluster.
+
+Request example:
+
+```
+POST http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs HTTP/1.1
+Content-Type: application/json
+X-Auth-Token: 3bzH35FFLdapMgVCOdpot23534fa8a
+
+{
+	"jar": "/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar",
+	"class_name": "wordcount",
+	"lib_jars": "/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar",
+	"input": "mrtest",
+	"output": "output4"
+}
+```
+
+Response example:
+
+```
+HTTP/1.1 200 OK
+
+{
+    "success": "true",
+    "job_id": "job_1460639183882_0005"
+}
+```
+
+[Top](#top)
+
+###<a name="section5.3"></a>`GET /tidoop/v1/user/{userId}/jobs`
+Gets the details for all the MapReduce jobs run by the given user ID.
+
+Request example:
+
+```
+GET http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs HTTP/1.1
+```
+
+Response example:
+
+```
+HTTP/1.1 200 OK
+
+{
+	"success": "true",
+	"jobs": [{
+		"job_id": "job_1460639183882_0005",
+		"state": "SUCCEEDED",
+		"start_time": "1460963556383",
+		"user_id": "frb"
+	}, {
+		"job_id": "job_1460639183882_0004",
+		"state": "SUCCEEDED",
+		"start_time": "1460959583838",
+		"user_id": "frb"
+	}]
+}
+```
+
+[Top](#top)
+
+###<a name="section5.4"></a>`GET /tidoop/v1/user/{userId}/jobs/{jobId}`
+Gets the details for the given MapReduce job run by the given user ID.
+
+Request example:
+
+```
+GET http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs/job_1460639183882_0005 HTTP/1.1
+```
+
+Response example:
+
+```
+HTTP/1.1 200 OK
+
+{
+	"success": "true",
+	"job": {
+		"job_id": "job_1460639183882_0005",
+		"state": "SUCCEEDED",
+		"start_time": "1460963556383",
+		"user_id": "frb"
+	}
+}
+```
+
+[Top](#top)
+
+###<a name="section5.5"></a>`DELETE /tidoop/v1/user/{userId}/jobs/{jobId}`
+Deletes the given MapReduce job run by the given user ID.
+
+Request example:
+
+```
+DELETE http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs/job_1460639183882_0005 HTTP/1.1
+```
+
+Response example:
+
+```
+HTTP/1.1 200 OK
+
+{
+    "success": "true"
+}
+```
 
 [Top](#top)
 
