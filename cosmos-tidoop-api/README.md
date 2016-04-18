@@ -103,6 +103,8 @@ cosmos-tidoop-api typically listens in the TCP/12000 port, but you can change if
 [Top](#top)
 
 ##<a name="section5"></a>Usage
+NOTE: A `X-Auth-Token` header has been included in all the requests assuming the API is protected by means of some kind of token-based authentication mechanism, such as [OAUth2](http://oauth.net/2/).
+
 ###<a name="section5.1"></a>`GET /tidoop/v1/version`
 Gets the running version of cosmos-tidoop.
 
@@ -110,6 +112,7 @@ Request example:
 
 ```
 GET http://<tidoop_host>:<tidoop_port>/tidoop/v1/version HTTP/1.1
+X-Auth-Token: 3bzH35FFLdapMgVCOdpot23534fa8a
 ```
 
 Response example:
@@ -170,6 +173,7 @@ Request example:
 
 ```
 GET http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs HTTP/1.1
+X-Auth-Token: 3bzH35FFLdapMgVCOdpot23534fa8a
 ```
 
 Response example:
@@ -202,6 +206,7 @@ Request example:
 
 ```
 GET http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs/job_1460639183882_0005 HTTP/1.1
+X-Auth-Token: 3bzH35FFLdapMgVCOdpot23534fa8a
 ```
 
 Response example:
@@ -229,6 +234,7 @@ Request example:
 
 ```
 DELETE http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs/job_1460639183882_0005 HTTP/1.1
+X-Auth-Token: 3bzH35FFLdapMgVCOdpot23534fa8a
 ```
 
 Response example:
