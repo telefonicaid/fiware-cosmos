@@ -7,3 +7,4 @@
 - [cosmos] [HARDENING] Add a Quick Start Guide (#157)
 - [cosmos-tidoop-api] [FEATURE] Create initial version (#158)
 - [cosmos] [HARDENING] Fix the base path for readthedocks in mkdocs.yml (#164)
+- [cosmos] [HARDENING] Add Hive clients to resources folder (#168)
