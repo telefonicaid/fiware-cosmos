@@ -109,7 +109,7 @@ The above command just has started the uploading operation. As can be seen, the 
 
     location: http://dev-fiwr-svc-01.tid.es:14000/webhdfs/v1/user/frb/testdir/testdata.txt?op=CREATE&user.name=frb&data=true
     
-That's becasue the first operation only created the new `hdfs:///user/testdir/testdata.txt` HDFS file in the Namenode; not it is time to upload the data bytes to the Datanodes, and that's achieved by PUTting again the local `testdata.txt` file in the redirection URL:
+That's because the first operation only created the new `hdfs:///user/testdir/testdata.txt` HDFS file in the Namenode; not it is time to upload the data bytes to the Datanodes, and that's achieved by PUTting again the local `testdata.txt` file in the redirection URL:
 
 ```
 $ curl -v -X PUT -T testdata.txt "http://dev-fiwr-svc-01.tid.es:14000/webhdfs/v1/user/frb/testdir/testdata.txt?op=CREATE&user.name=frb&data=true" -H "Content-Type: application/octet-stream" -H "X-Auth-token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
