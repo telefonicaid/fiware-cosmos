@@ -161,22 +161,7 @@ NOTES:
 [Top](#top)
 
 ###<a name="section3.4"></a>Step 4: Query your data
-Since the `testdata.txt` file content was structured in a Comma-Separated Value (CSV) format, it is suitable for being used with [Hive](http://hive.apache.org/), a querying tool from Hadoop ecosystem.
-
-The same we previously used `curl` as a REST client, now we will need a Hive client. In the examples below [this](../../resources/hiveclients/python/hiveserver2-client.py) custom client written in Python has been used (simply follow the [guidelines](./../resources/hiveclients/python/README.md) for installing it).
-
-In order to query for the data within the `hdfs:///frb/testdir/testdata.txt` file, a Hive external table must be created. The concept is similar to SQL, however, in this case the Hive table just contains metadata about the HDFS file, not the data itself.
-
-    hive> create external table my_user_star_wars (name string, planet string, profession string, age int) row format delimited fields terminated by ',' location '/user/my_user/input/structured/';
-
-These Hive tables can be queried locally, by using the Hive CLI as well:
-
-    $ hive
-    hive> select * from <my_user>_star_wars;
-
-Or any other SQL-like sentence, properly called [HiveQL ](http://cwiki.apache.org/confluence/display/Hive/LanguageManual)
-
-Or remotelly, by [developing a Hive client](http://github.com/telefonicaid/fiware-connectors/tree/develop/resources/hive-basic-client) (typically, using JDBC, but there are some other options for other non Java programming languages) able to connect to `cosmos.lab.fi-ware.org:10000`.
+Coming soon.
 
 [Top](#top)
 
@@ -187,17 +172,29 @@ Several pre-loaded MapReduce examples can be found in every Hadoop distribution,
 
 For instance, you can run the <i>Word Count</i> example (this is also know as the "hello world" of Hadoop) by typing:
 
-    $ curl -X POST "http://computing.cosmos.lab.fiware.org:13000/tidoop/v1/user/frb/jobs" -d '{"jar":"/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar","class_name":"WordCount","lib_jars":"/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar","input":"testdir","output":"outputdir"} -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+    $ curl -X POST "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs" -d '{"jar":"/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar","class_name":"wordcount","lib_jars":"/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar","input":"testdir","output":"testoutput"}' -H "Content-Type: application/json" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+    {"success":"true","job_id": "job_1460639183882_0001"}
 
-Please observe the output HDFS folder is automatically created.
-  
+As you can see, another REST API has been used, in this case the Tidoop REST API in the <i>Computing Endpoint</i>. The API allows you checking the status of the job as well:
+
+    $ curl -X GET "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs/job_1460639183882_0001" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+    {"success":"true","job":{"job_id":"job_1460639183882_0001","state":"SUCCEEDED","start_time":"1461060258427","user_id":"frb"}}
+
 [Top](#top)
 
 ###<a name="section3.6"></a>Step 6: Download some data
-You can download any HDFS file using WebHDFS REST API:
+Finally, the result of the MapReduce execution can be seen at the output HDFS folder (which is automatically created) by using the WebHDFS REST API in the <i>Storage Endpoint</i>:
 
-    $ tbd
-
+    $ curl -X GET "http://storage.cosmos.lab.fiware.org:14000/webhdfs/v1/user/frb/testoutput?op=liststatus&user.name=frb" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+    {"FileStatuses":{"FileStatus":[{"pathSuffix":"_SUCCESS","type":"FILE","length":0,"owner":"frb","group":"frb","permission":"644","accessTime":1461060272601,"modificationTime":1461060272616,"blockSize":134217728,"replication":3},{"pathSuffix":"part-r-00000","type":"FILE","length":47,"owner":"frb","group":"frb","permission":"644","accessTime":1461060272228,"modificationTime":1461060272409,"blockSize":134217728,"replication":3}]}}
+    $ curl -X GET "http://storage.cosmos.lab.fiware.org:14000/webhdfs/v1/user/frb/testoutput/part-r-00000?op=open&user.name=frb" -o output.txt -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+    $ cat output.txt 
+    leia,alderaan,politician,25	1
+    luke,tatooine,jedi,25	1
+    solo,corellia,pilot,32	1
+    vader,tatooine,sith,50	1
+    yoda,dagobah,jedi,275	1
+    
 [Top](#top)
 
 ##<a name="section4"></a>Reporting issues and contact information
