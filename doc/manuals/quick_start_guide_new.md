@@ -166,13 +166,13 @@ Coming soon.
 [Top](#top)
 
 ###<a name="section3.5"></a>Step 5: Run your first MapReduce job
-Several pre-loaded MapReduce examples can be found in every Hadoop distribution, typically in a Java `-jar` file called `hadoop-mapreduce-examples.jar`. In this case, the <i>Computing Endpoint</i> owns that file at:
+Several already developed MapReduce examples can be found in every Hadoop distribution, typically in a Java `.jar` file called `hadoop-mapreduce-examples.jar`. This file is copied to the HDFS space a user owns in FIWARE Lab, specifically under the `jars/` folder, so the `frb` user should have it copied to:
 
-    /usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar
+    hdfs:///user/frb/jars/hadoop-mapreduce-examples.jar
 
-For instance, you can run the <i>Word Count</i> example (this is also know as the "hello world" of Hadoop) by typing:
+Thus, you can run the <i>Word Count</i> example (this is also know as the "hello world" of Hadoop) by typing:
 
-    $ curl -X POST "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs" -d '{"jar":"/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar","class_name":"wordcount","lib_jars":"/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar","input":"testdir","output":"testoutput"}' -H "Content-Type: application/json" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+    $ curl -X POST "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs" -d '{"jar":"jars/hadoop-mapreduce-examples.jar","class_name":"wordcount","lib_jars":"jars/hadoop-mapreduce-examples.jar","input":"testdir","output":"testoutput"}' -H "Content-Type: application/json" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
     {"success":"true","job_id": "job_1460639183882_0001"}
 
 As you can see, another REST API has been used, in this case the Tidoop REST API in the <i>Computing Endpoint</i>. The API allows you checking the status of the job as well:
