@@ -9,3 +9,4 @@
 - [cosmos] [HARDENING] Fix the base path for readthedocks in mkdocs.yml (#164)
 - [cosmos] [HARDENING] Update the Quick Start Guide with regards to the new FIWARE Lab clusters (#167)
 - [cosmos] [HARDENING] Add Hive clients to resources folder (#168)
+- [cosmos-tidoop-api] [BUG] Run Java jars located in HDFS (#172)
