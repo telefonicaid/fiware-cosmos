@@ -55,9 +55,15 @@ server.route({
     path: '/tidoop/v1/user/{userId}/jobs',
     handler: function (request, reply) {
         var userId = request.params.userId;
-        var jar = request.payload.jar;
+        var jarInHDFS = 'hdfs://' + config.storage_cluster.namenode_host + ':'
+            + config.storage_cluster.namenode_ipc_port + '/user/' + userId + '/' + request.payload.jar;
+        var splits = request.payload.jar.split("/");
+        var jarName = splits[splits.length - 1];
         var className = request.payload.class_name;
-        var libJars = request.payload.lib_jars;
+        var libJarsInHDFS = 'hdfs://' + config.storage_cluster.namenode_host + ':'
+            + config.storage_cluster.namenode_ipc_port + '/user/' + userId + '/' + request.payload.lib_jars;
+        var splits = request.payload.lib_jars.split("/");
+        var libJarsName = splits[splits.length - 1];
         var input = 'hdfs://' + config.storage_cluster.namenode_host + ':' + config.storage_cluster.namenode_ipc_port
             + '/user/' + userId + '/' + request.payload.input;
         var output = 'hdfs://' + config.storage_cluster.namenode_host + ':' + config.storage_cluster.namenode_ipc_port
@@ -65,7 +71,8 @@ server.route({
 
         logger.info('Request: POST /tidoop/v1/user/' + userId + '/jobs ' + request.payload);
 
-        cmdRunner.runHadoopJar(userId, jar, className, libJars, input, output, function(error, result) {
+        cmdRunner.runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJarsInHDFS, input, output,
+            function(error, result) {
             if (error && error >= 0) {
                 var response = '{"success":"false","error":' + error + '}';
                 logger.info(response);
