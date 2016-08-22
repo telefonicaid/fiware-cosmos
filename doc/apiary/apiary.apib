@@ -1,0 +1,147 @@
+FORMAT: 1A
+HOST: http://cosmos.lab.fiware.org/
+
+# FIWARE-COSMOS API (v1)
+
+FIWARE-COSMOS API (v1).
+
+This is a cookbook with commands that show how to use FIWARE cosmos API.
+It's a work in progress and is changing on a daily basis.
+
+Please check the following [FIWARE Open Specification Legal Notice (implicit patents license)]
+(http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/FI-WARE_Open_Specification_Legal_Notice_(implicit_patents_license))
+to understand the rights to use this document.
+
+
+# Description
+
+This resource allows you to obtain a list of subresources published by the API:
+
+* version of the current running tidoop
+* information about jobs running on the current tidoop
+
+## GET tidoop version [GET /tidoop/v1/version]
+
+Gets the running version of cosmos-tidoop.
+
++ Request
+
+       GET http://<tidoop_host>:<tidoop_port>/tidoop/v1/version HTTP/1.1
+
++ Headers
+
+       X-Auth-Token: xXXxxxxxxXXxxxXXXxXXXxxXxxXXxx
+
++ Response 200 (application/json)
+
+       [
+            {
+              "success": "true",
+              "version": "0.2.0-next"
+            }
+       ]
+
+## GET all jobs [GET /tidoop/v1/user/{userId}/jobs]
+
+Gets the details for all the MapReduce jobs run by the given user ID.
+
++ Request
+
+       GET http://<tidoop_host>:<tidoop_port>/tidoop/v1/user/{userId}}/jobs HTTP/1.1
+
++ Headers
+
+       X-Auth-Token: xXXxxxxxxXXxxxXXXxXXXxxXxxXXxx
+
++ Response 200 (application/json)
+
+       {
+               "success": "true",
+               "jobs": [{
+                       "job_id": "job_1460639183882_0005",
+                       "state": "SUCCEEDED",
+                       "start_time": "1460963556383",
+                       "user_id": "<userId>"
+               }, {
+                       "job_id": "job_1460639183882_0004",
+                       "state": "SUCCEEDED",
+                       "start_time": "1460959583838",
+                       "user_id": "<userId>"
+               }]
+       }
+
+## GET a specific job [GET /tidoop/v1/user/{userId}/jobs/{jobId}]
+
+Gets the details for a specific MapReduce job run by the given user ID.
+
++ Request
+
+      GET http://<tidoop_host>:<tidoop_port>/tidoop/v1/user/{userId}/jobs/{jobId} HTTP/1.1
+
++ Headers
+
+      X-Auth-Token: xXXxxxxxxXXxxxXXXxXXXxxXxxXXxx
+
++ Response 200 (application/json)
+
+       {
+               "success": "true",
+               "job": {
+                       "job_id": "job_1460639183882_0005",
+                       "state": "SUCCEEDED",
+                       "start_time": "1460963556383",
+                       "user_id": "frb"
+               }
+       }
+
+## POST a specific job in cosmos-tidoop [POST /tidoop/v1/user/{userId}/jobs]
+
+Runs a MapReduce job given the following parameters:
+
+* Java jar containing the desired MapReduce application.
+* The name of the MapReduce application.
+* Any additional library jars required by the application.
+* The input HDFS directory in the storage cluster.
+* The output HDFS directory in the storeage cluster.
+
+
++ Request
+
+       POST http://<tidoop_host>:<tidoop_port>/tidoop/v1/user/{userId}/jobs HTTP/1.1
+       {
+               "jar": "/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar",
+               "class_name": "wordcount",
+               "lib_jars": "/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar",
+               "input": "mrtest",
+               "output": "output4"
+       }
+
++ Headers
+
+       X-Auth-Token: xXXxxxxxxXXxxxXXXxXXXxxXxxXXxx
+
++ Response 200 (application/json)
+
+       {
+               "success": "true",
+               "job_id": "job_1460639183882_0005"
+       }
+
+## DELETE a job on cosmos-tidoop [DELETE /tidoop/v1/user/{userId}/jobs/{jobId}]
+
+Deletes the given MapReduce job run by the given user ID.
+
++ Request
+
+       DELETE http://<tidoop_host>:<tidoop_port>/tidoop/v1/user/{userId}/jobs/{jobId} HTTP/1.1
+
++ Headers
+
+       X-Auth-Token: xXXxxxxxxXXxxxXXXxXXXxxXxxXXxx
+
++ Response 200 (application/json)
+
+       {
+               "success": "true",
+       }
+
