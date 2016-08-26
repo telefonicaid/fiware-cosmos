@@ -19,7 +19,7 @@ Content:
 * [Reporting issues and contact information](#section8)
 
 ##<a name="section1"></a>Introduction
-This document describes how Sinfonier can consume historic context information handled by [Orion](http://catalogue.fiware.org/enablers/publishsubscribe-context-broker-orion-context-broker) and stored by Cygnus.
+This document describes how Sinfonier can consume historic context information handled by [Orion](https://github.com/telefonicaid/fiware-orion) and stored by [Cygnus](https://github.com/telefonicaid/fiware-cygnus).
 
 The purpose is consuming information with Sinfonier. Orion has context information that could be useful, but we need a way to connect both elements. The deployment of Cygnus and Kafka, for translating and storing the information in a data structure, implements the connection between Orion and Sinfonier.
 
@@ -55,6 +55,7 @@ Let's write an example of use creating a new entity with attributes and a subscr
 Follow the general procedure below for create this entity and receive changes in its values.
 
 * Entity: Book1
+* Type: Book
 * Attributes: Title, Pages and Price.
 
 A `Fiware-Service` and a `Fiware-ServicePath` must be defined during all the process: Subscription to Orion, Append values and Update the content. In this case we are going to select a descriptive parameters:
@@ -70,7 +71,7 @@ curl -X GET http://localhost:1026/version
 ```
 (Note that `curl` is just one option for sending the requests).
 
-2. Create a subscription to the entity `Book1`
+2. Create a subscription to the entity `Book1` of type `Book`, with Fiware-Service `LibraryOrion` and Fiware-ServicePath `/catalog`.
 ```
 (curl localhost:1026/v1/subscribeContext -s -S --header 'Content-type: application/json' --header 'Accept: application/json' --header 'Fiware-Service: LibraryOrion' --header 'Fiware-ServicePath: /catalog' -d @- | python -mjson.tool) <<EOF
 {
@@ -130,7 +131,7 @@ If you receive another answer from Orion check your curl: `JSON Parse Error` is 
 }   
 ```
 
-3. Create an entity `Book1` in Orion; we will use the `updateContext` operation of the Orion API with the `APPEND` value for creating:
+3. Create an entity `Book1` of type `Book`, with Fiware-Service `LibraryOrion` and Fiware-ServicePath `/catalog` in Orion; we will use the `updateContext` operation of the Orion API with the `APPEND` value for creating:
 ```
 (curl localhost:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'Fiware-Service: LibraryOrion' --header 'Fiware-ServicePath: /catalog' -d @- | python -mjson.tool) <<EOF
 {  
@@ -198,7 +199,7 @@ This action only store a value in the attributes, isn't a change for notify to C
 }   
 ```
 
-4.  When you have your subscription and some appended values it's time to update them. This updates are going to be sent to Cygnus. The way for updating is through the `updateContext` operation, but using the `UPDATE` option. Let's see:
+4.  When you have your subscription and some appended values it's time to update them. This updates are going to be sent to Cygnus. The way for updating is through the `updateContext` operation, but using the `UPDATE` option. We're going to do this update in the entity `Book1` of type `Book`, with Fiware-Service `LibraryOrion` and Fiware-ServicePath `/catalog`. Let's see:
 ```
 (curl localhost:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'Fiware-Service: LibraryOrion' --header 'Fiware-ServicePath: /catalog' -d @- | python -mjson.tool) <<EOF
 {
@@ -417,9 +418,6 @@ There are several channels suited for reporting issues and asking for doubts in 
 * Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
-    * [fermin.galanmarquez@telefonica.com](mailto:fermin.galanmarquez@telefonica.com) **[Contributor]**
-    * [german.torodelvalle@telefonica.com](german.torodelvalle@telefonica.com) **[Contributor]**
-    * [ivan.ariasleon@telefonica.com](mailto:ivan.ariasleon@telefonica.com) **[Quality Assurance]**
     * [pablo.coellovillalba@telefonica.com](mailto:pablo.coellovillalba@telefonica.com) **[Contributor]**
 
 **NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
