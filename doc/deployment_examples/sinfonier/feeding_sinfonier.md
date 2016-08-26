@@ -292,8 +292,8 @@ cygnusagent.sinks.kafka-sink.batch_size = 1
 cygnusagent.sinks.kafka-sink.batch_timeout = 10
 ```
 Some important details:
-* `cygnusagent.sinks.kafka-sink.broker_list` : Need the IP and port of your Kafka `brokers`. See [next section](#section5.1) for more information about kafka.
-* `cygnusagent.sinks.kafka-sink.zookeeper_endpoint`: In this case, we are running Zookeeper in `localhost` with port 2181 (Zookeeper port). See [next section](#section5.2) for more information about zookeeper.
+* `cygnusagent.sinks.kafka-sink.broker_list` : Need the IP and port of your Kafka `brokers`. See [next section](#section5.1) for more information about Kafka.
+* `cygnusagent.sinks.kafka-sink.zookeeper_endpoint`: In this case, we are running Zookeeper in `localhost` with port 2181 (Zookeeper port). See [next section](#section5.2) for more information about Zookeeper.
 * `cygnusagent.sinks.kafka-sink.data_model`: Cygnus parameter. Use dm-by-entity for a descriptive storage.
 
 Running properly all the structure (See [general procedure step-by-step](#section7) for do it properly) and updating some values in our `Entity` you can see how Cygnus persist the information.
@@ -366,9 +366,9 @@ A single `Broker` is configured through the following parameters:
 | broker.id | yes | 1 | An unique integer that define a broker |
 | port | yes | 9092 |  Port assigned to broker 1 |
 | host.name | yes | 0.0.0.0 |  For local connections must be `localhost`. For remote connections `0.0.0.0` allow them |
-| zookeeper.connect | yes | localhost:2181 | Usually Zookeeper is running on a local machine. In other case, remote ip access is required with port 2181 |
+| zookeeper.connect | yes | localhost:2181 | Usually Zookeeper is running on a local machine. In other case, remote IP access is required with port 2181 |
 | log.dirs | yes | /tmp/kafka-logs-1 | kafka-logs-x, being x the broker.id |
-| advertised.host.name | no | your_remote_ip |  For remote connections of a known ip that allow it to access to the `broker` |
+| advertised.host.name | no | your_remote_ip |  For remote connections of a known IP that allow it to access to the `broker` |
 | advertised.port | no | 9092 | For use a remote port different from the port broker set previously |
 
 A “multibroker” configuration can be configured by creating different files, one per `Broker`, and setting same parameters like the first one, but changing `broker.id`, `port` and `logs.dir`.
