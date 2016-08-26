@@ -5,3 +5,4 @@
 - [cosmos] [HARDENING] Add documentation about how to consume context data from Sinfonier (#145)
 - [cosmos-gui] [HARDENING] Configurable logging level support (#45)
 - [cosmos-gui] [FEATURE] Remove ssh provision for users (#152)
+- [cosmos] [HARDENING] Add Apiary documentation (#177)

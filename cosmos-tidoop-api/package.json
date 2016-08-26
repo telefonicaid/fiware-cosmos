@@ -1,6 +1,6 @@
 {
-  "name": "cosmos-auth",
-  "description": "Node.js app exposing Cosmos Auth API",
+  "name": "cosmos-tidoop-api",
+  "description": "Node.js app exposing the Tidoop REST API",
   "version": "0.3.0-next",
   "repository": {
     "type": "git",
@@ -8,10 +8,9 @@
   },
   "dependencies": {
     "hapi": "^8.5.1",
-    "boom": "^2.8.0",
     "winston": "^1.0.1"
   },
   "scripts": {
-    "start": "node ./src/cosmos_auth.js"
+    "start": "node ./src/tidoop_api.js"
   }
 }
