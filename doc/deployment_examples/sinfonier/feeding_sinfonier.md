@@ -40,6 +40,12 @@ There are two ways to run the architecture:
 ##<a name="section3"></a>Orion contextBroker
 First of all, [Orion](https://github.com/telefonicaid/fiware-orion/blob/develop/doc/manuals/admin/install.md) must be installed in the system. In addition, Orion needs MongoDB for storage, so must be installed too.
 
+Orion contextBroker must be running in `multiservice` mode with the command:
+
+```
+contextBroker -multiservice
+```
+
 Orion handles context information which is stored as `entities` holding `attributes`.
 
 This structure allows to subscribe to `entities` and wait for changes in them. Once subscribed all changes are sent to Cygnus through a specific port (set in subscription curl).
@@ -51,187 +57,195 @@ Follow the general procedure below for create this entity and receive changes in
 * Entity: Book1
 * Attributes: Title, Pages and Price.
 
+A `Fiware-Service` and a `Fiware-ServicePath` must be defined during all the process: Subscription to Orion, Append values and Update the content. In this case we are going to select a descriptive parameters:
+
+* Fiware-Service: LibraryOrion
+* Fiware-ServicePath: /catalog
+
+Let's start with the process:
+
 1. Check if Orion is running properly, asking Orion for its version:
-  ```
-  curl -X GET http://localhost:1026/version
-  ```
-  (Note that `curl` is just one option for sending the requests).
+```
+curl -X GET http://localhost:1026/version
+```
+(Note that `curl` is just one option for sending the requests).
 
 2. Create a subscription to the entity `Book1`
-  ```
-  (curl localhost:1026/v1/subscribeContext -s -S --header 'Content-type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
-  {
-      "entities": [
-          {
-              "type": "Book",
-              "isPattern": "false",
-              "id": "Book1"
-          }
-      ],
-      "attributes": [
-      ],
-      "reference": "http://localhost:5050/notify",
-      "duration": "P1M",
-      "notifyConditions": [
-          {
-              "type": "ONCHANGE",
-              "condValues": [
-                  "title",
-                  "pages",
-                  "price"
-              ]
-          }
-      ],
-      "throttling": "PT5S"
-  }
-  EOF
-  ```
+```
+(curl localhost:1026/v1/subscribeContext -s -S --header 'Content-type: application/json' --header 'Accept: application/json' --header 'Fiware-Service: LibraryOrion' --header 'Fiware-ServicePath: /catalog' -d @- | python -mjson.tool) <<EOF
+{
+    "entities": [
+        {
+            "type": "Book",
+            "isPattern": "false",
+            "id": "Book1"
+        }
+    ],
+    "attributes": [
+    ],
+    "reference": "http://localhost:5050/notify",
+    "duration": "P1M",
+    "notifyConditions": [
+        {
+            "type": "ONCHANGE",
+            "condValues": [
+                "title",
+                "pages",
+                "price"
+            ]
+        }
+    ],
+    "throttling": "PT5S"
+}
+EOF
+```
 
-  There are three JSON special parameters when a susbscription is sent:
-  * `attributes`: Refers to the attributes that will be notified to Cygnus. If empty, all attributes will be notified to Cygnus. If not, only the attributes wrote here will be notified. In this case, if Orion receive a change for the attribute `price` in entity `Book1` all the attributes (`title`, `pages` and `price`) will be sent to Cygnus.
-  * `condValues`: List of attributes that `Book1` has. When a subscription is done to an entity their attributes must be sent to Orion
-  * `reference`: Destination of notifications. In this case we use `http://localhost:5050/notify` but you can configure it with your own destination. This parameter involve that our Cygnus must be configured as destination.
+There are three JSON special parameters when a subscription is sent:
+* `attributes`: Refers to the attributes that will be notified to Cygnus. If empty, all attributes will be notified to Cygnus. If not, only the attributes wrote here will be notified. In this case, if Orion receive a change for the attribute `price` in entity `Book1` all the attributes (`title`, `pages` and `price`) will be sent to Cygnus.
+* `condValues`: List of attributes that `Book1` has. When a subscription is done to an entity their attributes must be sent to Orion
+* `reference`: Destination of notifications. In this case we use `http://localhost:5050/notify` but you can configure it with your own destination. This parameter involve that our Cygnus must be configured as destination.
 
-  Once sent, you will receive something like this:
-  ```
-  {
-      "subscribeResponse": {
-          "duration": "P1M",
-          "subscriptionId": "your_subscription_id",
-          "throttling": "PT5S"
-      }
-  }  
-  ```
-  The value `subscriptionId` is very important. It's highly recommended to save it in case of you need to unsubscribe to the entity in the future.
+Once sent, you will receive something like this:
+```
+{
+    "subscribeResponse": {
+        "duration": "P1M",
+        "subscriptionId": "your_subscription_id",
+        "throttling": "PT5S"
+    }
+}  
+```
+The value `subscriptionId` is very important. It's highly recommended to save it in case of you need to unsubscribe to the entity in the future.
 
-  If you receive another answer from Orion check your curl: `JSON Parse Error` is a typical error. In that case you will receive this message:
-  ```
-  {
-      "subscribeError": {
-          "errorCode": {
-              "code": "400",
-              "details": "JSON Parse Error",
-              "reasonPhrase": "Bad Request"
-          }
-      }
-  }   
-  ```
+If you receive another answer from Orion check your curl: `JSON Parse Error` is a typical error. In that case you will receive this message:
+```
+{
+    "subscribeError": {
+        "errorCode": {
+            "code": "400",
+            "details": "JSON Parse Error",
+            "reasonPhrase": "Bad Request"
+        }
+    }
+}   
+```
 
-3. Create an entity `Book1` in Orion; we will use the `updateContext` operation of the Orion API with the `APPEND` option for creating:
-  ```
-  (curl localhost:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
-  {  
-      "contextElements": [
-          {
-              "type": "Book",
-              "isPattern": "false",
-              "id": "Book1",
-              "attributes": [
-                  {
-                      "name": "title",
-                      "type": "text",
-                      "value": "Game of Thrones"
-                  },
-                  {
-                      "name": "pages",
-                      "type": "integer",
-                      "value": "927"
-                  },
-                  {
-                      "name": "price",
-                      "type": "float",
-                      "value": "18.50"
-                  }
-              ]
-          }
-      ],
-      "updateAction": "APPEND"
-  }
-  EOF
-  ```
-  This action only store a value in the attributes, isn't a change for notify to Cygnus. You will receive:
-  ```
-  {
-      "contextResponses": [
-          {
-              "contextElement": {
-                  "attributes": [
-                      {
-                          "name": "title",
-                          "type": "text",
-                          "value": ""
-                      },
-                      {
-                          "name": "pages",
-                          "type": "integer",
-                          "value": ""
-                      },
-                      {
-                          "name": "price",
-                          "type": "float",
-                          "value": ""
-                      }
-                  ],
-                  "id": "Book1",
-                  "isPattern": "false",
-                  "type": "Book"
-              },
-              "statusCode": {
-                  "code": "200",
-                  "reasonPhrase": "OK"
-              }
-          }
-      ]
-  }   
-  ```
+3. Create an entity `Book1` in Orion; we will use the `updateContext` operation of the Orion API with the `APPEND` value for creating:
+```
+(curl localhost:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'Fiware-Service: LibraryOrion' --header 'Fiware-ServicePath: /catalog' -d @- | python -mjson.tool) <<EOF
+{  
+    "contextElements": [
+        {
+            "type": "Book",
+            "isPattern": "false",
+            "id": "Book1",
+            "attributes": [
+                {
+                    "name": "title",
+                    "type": "text",
+                    "value": "Game of Thrones"
+                },
+                {
+                    "name": "pages",
+                    "type": "integer",
+                    "value": "927"
+                },
+                {
+                    "name": "price",
+                    "type": "float",
+                    "value": "18.50"
+                }
+            ]
+        }
+    ],
+    "updateAction": "APPEND"
+}
+EOF
+```
+This action only store a value in the attributes, isn't a change for notify to Cygnus. You will receive:
+```
+{
+    "contextResponses": [
+        {
+            "contextElement": {
+                "attributes": [
+                    {
+                        "name": "title",
+                        "type": "text",
+                        "value": ""
+                    },
+                    {
+                        "name": "pages",
+                        "type": "integer",
+                        "value": ""
+                    },
+                    {
+                        "name": "price",
+                        "type": "float",
+                        "value": ""
+                    }
+                ],
+                "id": "Book1",
+                "isPattern": "false",
+                "type": "Book"
+            },
+            "statusCode": {
+                "code": "200",
+                "reasonPhrase": "OK"
+            }
+        }
+    ]
+}   
+```
 
 4.  When you have your subscription and some appended values it's time to update them. This updates are going to be sent to Cygnus. The way for updating is through the `updateContext` operation, but using the `UPDATE` option. Let's see:
-  ```
-  (curl localhost:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
-  {
-      "contextElements": [
-          {
-              "type": "Book",
-              "isPattern": "false",
-              "id": "Book1",
-              "attributes": [
-                  {
-                      "name": "title",
-                      "type": "text",
-                      "value": "Game of thrones: A song of ice and fire"
-                  },
-                  {
-                      "name": "pages",
-                      "type": "integer",
-                      "value": "985"
-                  },
-                  {
-                      "name": "price",
-                      "type": "float",
-                      "value": "23.50"
-                  }
-              ]
-          }
-      ],
-      "updateAction": "UPDATE"
-  }
-  EOF
-  ```
-  As you can see we send differents values. The response is the same as `APPEND`.
+```
+(curl localhost:1026/v1/updateContext -s -S --header 'Content-Type: application/json' --header 'Accept: application/json' --header 'Fiware-Service: LibraryOrion' --header 'Fiware-ServicePath: /catalog' -d @- | python -mjson.tool) <<EOF
+{
+    "contextElements": [
+        {
+            "type": "Book",
+            "isPattern": "false",
+            "id": "Book1",
+            "attributes": [
+                {
+                    "name": "title",
+                    "type": "text",
+                    "value": "Game of thrones: A song of ice and fire"
+                },
+                {
+                    "name": "pages",
+                    "type": "integer",
+                    "value": "985"
+                },
+                {
+                    "name": "price",
+                    "type": "float",
+                    "value": "23.50"
+                }
+            ]
+        }
+    ],
+    "updateAction": "UPDATE"
+}
+EOF
+```
+As you can see we send different values. The response is the same as `APPEND`.
 
-  After all, there a subscription to `Book1` that will notify all attributes to Cygnus in the moment that a value changes (one, two or all attributes). If you got a bad subscription or want to change it to another entity or change the notified values, you can easily unsubscribe. Only needs the subscription ID previously saved:
-  ```
-  (curl localhost:1026/v1/unsubscribeContext -s -S --header 'Content-Type: application/json' \
-      --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
-  {
-      "subscriptionId": "your_subscription_id"
-  }
-  EOF
-  ```
-  In addition, there are a way to know all subscriptions and obtain the ID:
-  ```
-  curl -X GET http://localhost:1026/v2/subscriptions
-  ```
+After all, there a subscription to `Book1` that will notify all attributes to Cygnus in the moment that a value changes (one, two or all attributes). If you got a bad subscription or want to change it to another entity or change the notified values, you can easily unsubscribe. Only needs the subscription ID previously saved:
+```
+(curl localhost:1026/v1/unsubscribeContext -s -S --header 'Content-Type: application/json' \
+    --header 'Accept: application/json' -d @- | python -mjson.tool) <<EOF
+{
+    "subscriptionId": "your_subscription_id"
+}
+EOF
+```
+
+In addition, there are a way to know all subscriptions and obtain the ID:
+```
+curl -X GET http://localhost:1026/v2/subscriptions
+```
 
 [Top](#top)
 
@@ -253,21 +267,21 @@ cygnusagent.channels = kafka-channel
 cygnusagent.sources.http-source.channels = kafka-channel
 cygnusagent.sources.http-source.type = org.apache.flume.source.http.HTTPSource
 cygnusagent.sources.http-source.port = 5050
-cygnusagent.sources.http-source.handler = com.telefonica.iot.cygnus.handlers.OrionRestHandler
+cygnusagent.sources.http-source.handler = com.telefonica.iot.cygnus.handlers.NGSIRestHandler
 cygnusagent.sources.http-source.handler.notification_target = /notify
 cygnusagent.sources.http-source.handler.default_service = def_serv
-cygnusagent.sources.http-source.handler.default_service_path = def_servpath
+cygnusagent.sources.http-source.handler.default_service_path = /def_servpath
 cygnusagent.sources.http-source.handler.events_ttl = 2
 cygnusagent.sources.http-source.interceptors = ts gi
 cygnusagent.sources.http-source.interceptors.ts.type = timestamp
-cygnusagent.sources.http-source.interceptors.gi.type = com.telefonica.iot.cygnus.interceptors.GroupingInterceptor$Builder
-cygnusagent.sources.http-source.interceptors.gi.grouping_rules_conf_file = /path/to/your/grouping_rules/conf/grouping_rules2.conf
+cygnusagent.sources.http-source.interceptors.gi.type = com.telefonica.iot.cygnus.interceptors.NGSIGroupingInterceptor$Builder
+cygnusagent.sources.http-source.interceptors.gi.grouping_rules_conf_file = /path/to/your/grouping_rules/conf/grouping_rules.conf
 
 cygnusagent.channels.kafka-channel.type = memory
 cygnusagent.channels.kafka-channel.capacity = 1000
 cygnusagent.channels.kafka-channel.trasactionCapacity = 100
 
-cygnusagent.sinks.kafka-sink.type = com.telefonica.iot.cygnus.sinks.OrionKafkaSink
+cygnusagent.sinks.kafka-sink.type = com.telefonica.iot.cygnus.sinks.NGSIKafkaSink
 cygnusagent.sinks.kafka-sink.channel = kafka-channel
 cygnusagent.sinks.kafka-sink.enable_grouping = true
 cygnusagent.sinks.kafka-sink.data_model = dm-by-entity
@@ -277,7 +291,7 @@ cygnusagent.sinks.kafka-sink.batch_size = 1
 cygnusagent.sinks.kafka-sink.batch_timeout = 10
 ```
 Some important details:
-* `cygnusagent.sinks.kafka-sink.broker_list` : Need the ip and port of your Kafka `brokers`. See [next section](#section5.1) for more information about kafka.
+* `cygnusagent.sinks.kafka-sink.broker_list` : Need the IP and port of your Kafka `brokers`. See [next section](#section5.1) for more information about kafka.
 * `cygnusagent.sinks.kafka-sink.zookeeper_endpoint`: In this case, we are running Zookeeper in `localhost` with port 2181 (Zookeeper port). See [next section](#section5.2) for more information about zookeeper.
 * `cygnusagent.sinks.kafka-sink.data_model`: Cygnus parameter. Use dm-by-entity for a descriptive storage.
 
@@ -286,16 +300,17 @@ Running properly all the structure (See [general procedure step-by-step](#sectio
 ####<a name=”section4.2></a>Running
 Cygnus is run through this command:
 ```
-/path/to/flume/folder/bin/flume-ng agent --conf /path/to/flume/folder/conf -f /path/to/flume/folder/conf/kafka_agents/your_agent.conf -n cygnusagent -Dflume.root.logger=INFO,console
+/path/to/flume/folder/bin/flume-ng agent --conf /path/to/flume/folder/conf -f /path/to/flume/folder/conf/your_kafka_agent.conf -n cygnusagent -Dflume.root.logger=INFO,console
 ```
 An own shell is required for this service. Another way is using `nohup` at the start and `&`at the end for running the server in background (Use restricted when brokers are running properly and if you know how `nohup` works)
 ```
-nohup /path/to/flume/folder/bin/flume-ng agent --conf /path/to/flume/folder/conf -f /path/to/flume/folder/conf/kafka_agents/your_agent.conf -n cygnusagent -Dflume.root.logger=INFO,console &
+nohup /path/to/flume/folder/bin/flume-ng agent --conf /path/to/flume/folder/conf -f /path/to/flume/folder/conf/your_kafka_agent.conf -n cygnusagent -Dflume.root.logger=INFO,console &
 ```
 
 Once you have your Cygnus running and update some values on Orion the notification will be persisted. You will see logs like:
 ```
-2016-XX-XX 09:13:57,365 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - com.telefonica.iot.cygnus.sinks.OrionKafkaSink.persistAggregation(OrionKafkaSink.java:264)] [kafka-sink] Persisting data at OrionKafkaSink. Topic (Book1_Book), Data ({"headers":[{"fiware-service":"def_serv"},{"fiware-servicePath":"def_servpath"},{"timestamp":1451981636718}],"body":{"attributes":[{"name":"title","type":"text","value":"Game of thrones: A song of ice and fire"},{"name":"pages","type":"integer","value":"985"},{"name":"price","type":"float","value":"23.50"}],"type":"Book","isPattern":"false","id":"Book1"}})
+2016-XX-XX 09:13:57,365 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - com.telefonica.iot.cygnus.sinks.NGSIKafkaSink.persistAggregation(NGSIKafkaSink.java:264)] [kafka-sink] Persisting data at NGSIKafkaSink. Topic (libraryorion_catalog_book1_book), Data ({"headers":[{"fiware-service":"LibraryOrion"},{"fiware-servicePath":"/catalog"},{"timestamp":1451981636718}],"body":{"attributes":[{"name":"title","type":"text","value":"Game of thrones: A song of ice and fire"},{"name":"pages","type":"integer","value":"985"},{"name":"price","type":"float","value":"23.50"}],"type":"Book",
+"isPattern":"false","id":"Book1"}})
 2016-XX-XX 09:13:57,414 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - com.telefonica.iot.cygnus.sinks.OrionSink.process(OrionSink.java:196)] Finishing transaction (1451981632-289-0000000000)
 ```
 As you can see, the information is persisted in a `topic` "Book1_Book" with `attributes` title, pages and price. The values match with the last update that we did in Orion.
@@ -303,7 +318,7 @@ As you can see, the information is persisted in a `topic` "Book1_Book" with `att
 [Top](#top)
 
 ##<a name="section5"></a>Kafka
-[Apache Kafka](http://kafka.apache.org/documentation.html#quickstart) is a distributed, partitioned, replicated commit log service. It provides the funcionality of a messaging system, but with a unique design.
+[Apache Kafka](http://kafka.apache.org/documentation.html#quickstart) is a distributed, partitioned, replicated commit log service. It provides the functionality of a messaging system, but with a unique design.
 The use of Kafka for that purpose have two main pieces: Zookeeper and `brokers` (or servers, both names are correct). Kafka is needed for storing the context information handled by the combination of Orion and Cygnus.
 
 Kafka manages the information through `topics` distributed in `brokers` (or servers) running into Zookeeper. The number of `brokers` to be used is up to the user.
@@ -329,7 +344,7 @@ Zookeeper configuration must be stored in a file called `zookeeper.properties`
 [Top](#top)
 
 ####<a name=”section5.1.2></a>Running
-Zookeeper is run throughthis command:
+Zookeeper is run through this command:
 ```
 bin/zookeeper-server-start.sh config/zookeeper.properties
 ```
@@ -399,7 +414,7 @@ The following steps will help you to run all the procedure properly. A specific 
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cygnus` tag.
-* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
+* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [fermin.galanmarquez@telefonica.com](mailto:fermin.galanmarquez@telefonica.com) **[Contributor]**
