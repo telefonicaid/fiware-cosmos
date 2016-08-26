@@ -424,4 +424,4 @@ There are several channels suited for reporting issues and asking for doubts in 
 
 [Top](#top)
 
-[Architecture]: https://github.com/telefonicaid/fiware-cosmos/blob/develop/doc/deployment_examples/sinfonier/feeding_sinfonier.md "Sinfonier architecture"
+[Architecture]: https://github.com/telefonicaid/fiware-cosmos/blob/develop/doc/deployment_examples/sinfonier/feeding_sinfonier.md "Architecture for sinfonier"
