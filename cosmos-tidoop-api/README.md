@@ -149,7 +149,8 @@ X-Auth-Token: 3bzH35FFLdapMgVCOdpot23534fa8a
 	"class_name": "wordcount",
 	"lib_jars": "/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar",
 	"input": "mrtest",
-	"output": "output4"
+	"output": "output4",
+	"other_args": "arg1 arg2"
 }
 ```
 
