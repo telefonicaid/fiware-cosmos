@@ -1,2 +1,3 @@
 - [cosmos] [HARDENING] Add documentation about how to consume context data from Sinfonier (#145)
 - [cosmos] [HARDENING] Add Apiary documentation (#177)
+- [cosmos] [HARDENING] Add improvements to data_copier.sh (#180)
