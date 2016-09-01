@@ -26,7 +26,7 @@
 // Module dependencies
 var spawn = require('child_process').spawn;
 
-function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJarsInHDFS, input, output, callback) {
+function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJarsInHDFS, args, input, output, callback) {
     // Copy the jar from the HDFS user space
     var params = ['-u', userId, 'hadoop', 'fs', '-copyToLocal', jarInHDFS, '/home/' + userId + '/' + jarName];
     var command = spawn('sudo', params);
@@ -38,7 +38,7 @@ function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJar
 
         command.on('close', function(code) {
             // Run the MR job
-            var params = ['-u', userId, 'hadoop', 'jar', '/home/' + userId + '/' + jarName, className, '-libjars', '/home/' + userId + '/' + libJarsName, input, output];
+            var params = ['-u', userId, 'hadoop', 'jar', '/home/' + userId + '/' + jarName, className, args, '-libjars', '/home/' + userId + '/' + libJarsName, input, output];
             var command = spawn('sudo', params);
             var jobId = null;
 
