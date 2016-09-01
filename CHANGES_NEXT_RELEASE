@@ -1,3 +1,6 @@
 - [cosmos][hardening] Add documentation about how to consume context data from Sinfonier (#145)
 - [cosmos][hardening] Add Apiary documentation (#177)
 - [cosmos-tidoop-api][feature] Add suport for MR job input parameters (#181)
+- [cosmos][hardening] Add documentation about how to consume context data from Sinfonier (#145)
+- [cosmos-tidoop-api][hardening]] Add Apiary documentation (#177)
+- [cosmos-admin][hardening] Add improvements to data_copier.sh (#180)
