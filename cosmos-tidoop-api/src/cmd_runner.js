@@ -38,7 +38,6 @@ function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJar
 
         command.on('close', function(code) {
             // Run the MR job
-            //var params = ['-u', userId, 'hadoop', 'jar', '/home/' + userId + '/' + jarName, className, '-libjars', '/home/' + userId + '/' + libJarsName, input, output, otherArgs];
             var params = [];
 
             if (args.length === 0) {
