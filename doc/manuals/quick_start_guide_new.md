@@ -172,7 +172,7 @@ Several already developed MapReduce examples can be found in every Hadoop distri
 
 Thus, you can run the <i>Word Count</i> example (this is also know as the "hello world" of Hadoop) by typing:
 
-    $ curl -X POST "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs" -d '{"jar":"jars/hadoop-mapreduce-examples.jar","class_name":"wordcount","lib_jars":"jars/hadoop-mapreduce-examples.jar","input":"testdir","output":"testoutput"}' -H "Content-Type: application/json" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+    $ curl -X POST "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs" -d '{"jar":"jars/hadoop-mapreduce-examples.jar","class_name":"wordcount","lib_jars":"","input":"testdir","output":"testoutput","other_args":""}' -H "Content-Type: application/json" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
     {"success":"true","job_id": "job_1460639183882_0001"}
 
 As you can see, another REST API has been used, in this case the Tidoop REST API in the <i>Computing Endpoint</i>. The API allows you checking the status of the job as well:

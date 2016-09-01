@@ -68,10 +68,11 @@ server.route({
             + '/user/' + userId + '/' + request.payload.input;
         var output = 'hdfs://' + config.storage_cluster.namenode_host + ':' + config.storage_cluster.namenode_ipc_port
             + '/user/' + userId + '/' + request.payload.output;
+        var otherArgs = request.payload.other_args;
 
         logger.info('Request: POST /tidoop/v1/user/' + userId + '/jobs ' + request.payload);
 
-        cmdRunner.runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJarsInHDFS, input, output,
+        cmdRunner.runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJarsInHDFS, input, output, otherArgs,
             function(error, result) {
             if (error && error >= 0) {
                 var response = '{"success":"false","error":' + error + '}';
