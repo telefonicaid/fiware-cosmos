@@ -133,10 +133,9 @@ Runs a MapReduce job given the following parameters:
 
 * Java jar containing the desired MapReduce application.
 * The name of the MapReduce application.
-* Any additional library jars required by the application. Unless you are using `org.apache.hadoop.util.Tool` interface, leave it empty (`""`).
-* The input HDFS directory in the storage cluster. This must match the first argument (`args[0]`) of the job.
-* The output HDFS directory in the storeage cluster. This must match the second argument (`args[1]`) of the job.
-* Other arguments (`args[2] args[3] ...`) separated by white spaces. Leave it empty (`""`) if no additional arguments are required apart from the input and the output directories.
+* Arguments as a Json array (i.e. arguments separated by white spaces, enclosed by `[...]`). Leave it empty (`""`) if no arguments are required apart from the input and the output directories.
+
+Please observe if any of the arguments refers to a HDFS path (e.g. input or output directory), the absolute path including the HDFS endpoint is required.
 
 Request example:
 
@@ -148,10 +147,7 @@ X-Auth-Token: 3bzH35FFLdapMgVCOdpot23534fa8a
 {
 	"jar": "/usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar",
 	"class_name": "wordcount",
-	"lib_jars": "",
-	"input": "mrtest",
-	"output": "output",
-	"other_args": ""
+	"args": ["hdfs://storage.cosmos.lab.fiware.org/user/frb/input","hdfs://storage.cosmos.lab.fiware.org/user/frb/output"]
 }
 ```
 
