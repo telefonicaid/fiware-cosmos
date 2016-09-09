@@ -55,35 +55,65 @@ server.route({
     path: '/tidoop/v1/user/{userId}/jobs',
     handler: function (request, reply) {
         var userId = request.params.userId;
+
+        if (typeof request.payload.jar === 'undefined') {
+            var response = '{"success":"false","error":"jar not found in the request"}';
+            logger.info(response);
+            reply(response);
+            return;
+        } // if
+
         var jarInHDFS = 'hdfs://' + config.storage_cluster.namenode_host + ':'
             + config.storage_cluster.namenode_ipc_port + '/user/' + userId + '/' + request.payload.jar;
         var splits = request.payload.jar.split("/");
         var jarName = splits[splits.length - 1];
+
+        if (typeof request.payload.class_name === 'undefined') {
+            var response = '{"success":"false","error":"class name not found in the request"}';
+            logger.info(response);
+            reply(response);
+            return;
+        } // if
+
         var className = request.payload.class_name;
-        var libJarsInHDFS = 'hdfs://' + config.storage_cluster.namenode_host + ':'
-            + config.storage_cluster.namenode_ipc_port + '/user/' + userId + '/' + request.payload.lib_jars;
-        var splits = request.payload.lib_jars.split("/");
-        var libJarsName = splits[splits.length - 1];
-        var input = 'hdfs://' + config.storage_cluster.namenode_host + ':' + config.storage_cluster.namenode_ipc_port
-            + '/user/' + userId + '/' + request.payload.input;
-        var output = 'hdfs://' + config.storage_cluster.namenode_host + ':' + config.storage_cluster.namenode_ipc_port
-            + '/user/' + userId + '/' + request.payload.output;
-        var otherArgs = request.payload.other_args;
+
+        var libJarsName = jarName;
+        var libJarsInHDFS = jarInHDFS;
+
+        if (typeof request.payload.args === 'undefined') {
+            var response = '{"success":"false","error":"args not found in the request"}';
+            logger.info(response);
+            reply(response);
+            return;
+        } // if
+
+        var args = request.payload.args;
+        var modArgs = '';
+
+        for (var i = 0; i < args.length; i++) {
+            if (modArgs.length == 0) {
+                modArgs += args[i].replace('storage.cosmos.lab.fiware.org', config.storage_cluster.namenode_host + ':'
+                    + config.storage_cluster.namenode_ipc_port);
+            } else {
+                modArgs += " " + args[i].replace('storage.cosmos.lab.fiware.org', config.storage_cluster.namenode_host
+                        + ':' + config.storage_cluster.namenode_ipc_port);
+            } // if else
+        } // for
 
         logger.info('Request: POST /tidoop/v1/user/' + userId + '/jobs ' + request.payload);
 
-        cmdRunner.runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJarsInHDFS, input, output, otherArgs,
+        cmdRunner.runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJarsInHDFS, modArgs,
             function(error, result) {
-            if (error && error >= 0) {
-                var response = '{"success":"false","error":' + error + '}';
-                logger.info(response);
-                reply(response);
-            } else {
-                var response = '{"success":"true","job_id": "' + result + '"}';
-                logger.info("Response: " + response);
-                reply(response);
-            } // if else
-        });
+                if (error) {
+                    var response = '{"success":"false","error":' + error + '}';
+                    logger.info(response);
+                    reply(response);
+                } else {
+                    var response = '{"success":"true","job_id": "' + result + '"}';
+                    logger.info("Response: " + response);
+                    reply(response);
+                } // if else
+            });
     } // handler
 });
 

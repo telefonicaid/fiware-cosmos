@@ -40,21 +40,25 @@ function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJar
             // Run the MR job
             var params = [];
 
-            if (args.length === 0) {
-                params = ['-u', userId, 'hadoop', 'jar', '/home/' + userId + '/' + jarName, className, input, output];
+            if(args.length === 0) {
+                params = ['-u', userId, 'hadoop', 'jar', '/home/' + userId + '/' + jarName, className];
             } else {
-                params = ['-u', userId, 'hadoop', 'jar', '/home/' + userId + '/' + jarName, className, input, output, otherArgs];
-            } // if else
+                par = ['-u', userId, 'hadoop', 'jar', '/home/' + userId + '/' + jarName, className];
+                params = par.concat(args.split(' '));
+            } // else
 
-            logger.info('Running: sudo -u ' + userId + ' hadoop jar /home/' + userId + '/' + jarName + ' ' + className + ' ' + input + ' ' + output + ' ' + otherArgs);
+            logger.info('sudo ' + params.toString().replace(',', ' '));
             var command = spawn('sudo', params);
             var jobId = null;
+            var stderrTraces = '';
+            var stdoutTraces = '';
 
             // This function catches the stderr as it is being produced (console logs are printed in the stderr). At the
             // moment of receiving the line containing the job ID, get it and return with no error (no error means the
             // job could be run, independently of the final result of the job)
             command.stderr.on('data', function (data) {
                 var dataStr = data.toString();
+                stderrTraces += dataStr;
                 var magicString = 'Submitting tokens for job: ';
                 var indexOfJobId = dataStr.indexOf(magicString);
 
@@ -68,10 +72,16 @@ function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJar
                 } // if
             });
 
+            command.stdout.on('data', function (data) {
+                var dataStr = data.toString();
+                stdoutTraces += dataStr;
+            });
+
             // This function catches the moment the command finishes. Return the error code if the job ID was never got
             command.on('close', function (code) {
                 if (jobId === null) {
-                    return callback(code, null);
+                    return callback('{"stderr":"' + stderrTraces.replace('"', '\"')
+                        + '","stdout":"' + stdoutTraces.replace('"', '\"') + '"}', null);
                 } // if
             });
         });
