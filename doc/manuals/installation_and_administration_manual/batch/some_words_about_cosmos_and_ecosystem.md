@@ -8,7 +8,7 @@ Content:<br>
 
 ##<a name="section1"></a>Cosmos architecture reminder
 
-As previusly said, Cosmos (and its ecosystem) is part of a platform about providing BigData analysis means for data scientists, avoiding them to deploy any kind of infrastructure nor any kind of software, focusing on the analysis. So, the core idea of Cosmos is the on-demand provision of infrastructure supporting the desired analysis software that, once used, is released in order future users may have the opportunity to request resources as well.
+As previoously said, Cosmos (and its ecosystem) is part of a platform about providing BigData analysis means for data scientists, avoiding them to deploy any kind of infrastructure nor any kind of software, focusing on the analysis. So, the core idea of Cosmos is the on-demand provision of infrastructure supporting the desired analysis software that, once used, is released in order future users may have the opportunity to request resources as well.
 
 On the one hand, the infrastructure usually comprises a cluster of machines since BigData is commonly processed in a distributed fashion. Machines can be physical or virtual; our implementation performs a mix of both types, being [Openstack](http://www.openstack.org/) the chosen technology for virtualization.
 
@@ -65,5 +65,5 @@ While these others are optional and depend on your needs:
 * Tidoop MR library and its RESTful API; your users may always use their own MapReduce jobs, this is *only* a library of ready-to-use general purpose jobs.
 * Hadoop extensions; install it if you want yours users have access to non HDFS data such as the one stored in [CKAN Open Data](http://ckan.org/).
 * PEP proxy + OAuth2 Tokens Generator; only if you expect to protect your REST APIs with OAuth2.
-    
+
 [Top](#top)

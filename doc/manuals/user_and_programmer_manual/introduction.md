@@ -7,7 +7,7 @@ The BigData Analysis GE, as described in the [Architecture Description](http://f
 * Cosmos (either the *official* one based on [Openstack's Sahara](http://wiki.openstack.org/wiki/Sahara), either the light version based on a shared [Hadoop](http://hadoop.apache.org/) cluster), [Tidoop](http://github.com/telefonicaid/fiware-tidoop) and [Cygnus](http://github.com/telefonicaid/fiware-cygnus), conforming the Cosmos Ecosystem, for batch processing.
 * [Storm](http://storm.apache.org/) and Sinfonier for stream processing.
 
-Nevertheless, and according to the current versions of the software, please observe both set of tools are not necessary at the same time. So you can feel free to install one, the other or both. Even, not all the tools within a set are mandatory; please have a look on the description of each tool in order to know wether it suits for your deployment or not.
+Nevertheless, and according to the current versions of the software, please observe both set of tools are not necessary at the same time. So you can feel free to install one, the other or both. Even, not all the tools within a set are mandatory; please have a look on the description of each tool in order to know whether it suits for your deployment or not.
 
 [Top](#top)
 
@@ -25,11 +25,11 @@ Apart from this introduction, this User and Programmer Guide contains two main s
 
 Regarding the batch chapter, the user will find instructions about how to manage and upload/download his/her data saved in the permanent storage; a specific section for Cygnus details how to feed the HDFS storage with context data coming from Orion Context Broker. Once the I/O is mastered, the chapter continues teaching the anatomy of a MapReduce application and how to develop and run one of them; a specific section has been added when dealing with CKAN data stored outside of the HDFS. If MapReduce results very difficult to understand for you, or you are looking for something easier, HiveQL is designed for you; you will learn how to query HDFS for selected data, both in a local (using the CLI) and a remote way (creating a custom Hive client). Finally, Oozie is explained as a data processing scheduler. The chapter closes with an explanation about how to deal with OAuth2-secured REST APIs.
 
-Regarding the stremaing chapter, user will find instructions about how to understand and use Sinfonier Project; including how to create topologies ( a graph of real-time computation ), how to deploy them into Apache Storm cluster and how to create "modules" ( processing pieces to be combined in topologies - Spouts, Bolts and Drains). 
+Regarding the streaming chapter, user will find instructions about how to understand and use Sinfonier Project; including how to create topologies ( a graph of real-time computation ), how to deploy them into Apache Storm cluster and how to create "modules" ( processing pieces to be combined in topologies - Spouts, Bolts and Drains).
 
 Once the user knows how Sinfonier works we will see some use case and we will see in depth how to develop new modules (Spouts, Bolts and Drains).
 
-**NOTE**: Please if you have previous Apache Storm knowledge try to be patient with the aditional Storm abstraction called "Drain", we will see how Sinfonier includes it.
+**NOTE**: Please if you have previous Apache Storm knowledge try to be patient with the additional Storm abstraction called "Drain", we will see how Sinfonier includes it.
 
 [Top](#top)
 
@@ -52,12 +52,11 @@ There are several channels suited for reporting issues and asking for doubts in 
    * fiware-cygnus
    * fiware-sinfonier
    * storm (please observe in this case we are not the main supporters of Apache Storm)
-* Use [ask.fiware.org](http://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
+* Use [ask.fiware.org](http://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * <francisco.romerobueno@telefonica.com> (Cosmos Ecosystem)
     * <franciscojesus.gomezrodriguez@telefonica.com> (Sinfonier)
 
-**NOTE**: Please try to avoid personaly emailing the GE owners unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](http://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personally emailing the GE owners unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](http://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)
-

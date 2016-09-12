@@ -23,9 +23,9 @@ Available tools are:
 
 ##<a name="scripts"></a>Scripts
 ###<a name="datacopier"></a>`data_copier.sh`
-This script has been designed for copying HDFS data from one cluster to another. Please observe the data is copied, nod moved, i.e. the source data is never deleted by this script, and this is something up to the source cluster administrator.
+This script has been designed for copying HDFS data from one cluster to another. Please observe the data is copied, not moved, i.e. the source data is never deleted by this script, and this is something up to the source cluster administrator.
 
-The underlying data copying mechanism used by `data_copier.sh` is [WebHDFS](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html), the RESTful API from Hadoop for HDFS. This API exposes methods for creating directories, renaming files... and, specially, reading and writting files.
+The underlying data copying mechanism used by `data_copier.sh` is [WebHDFS](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html), the RESTful API from Hadoop for HDFS. This API exposes methods for creating directories, renaming files... and, specially, reading and writing files.
 
 `data_copier.sh` is parameterized by:
 
@@ -58,15 +58,15 @@ This script has been designed to get certain user statistics, these ones:
 * Number of successful ssh connections.
 * Number of failed ssh connections.
 
-The above values are stored within a database usally named `cosmos`,  in a table usually named `cosmos_user`. Follow [this link](../cosmos-gui/README.md#database) for more details about the database.
+The above values are stored within a database usually named `cosmos`, in a table usually named `cosmos_user`. Follow [this link](../cosmos-gui/README.md#database) for more details about the database.
 
 `get_user_stats.sh` is parameterized by:
 
 * Host running the MySQL server
 * Port where the MySQL server listens for requests. Typically, TCP/3306 port.
 * Database name. Usually, `cosmos`.
-* MySQL user allowd to insert data within the `cosmos` database, `cosmos_user` table.
-* Pasword for the MySQL user.
+* MySQL user allowed to insert data within the `cosmos` database, `cosmos_user` table.
+* Password for the MySQL user.
 * ssh log file (usually, `/var/log/secure`).
 
 In a shell:
@@ -75,7 +75,7 @@ In a shell:
 
 Since the above mentioned statistics change along the time, it is useful to schedule this script execution in a periodic fashion, let's say at least once per day. You can use the `crontab` tool for achieving this; take a look on the next section for more details.
 
-At the same time, the system log rotation must be done at the same frequency this script is run. The reason is the ssh log file is used in order to obtain the number of successful and failed connections; therefore, if this is done in a per day fashion, then the system logs must be rotated once per day; if the statistics are got once per week, then the system logs must be rotated once per week as well; and so on. If you don't want to rotate all the system logs at the same frequency this script is executed, at least you must syncronize the ssh log file among all the system log files.
+At the same time, the system log rotation must be done at the same frequency this script is run. The reason is the ssh log file is used in order to obtain the number of successful and failed connections; therefore, if this is done in a per day fashion, then the system logs must be rotated once per day; if the statistics are got once per week, then the system logs must be rotated once per week as well; and so on. If you don't want to rotate all the system logs at the same frequency this script is executed, at least you must synchronize the ssh log file among all the system log files.
 
 [Top](#top)
 
@@ -93,7 +93,7 @@ When any of the above situations is detected, an email is sent to the Cosmos adm
 * Port where the MySQL server listens for requests. Typically, TCP/3306 port.
 * Database name. Usually, `cosmos`.
 * MySQL user allowed to insert data within the `cosmos` database, `cosmos_user` table.
-* Pasword for the MySQL user.
+* Password for the MySQL user.
 * Percentage of HDFS space considered close to the quota limit.
 * Number of days since creation an account having no HDFS data is considered unused.
 * Email address (owned by an administrator) to send the report to.
@@ -111,7 +111,7 @@ It is convenient this script is run with a frequency not greater than a day, sin
 Scheduling is done through a file that can be edited by typing:
 
     $ crontab -e
-    
+
 Then, and according to the `crontab` specification, add the following lines:
 
 ```
@@ -169,7 +169,7 @@ include /etc/logrotate.d
 }
 
 # system-specific logs may be also be configured here.
-``` 
+```
 
 * `/etc/logrotate.d/`. This folder contains particular configurations for some system processes aming a different log rotation than the default one. This may be as simple as adding certain post-rotation executions, or adding a totally different rotation schedule. Each process, e.g. Syslog, will have a file within this folder containig its particular configuration.
 
@@ -191,7 +191,7 @@ $ cat /etc/logrotate.d/syslog
 
 ```
 
-As explained before, some administrative scripts used by Cosmos need certain system logs are rotated at the same frequency the scripts are run, in order to synchronize them. This is the case for `/var/log/secure`, the file where the ssh daemon logs. The directives for rotating this file are within the Syslog specific configuration (`/etc/logrotate.d/syslog`), which simply adds a post-rotation execution of a command (the `rsyslogd` daemon restart) to the general configration; thus, it is rotated in a per week fashion. Nevertheless, we may need this file is rotated daily if the `get_user_stats.sh` script is run in a per day fashion as well. In order to achieve this, we must create a specific rotation directives file at `/etc/logrotate.d/` for the `/var/log/secure` file, let's say `/etc/logrotate.d/ssh-secure`, with the following content:
+As explained before, some administrative scripts used by Cosmos need certain system logs are rotated at the same frequency the scripts are run, in order to synchronize them. This is the case for `/var/log/secure`, the file where the ssh daemon logs. The directives for rotating this file are within the Syslog specific configuration (`/etc/logrotate.d/syslog`), which simply adds a post-rotation execution of a command (the `rsyslogd` daemon restart) to the general configuration; thus, it is rotated in a per week fashion. Nevertheless, we may need this file is rotated daily if the `get_user_stats.sh` script is run in a per day fashion as well. In order to achieve this, we must create a specific rotation directives file at `/etc/logrotate.d/` for the `/var/log/secure` file, let's say `/etc/logrotate.d/ssh-secure`, with the following content:
 
 ```
 $ cat /etc/logrotate.d/ssh-secure
@@ -204,7 +204,7 @@ $ cat /etc/logrotate.d/ssh-secure
     endscript
 }
 ```
-    
+
 Since the `/var/log/secure` file is now rotated following the directives within `/etc/logrotate.d/ssh-secure`, we must remove such a log file from the `/etc/logrotate.d/syslog` configuration file:
 
 ```
@@ -229,12 +229,11 @@ It is possible the first rotation cycle is not executed at the expected time sin
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cosmos` tag.
-* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
+* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [fermin.galanmarquez@telefonica.com](mailto:fermin.galanmarquez@telefonica.com) **[Contributor]**
 
-**NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personally emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)
-

@@ -39,7 +39,7 @@ The `access_token` field is the OAuth2 token.
 [Top](#top)
 
 ###<a name="section3.2"></a>Step 2: Create a Cosmos account
-At the moment of writting, deploying a Cosmos Portal for FIWARE Lab is in the roadmap, but not yet done.
+At the moment of writing, deploying a Cosmos Portal for FIWARE Lab is in the roadmap, but not yet done.
 
 Thus, in order to create an account you will have to send an email to `francisco.romerobueno@telefonica.com` specifying your FIWARE Lab ID.
 
@@ -66,7 +66,7 @@ Let's start by creating a new directory (`testdir`) in our HDFS user space (in t
 Now, it is time to upload some local file (`testdata.txt`) to the fresh new directory we have created (please observe the verbose option `-v` has been used):
 
 ```
-$ cat testdata.txt 
+$ cat testdata.txt
 luke,tatooine,jedi,25
 leia,alderaan,politician,25
 solo,corellia,pilot,32
@@ -86,7 +86,7 @@ $ curl -v -X PUT -T testdata.txt "http://storage.cosmos.lab.fiware.org:14000/web
 > X-Auth-token: 3azH09G1PdaGmgBNODLOtxy52f5a00
 > Content-Length: 118
 > Expect: 100-continue
-> 
+>
 < HTTP/1.1 100 Continue
 * We are completely uploaded and fine
 < HTTP/1.1 307 Temporary Redirect
@@ -101,14 +101,14 @@ $ curl -v -X PUT -T testdata.txt "http://storage.cosmos.lab.fiware.org:14000/web
 < content-length: 0
 < date: Thu, 14 Apr 2016 09:19:59 GMT
 < connection: close
-< 
+<
 * Closing connection 0
 ```
 
 The above command just has started the uploading operation. As can be seen, the WebHDFS service redirects us to the following location:
 
     location: http://dev-fiwr-svc-01.tid.es:14000/webhdfs/v1/user/frb/testdir/testdata.txt?op=CREATE&user.name=frb&data=true
-    
+
 That's because the first operation only created the new `hdfs:///user/testdir/testdata.txt` HDFS file in the Namenode; not it is time to upload the data bytes to the Datanodes, and that's achieved by PUTting again the local `testdata.txt` file in the redirection URL:
 
 ```
@@ -123,7 +123,7 @@ $ curl -v -X PUT -T testdata.txt "http://dev-fiwr-svc-01.tid.es:14000/webhdfs/v1
 > X-Auth-token: 3azH09G1PdaGmgBNODLOtxy52f5a00
 > Content-Length: 118
 > Expect: 100-continue
-> 
+>
 < HTTP/1.1 100 Continue
 * We are completely uploaded and fine
 < HTTP/1.1 201 Created
@@ -137,7 +137,7 @@ $ curl -v -X PUT -T testdata.txt "http://dev-fiwr-svc-01.tid.es:14000/webhdfs/v1
 < content-length: 0
 < date: Thu, 14 Apr 2016 09:22:39 GMT
 < connection: close
-< 
+<
 * Closing connection 0
 ```
 
@@ -151,7 +151,7 @@ solo,corellia,pilot,32
 yoda,dagobah,jedi,275
 vader,tatooine,sith,50
 ```
-    
+
 NOTES:
 
 * `dev-fiwr-svc-01.tid.es` is just an alias of `storage.cosmos.lab.fiware.org`.
@@ -172,40 +172,46 @@ Several already developed MapReduce examples can be found in every Hadoop distri
 
 Thus, you can run the <i>Word Count</i> example (this is also know as the "hello world" of Hadoop) by typing:
 
-    $ curl -X POST "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs" -d '{"jar":"jars/hadoop-mapreduce-examples.jar","class_name":"wordcount","args":["hdfs://storage.cosmos.lab.fiware.org/user/frb/testdir","hdfs://storage.cosmos.lab.fiware.org/user/frb/testoutput"]}' -H "Content-Type: application/json" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
-    {"success":"true","job_id": "job_1460639183882_0001"}
+```
+$ curl -X POST "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs" -d '{"jar":"jars/hadoop-mapreduce-examples.jar","class_name":"wordcount","args":["hdfs://storage.cosmos.lab.fiware.org/user/frb/testdir","hdfs://storage.cosmos.lab.fiware.org/user/frb/testoutput"]}' -H "Content-Type: application/json" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+{"success":"true","job_id": "job_1460639183882_0001"}
+```
 
 As you can see, another REST API has been used, in this case the Tidoop REST API in the <i>Computing Endpoint</i>. The API allows you checking the status of the job as well:
 
-    $ curl -X GET "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs/job_1460639183882_0001" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
-    {"success":"true","job":{"job_id":"job_1460639183882_0001","state":"SUCCEEDED","start_time":"1461060258427","user_id":"frb"}}
+```
+$ curl -X GET "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs/job_1460639183882_0001" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+{"success":"true","job":{"job_id":"job_1460639183882_0001","state":"SUCCEEDED","start_time":"1461060258427","user_id":"frb"}}
+```
 
 [Top](#top)
 
 ###<a name="section3.6"></a>Step 6: Download some data
 Finally, the result of the MapReduce execution can be seen at the output HDFS folder (which is automatically created) by using the WebHDFS REST API in the <i>Storage Endpoint</i>:
 
-    $ curl -X GET "http://storage.cosmos.lab.fiware.org:14000/webhdfs/v1/user/frb/testoutput?op=liststatus&user.name=frb" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
-    {"FileStatuses":{"FileStatus":[{"pathSuffix":"_SUCCESS","type":"FILE","length":0,"owner":"frb","group":"frb","permission":"644","accessTime":1461060272601,"modificationTime":1461060272616,"blockSize":134217728,"replication":3},{"pathSuffix":"part-r-00000","type":"FILE","length":47,"owner":"frb","group":"frb","permission":"644","accessTime":1461060272228,"modificationTime":1461060272409,"blockSize":134217728,"replication":3}]}}
-    $ curl -X GET "http://storage.cosmos.lab.fiware.org:14000/webhdfs/v1/user/frb/testoutput/part-r-00000?op=open&user.name=frb" -o output.txt -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
-    $ cat output.txt 
-    leia,alderaan,politician,25	1
-    luke,tatooine,jedi,25	1
-    solo,corellia,pilot,32	1
-    vader,tatooine,sith,50	1
-    yoda,dagobah,jedi,275	1
-    
+```
+$ curl -X GET "http://storage.cosmos.lab.fiware.org:14000/webhdfs/v1/user/frb/testoutput?op=liststatus&user.name=frb" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+{"FileStatuses":{"FileStatus":[{"pathSuffix":"_SUCCESS","type":"FILE","length":0,"owner":"frb","group":"frb","permission":"644","accessTime":1461060272601,"modificationTime":1461060272616,"blockSize":134217728,"replication":3},{"pathSuffix":"part-r-00000","type":"FILE","length":47,"owner":"frb","group":"frb","permission":"644","accessTime":1461060272228,"modificationTime":1461060272409,"blockSize":134217728,"replication":3}]}}
+$ curl -X GET "http://storage.cosmos.lab.fiware.org:14000/webhdfs/v1/user/frb/testoutput/part-r-00000?op=open&user.name=frb" -o output.txt -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
+$ cat output.txt
+leia,alderaan,politician,25	1
+luke,tatooine,jedi,25	1
+solo,corellia,pilot,32	1
+vader,tatooine,sith,50	1
+yoda,dagobah,jedi,275	1
+```  
+
 [Top](#top)
 
 ##<a name="section4"></a>Reporting issues and contact information
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cygnus` tag.
-* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
+* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [pablo.coellovillalba@telefonica.com](mailto:pablo.coellovillalba@telefonica.com) **[Contributor]**
 
-**NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personally emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)

@@ -35,17 +35,17 @@ Content:<br>
 
 MapReduce is the programming paradigm used by Hadoop for large data analysis. It basically applies the divide-and-conquer strategy within a distributed cluster of machines:
 
-1. The original input data is splited into many chunks (the chunk size is the Hadoop block size, by default 64 MB).
+1. The original input data is splitted into many chunks (the chunk size is the Hadoop block size, by default 64 MB).
 2. A process is run for each data chunk, in a distributed/parallel fashion and executing each process the same transformation or filtering function on the partial input data. Some partial output data is generated. These processes are named "mappers".\
-3. One or more processes are run in charge of receiving the output of the mappers and executing each process the same aggregation or joining funcion. These processes are named "reducers". The number of reducers is calculated by Hadoop.
+3. One or more processes are run in charge of receiving the output of the mappers and executing each process the same aggregation or joining function. These processes are named "reducers". The number of reducers is calculated by Hadoop.
 
 [Top](#top)
 
 ####<a name="section1.1.1"></a>Input split details
 
-The configured `InputFormat    class governs how a large data file is splited into blocks, and how those blocks are read. By default `FileInputFormat    class is used, and an `InputSplit    object is created per each stored HDFS data block. A `RecordReader    function is given with the `InputSplit    object.
+The configured `InputFormat class governs how a large data file is splitted into blocks, and how those blocks are read. By default `FileInputFormat class is used, and an `InputSplit object is created per each stored HDFS data block. A `RecordReader function is given with the `InputSplit object.
 
-Both `InputSplit    and `RecordReader    are transparent concepts, and the programmer only needs to specify a standard input format from the following ones:
+Both `InputSplit and `RecordReader are transparent concepts, and the programmer only needs to specify a standard input format from the following ones:
 
 * `FileInputFormat`
 * `TextInputFormat`
@@ -148,9 +148,9 @@ Finally, the input and output paths (it is mandatory these paths are about folde
      * For those usages not covered by the GNU Affero General Public License please contact with
      * francisco.romerobueno at telefonica dot com
      */
-    
+
     package com.telefonica.iot.tidoop.mrlib.jobs;
-    
+
     import com.telefonica.iot.tidoop.mrlib.combiners.LinesCombiner;
     import com.telefonica.iot.tidoop.mrlib.mappers.LineFilter;
     import com.telefonica.iot.tidoop.mrlib.reducers.LinesJoiner;
@@ -169,13 +169,13 @@ Finally, the input and output paths (it is mandatory these paths are about folde
     import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
     import org.apache.hadoop.util.Tool;
     import org.apache.hadoop.util.ToolRunner;
-    
+
     /**
      *
      * @author frb
      */
     public final class Filter extends Configured implements Tool {
-    
+
        /**
         * Main class.
         * @param args
@@ -185,7 +185,7 @@ Finally, the input and output paths (it is mandatory these paths are about folde
            int res = ToolRunner.run(new Configuration(), new Filter(), args);
            System.exit(res);
        } // main
-    
+
        @Override
        public int run(String[] args) throws Exception {
            // check the number of arguments, show the usage if it is wrong
@@ -193,12 +193,12 @@ Finally, the input and output paths (it is mandatory these paths are about folde
                showUsage();
                return -1;
            } // if
-       
+
            // get the arguments
            String input = args[0];
            String output = args[1];
            String regex = args[2];
-       
+
            // create and configure a MapReduce job
            Configuration conf = this.getConf();
            conf.set(Constants.PARAM_REGEX, regex);
@@ -214,11 +214,11 @@ Finally, the input and output paths (it is mandatory these paths are about folde
            job.setOutputValueClass(Text.class);
            FileInputFormat.addInputPath(job, new Path(input));
            FileOutputFormat.setOutputPath(job, new Path(output));
-       
+
            // run the MapReduce job
            return job.waitForCompletion(true) ? 0 : 1;
        } // main
-    
+
        private void showUsage() {
            System.out.println("Usage:");
            System.out.println();
@@ -230,16 +230,16 @@ Finally, the input and output paths (it is mandatory these paths are about folde
            System.out.println("   <HDFS output> \");
            System.out.println("   <regex>");
        } // showUsage
-    
+
     } // Filter
 
 [Top](#top)
 
 ####<a name="1.2.2"></a>Mapper code example
 
-A mapper must extend the `Mapper    class and override at least the `map    method with an implementation of the desired mapping function. In the example below, the mapping function is about filtering or not a text line based on the existence of a certain string (defined through a regular expression) within the text line. Such a regular expression was passed in the `Configuration    object, as explained before, and it must be retrieved in an implementation of the `setup    method, since the `map    method has not access to the configuration.
+A mapper must extend the `Mapper class and override at least the `map method with an implementation of the desired mapping function. In the example below, the mapping function is about filtering or not a text line based on the existence of a certain string (defined through a regular expression) within the text line. Such a regular expression was passed in the `Configuration object, as explained before, and it must be retrieved in an implementation of the `setup method, since the `map    method has not access to the configuration.
 
-Please observe the types for the input and output key-value pairs. A `(Object,Text)    pair is passed to the `map    method, as a result of (transparently) invoking the `RecordReader    method from `FileInputSplit    class. This pair, as already explained, contains the relative position of the read text line within the split or data block. A `(Text,Text)    pair is outputted as the result of the map function, in this particular case containing a constant key (`"common-key"`) and the input text line if it was not filtered; the reason for using this constant key is that all the outputted pairs are sent to the same single reducer.
+Please observe the types for the input and output key-value pairs. A `(Object,Text) pair is passed to the `map method, as a result of (transparently) invoking the `RecordReader method from `FileInputSplit class. This pair, as already explained, contains the relative position of the read text line within the split or data block. A `(Text,Text) pair is outputted as the result of the map function, in this particular case containing a constant key (`"common-key"`) and the input text line if it was not filtered; the reason for using this constant key is that all the outputted pairs are sent to the same single reducer.
 
     /**
      * Copyright 2015 Telefonica Investigación y Desarrollo, S.A.U
@@ -259,50 +259,50 @@ Please observe the types for the input and output key-value pairs. A `(Object,Te
      * For those usages not covered by the GNU Affero General Public License please contact with
      * francisco.romerobueno at telefonica dot com
      */
-    
+
     package com.telefonica.iot.tidoop.mrlib.mappers;
-    
+
     import java.io.IOException;
     import org.apache.hadoop.io.Text;
     import org.apache.hadoop.mapreduce.Mapper;
-    
+
     /**
      *
      * @author frb
      */
-    
+
     /**
      * LineFilter.
      */
     public static class LineFilter extends Mapper<Object, Text, Text, Text> {
-       
+
        private Pattern pattern = null;
        private final Text commonKey = new Text("common-key");
-    
+
        @Override
        public void setup(Context context) throws IOException, InterruptedException {
            // compile just once the regex; use an empty regex if no one is provided
            pattern = Pattern.compile(context.getConfiguration().get(Constants.PARAM_REGEX, ""));
        } // setup
-    
+
        @Override
        public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
            Matcher matcher = pattern.matcher(value.toString());
-    
+
            if (matcher.matches()) {
                context.write(commonKey, value);
            } // if
        } // map
-       
+
     } // LineFilter
 
 [Top](#top)
 
 ####<a name="1.2.3"></A>Reducer code example
 
-A reducer must extend the `Reducer    class and override at least the `reduce    method with an implementation of the desired reducing function. In the example below, the reducing function is about emitting to the output all the received pairs.
+A reducer must extend the `Reducer class and override at least the `reduce method with an implementation of the desired reducing function. In the example below, the reducing function is about emitting to the output all the received pairs.
 
-Please observe the types for the input and output key-value pairs. Several `(Text,Text)    pairs are passed as an interable object to the `reduce    method; these are the pairs the mappers outputted in the previous step of the algorithm. Several `(NullWritable,Text)    pairs are outputted as the result of the reduce function; the usage of `NullWritable    is due to we do not want a key to be serialized in the final HDFS file containing the whole result of the filtering process. Finally, the `FileOutputFormat`, through the `RecordWriter    method, serializes each one of the resulting pairs in a single HDFS file, since
+Please observe the types for the input and output key-value pairs. Several `(Text,Text) pairs are passed as an iterable object to the `reduce method; these are the pairs the mappers outputted in the previous step of the algorithm. Several `(NullWritable,Text) pairs are outputted as the result of the reduce function; the usage of `NullWritable is due to we do not want a key to be serialized in the final HDFS file containing the whole result of the filtering process. Finally, the `FileOutputFormat`, through the `RecordWriter method, serializes each one of the resulting pairs in a single HDFS file, since
 only one reducer has been setup.
 
     /**
@@ -323,24 +323,24 @@ only one reducer has been setup.
      * For those usages not covered by the GNU Affero General Public License please contact with
      * francisco.romerobueno at telefonica dot com
      */
-    
+
     package com.telefonica.iot.tidoop.mrlib.reducers;
-    
+
     import java.io.IOException;
     import org.apache.hadoop.io.NullWritable;
     import org.apache.hadoop.io.Text;
     import org.apache.hadoop.mapreduce.Reducer;
-    
+
     /**
      *
      * @author frb
      */
-    
+
     /**
      * LinesJoiner.
      */
     public class LinesJoiner extends Reducer<Text, Text, NullWritable, Text> {
-    
+
        @Override
        public void reduce(Text key, Iterable<Text> filteredLines, Context context)
            throws IOException, InterruptedException {
@@ -348,7 +348,7 @@ only one reducer has been setup.
                context.write(NullWritable.get(), filteredLine);
           } // for
       } // reduce
-    
+
     } // LinesJoiner
 
 [Top](#top)
@@ -391,7 +391,7 @@ Hadoop MapReduce jobs are written in Java and packaged as Java jar files; this s
     but it is useful for demostration purposes
     ...
 
-Assuming we want to run the Filter application from [tidoop-mr-lib](http://github.com/telefonicaid/fiware-tidoop/tree/develop/tidoop-mr-lib#filter) just for demostration purposes, this would be the oputput after typing the following command:
+Assuming we want to run the Filter application from [tidoop-mr-lib](http://github.com/telefonicaid/fiware-tidoop/tree/develop/tidoop-mr-lib#filter) just for demonstration purposes, this would be the output after typing the following command:
 
     $ hadoop jar target/tidoop-mr-lib-0.0.0-SNAPSHOT-jar-with-dependencies.jar com.telefonica.iot.tidoop.mrlib.jobs.Filter -libjars target/tidoop-mr-lib-0.0.0-SNAPSHOT-jar-with-dependencies.jar input output ^.*\bdata\b.*$
     15/08/11 16:02:59 INFO impl.TimelineClientImpl: Timeline service address: http://dev-fiwr-bignode-12.hi.inet:8188/ws/v1/timeline/
@@ -419,7 +419,7 @@ Assuming we want to run the Filter application from [tidoop-mr-lib](http://githu
            HDFS: Number of read operations=6
            HDFS: Number of large read operations=0
            HDFS: Number of write operations=2
-       Job Counters 
+       Job Counters
            Launched map tasks=1
            Launched reduce tasks=1
            Rack-local map tasks=1
@@ -459,9 +459,9 @@ Assuming we want to run the Filter application from [tidoop-mr-lib](http://githu
            WRONG_LENGTH=0
            WRONG_MAP=0
            WRONG_REDUCE=0
-       File Input Format Counters 
+       File Input Format Counters
            Bytes Read=1786
-       File Output Format Counters 
+       File Output Format Counters
            Bytes Written=0
 
 Notice the command is structured as:
@@ -475,7 +475,7 @@ Once the job has finished (a real job may take several hours or days to complete
     -rw-r--r--   3 myuserspace myuserspace      0 2015-08-11 16:03 output/_SUCCESS
     -rw-r--r--   3 myuserspace myuserspace    969 2015-08-11 16:03 output/part-r-00000
 
-Since the Filter application is setup to run a single reducer (see previous section), a single `part-r-0000    file appears in the output folder; if more than one reducer would have been setup then a file would have appeared for each one of them. We can show the content of that output file, confirming only the lines containg the word *data* have been maintained:
+Since the Filter application is setup to run a single reducer (see previous section), a single `part-r-0000    file appears in the output folder; if more than one reducer would have been setup then a file would have appeared for each one of them. We can show the content of that output file, confirming only the lines containing the word *data* have been maintained:
 
     $ hadoop fs -cat output/part-r-00000
     these are some lines of data
@@ -534,7 +534,7 @@ your credentials and by typing *hive* in a shell:
     2013-10-03 09:15:45,631 Stage-1 map = 100%,  reduce = 100%
     Ended Job = job_201308280930_0953
     OK
-    
+
     the result set...
 
 [Top](#top)
@@ -573,13 +573,13 @@ This is the minimum code:
     import java.sql.ResultSet;
     import java.sql.Statement;
     import java.sql.DriverManager;
-    
+
     public class HiveClient {
-    
+
        // JDBC driver required for Hive connections
        private static String driverName = "org.apache.hive.jdbc.HiveDriver";
        private static Connection con;
-    
+
        private static Connection getConnection(String ip, String port, String db, String user, String password) {
           try {
              // dynamically load the Hive JDBC driver
@@ -588,7 +588,7 @@ This is the minimum code:
              System.out.println(e.getMessage());
              return null;
           } // try catch
-      
+
           try {
              // return a connection based on the Hive JDBC driver
              return DriverManager.getConnection("jdbc:hive2://" + ip + ":" + port + "/" + db, user, password);
@@ -597,22 +597,22 @@ This is the minimum code:
              return null;
           } // try catch
        } // getConnection
-    
+
        private static void doQuery() {
           try {
              // from here on, everything is SQL!
              Statement stmt = con.createStatement();
              ResultSet res = stmt.executeQuery("select column1,column2,otherColumns "
                 + "from mytable where column1='whatever' and columns2 like '%whatever%'");
-    
+
              // iterate on the result
              while (res.next()) {
                 String column1 = res.getString(1);
                 Integer column2 = res.getInt(2);
-     
+
                 // whatever you want to do with this row, here
              } // while
-     
+
              // close everything
              res.close();
              stmt.close();
@@ -621,16 +621,16 @@ This is the minimum code:
              System.exit(0);
           } // try catch
        } // doQuery
-    
+
        public static void main(String[] args) {
           // get a connection to the Hive server running on the specified IP address, listening on 10000/TCP port
           // authenticate using my credentials
           con = getConnection("cosmos.lab.fiware.org", "10000", "default", "myuser", "mypasswd");
-    
+
           // do a query, querying the Hive server will automatically imply the execution of one or more MapReduce jobs
           doQuery();
        } // main
-       
+
     } // HiveClient
 
 [Top](#top)
@@ -647,7 +647,7 @@ Thus, start by installing the [3](http://github.com/BradRuderman/pyhs2) driver f
 The following code implements a basic Hive client using Python:
 
     import pyhs2
-    
+
     with pyhs2.connect(host='cosmos.lab.fiware.org',
                     port=10000,
                     authMechanism="PLAIN",
@@ -657,7 +657,7 @@ The following code implements a basic Hive client using Python:
      with conn.cursor() as cur:
          cur.execute("select * from table")
          print cur.getSchema()
-    
+
          for i in cur.fetch():
              print i`
 
@@ -668,7 +668,7 @@ The following code implements a basic Hive client using Python:
 Oozie is a workflow scheduler system for Apache Hadoop jobs. It allows designing Oozie Workflows, i.e. Directed Acyclical Graphs (DAGs) of actions, which in the end coordinate the execution of the jobs.
 
 An action can be a MapReduce job, a Pig application, a file system task, or a Java application. Flow control in the DAGs is performed by node
-elements providing a certain logic based on the input of the preceding task in the graph (e.g. forks, joins, decission nodes), or when an event (time, whatever) triggers. encies have been met.
+elements providing a certain logic based on the input of the preceding task in the graph (e.g. forks, joins, decision nodes), or when an event (time, whatever) triggers. encies have been met.
 
 An example of DAG is the following one:
 
@@ -705,7 +705,7 @@ The oozie command can provide per job status information as well:
     Started       : 2014-01-16 16:53
     Last Modified : 2014-01-16 16:53
     Ended         : -
-    
+
     Actions
     ------------------------------------------------------------------------------------------------------------------------------------
     ID                                                                            Status    Ext ID                 Ext Status Err Code
@@ -725,7 +725,7 @@ The programming guide will provide guidelines about how to create your own Oozie
 
 ###<a name="section3.2"></a>Oozie workflow
 
-Writting Oozie workflows can be a hard task, but in a few words it is necessary to generate a XML document as the one below, containing a list of flow control nodes (e.g. start, kill, end) and actions to be executed. Flow control nodes and actions may be parameterized in the
+Writing Oozie workflows can be a hard task, but in a few words it is necessary to generate a XML document as the one below, containing a list of flow control nodes (e.g. start, kill, end) and actions to be executed. Flow control nodes and actions may be parameterized in the
 `job.properties` file. This file must be called `workflow.xml` and must be included in the application folder.
 
     <workflow-app name="wordcount-wf" xmlns="uri:oozie:workflow:0.1">
@@ -770,9 +770,9 @@ Once a workflow is written, it is ready to be executed with the Oozie client as 
 
 ###<a name="section3.3"></a>Programming a custom Oozie client
 
-Oozie provides a Java API for custom Java clients development. There is a step-by-step example in this [offical link](http://oozie.apache.org/docs/4.0.0/DG_Examples.html#Java_API_Example).
+Oozie provides a Java API for custom Java clients development. There is a step-by-step example in this [official link](http://oozie.apache.org/docs/4.0.0/DG_Examples.html#Java_API_Example).
 
-Additionally, the [API REST](http://oozie.apache.org/docs/4.0.0/WebServicesAPI.html) for Oozie allows you for submitting and runnint workflows in a REST fashion.
+Additionally, the [API REST](http://oozie.apache.org/docs/4.0.0/WebServicesAPI.html) for Oozie allows you for submitting and running workflows in a REST fashion.
 
 The programming section of this document will explain you how to create an application taking advantage both of the Oozie API and the Oozie REST API.
 
@@ -780,7 +780,7 @@ The programming section of this document will explain you how to create an appli
 
 ####<a name="section3.3.1"></a>Java
 
-Oozie provides a Java API for custom Java clients development. There is a step-by-step example in this [offical link](http://oozie.apache.org/docs/4.0.0/DG_Examples.html#Java_API_Example) which is summarized here.
+Oozie provides a Java API for custom Java clients development. There is a step-by-step example in this [official link](http://oozie.apache.org/docs/4.0.0/DG_Examples.html#Java_API_Example) which is summarized here.
 
 Add the following lines to your Maven based pom.xml in order to solve the dependencies:
 
@@ -790,7 +790,7 @@ Add the following lines to your Maven based pom.xml in order to solve the depend
        <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
     </repository>
     </repositories>
-    
+
     <dependencies>
     ...
     <dependency>
@@ -803,56 +803,56 @@ Add the following lines to your Maven based pom.xml in order to solve the depend
 This is the minimum code:
 
     package com.mycompany.oozieclienttest;
-    
+
     import java.util.logging.Level;
     import java.util.logging.Logger;
     import org.apache.oozie.client.OozieClient;
     import org.apache.oozie.client.OozieClientException;
     import org.apache.oozie.client.WorkflowJob;
     import java.util.Properties;
-    
+
     /**
      * Oozie client test.
      *
      */
     public final class OozieClientTest {
-       
+
        /**
-        * 
+        *
         */
         private OozieClientTest() {
         } // OozieClientTest
-    
+
        /**
-        * 
+        *
         * @param args
         */
         public static void main(String[] args) {
           // get a OozieClient for local Oozie
           OozieClient client = new OozieClient("`[`http://130.206.80.46:11000/oozie/`](http://130.206.80.46:11000/oozie/)`");
-    
+
           // create a workflow job configuration and set the workflow application path
           Properties conf = client.createConfiguration();
           conf.setProperty(OozieClient.APP_PATH, "hdfs://cosmosmaster-gi:8020/user/frb/examples/apps/map-reduce");
-    
+
           // setting workflow parameters
           conf.setProperty("nameNode", "hdfs://cosmosmaster-gi:8020");
           conf.setProperty("jobTracker", "cosmosmaster-gi:8021");
           conf.setProperty("outputDir", "output-data");
           conf.setProperty("examplesRoot", "examples");
           conf.setProperty("queueName", "default");
-    
+
           // submit and start the workflow job
           String jobId = null;
-    
+
           try {
              jobId = client.run(conf);
           } catch (OozieClientException ex) {
              Logger.getLogger(OozieClientTest.class.getName()).log(Level.SEVERE, null, ex);
           } // try catch
-    
+
           System.out.println("Workflow job submitted");
-    
+
           try {
              // wait until the workflow job finishes printing the status every 10 seconds
              while (client.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) {
@@ -864,10 +864,10 @@ This is the minimum code:
           } catch (java.lang.InterruptedException ex) {
              Logger.getLogger(OozieClientTest.class.getName()).log(Level.SEVERE, null, ex);
           } // try catch catch
-    
+
           // print the final status o the workflow job
           System.out.println("Workflow job completed ...");
-    
+
           try {
              System.out.println(client.getJobInfo(jobId));
           } catch (OozieClientException ex) {

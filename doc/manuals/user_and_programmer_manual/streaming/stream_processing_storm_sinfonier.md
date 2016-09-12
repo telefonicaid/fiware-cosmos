@@ -1,4 +1,4 @@
-#<a name="top"></a>Stream processing: Apche Storm & Sinfonier 
+#<a name="top"></a>Stream processing: Apche Storm & Sinfonier
 
 Content:<br>
 
@@ -42,12 +42,12 @@ New framework implements new paradigms are needed. Key properties of this type o
 * **Scalable**: It should be scale to massive numbers of messages per second.
 
 * **Guarantees no data loss**: A realtime system must have strong guarantees about data being successfully processed. A system that drops data has a very limited set of use cases.
- 
+
 * **Extremely robust**: It should be simple manage.
 
 * **Fault-tolerant**: If there are faults during execution of your computation, system will reassign tasks as necessary. System should make sure that a computation must run forever (or until you kill the computation).
 
-* **Programming language agnostic**: Robust and scalable realtime processing shouldn't be limited to a single platform. 
+* **Programming language agnostic**: Robust and scalable realtime processing shouldn't be limited to a single platform.
 
 [Top](#top)
 
@@ -123,19 +123,19 @@ analysts can connect specific modules allowing them to create and implement thei
 
 Three main components of Sinfonier are:
 
-* **Sinfonier Editor** which allows users to create new topologies using a Drag & Drop methodology on a canvas: Here is where you can implement or edit your topologies. 
-    * The editor makes use of a drag & plug interface, it is very intuitive and easy to get used to. The operation is very simple, drag the modules from the left placed list to the central canvas and plug them however you want by clicking on the connectors provided by every module. 
+* **Sinfonier Editor** which allows users to create new topologies using a Drag & Drop methodology on a canvas: Here is where you can implement or edit your topologies.
+    * The editor makes use of a drag & plug interface, it is very intuitive and easy to get used to. The operation is very simple, drag the modules from the left placed list to the central canvas and plug them however you want by clicking on the connectors provided by every module.
     * If you want to delete a module, just click the cross of the module. Finally, remember to name your topology, there is a field for this purpose at the right side of the screen.
 
 ![Figure 6 - Sinfonier Editor](images/sinfonier_editor.png "Figure 6 - Sinfonier Editor")
 
 * **Backend with an API to automatically manage a Storm cluster**.
-    * Launch toplogies 
+    * Launch topologies
     * Stop topologies
     * Rebalance topologies
     * Add new modules (Spouts, Bolts and Drains)
         * Sinfonier includes one more abstraction: "Drains". Thus, a topology is not only a network of spouts and bolts, but also of drains. Drains send input streams to both storage and other services.
-    * Manage cluster Java and Python dependencies 
+    * Manage cluster Java and Python dependencies
 
 * **Apache Cluster**
     * Sinfonier use a standard Apache Storm cluster. Last version support Storm version 0.9.6 and development team is working to validate 0.10.0 release.

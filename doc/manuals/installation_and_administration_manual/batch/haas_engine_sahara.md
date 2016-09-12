@@ -14,11 +14,11 @@ Being another service for Openstack, [Sahara](http://wiki.openstack.org/wiki/Sah
 * Using [Fuel](http://docs.mirantis.com/openstack/fuel/fuel-6.0/virtualbox.html), the Mirantis installer.
 * Using [RDO Manager](http://www.rdoproject.org/Quickstart), from RDO, the community of people using and deploying OpenStack on Red Hat Enterprise Linux/Fedora/CentOS/Scientific Linux.
 
-If using any of the above methods, Sahara's installation [wiki](http://docs.openstack.org/developer/sahara/icehouse/userdoc/installation.guide.html) will tell you how to add the Sahara pluggin. In the case of Fuel, Sahara is enabled during the installation, but in the case of RDO Manager, Sahara must be installed after installing Openstack.
+If using any of the above methods, Sahara's installation [wiki](http://docs.openstack.org/developer/sahara/icehouse/userdoc/installation.guide.html) will tell you how to add the Sahara plugin. In the case of Fuel, Sahara is enabled during the installation, but in the case of RDO Manager, Sahara must be installed after installing Openstack.
 
 Nevertheless, the **preferred method for installing both Openstack and Sahara is [Devstack](http://docs.openstack.org/developer/devstack/)**. Typically, Openstack is installed in an infrastructure comprising [several nodes](http://docs.openstack.org/developer/devstack/guides/multinode-lab.html); but you can test it on a [single machine](http://docs.openstack.org/developer/devstack/guides/single-machine.html)).
 
-Independently of the ammount of infrastructure used, Sahara can be installed at the same time than the other services by simply adding this line to the `local.conf` file:
+Independently of the amount of infrastructure used, Sahara can be installed at the same time than the other services by simply adding this line to the `local.conf` file:
 
     enable_service sahara
 
@@ -30,7 +30,7 @@ Once the installation has finished, a message similar to the following one must 
     The default users are: admin and demo
     The password: xxxxxxxx
 
-As you may observe, two Openstack users (admin and demo) have been created. The admin user is a priviledged user allowed to administrate Openstack; the demo user is just a "normal" dummy user.
+As you may observe, two Openstack users (admin and demo) have been created. The admin user is a privileged user allowed to administrate Openstack; the demo user is just a "normal" dummy user.
 
 [Top](#top)
 
@@ -62,7 +62,7 @@ Independently of the CLIs you decide to install or not, it is very convenient yo
 
     $ sudo pip install python-openstackclient
 
-As said, the above clients wrap the Openstack REST APIs; you could also use the REST APIs for adminsitrating Openstack, but the CLI is easier to use since most of the configuration has not to be given each time an operation is performed, but configured in a file or added as environment variables. For instance, this configuration is valid for the admin user when using the Openstack Client:
+As said, the above clients wrap the Openstack REST APIs; you could also use the REST APIs for administrating Openstack, but the CLI is easier to use since most of the configuration has not to be given each time an operation is performed, but configured in a file or added as environment variables. For instance, this configuration is valid for the admin user when using the Openstack Client:
 
     $ export OS_IDENTITY_API_VERSION=3
     $ export OS_AUTH_URL=`[`http://localhost:5000/v3`](http://localhost:5000/v3)

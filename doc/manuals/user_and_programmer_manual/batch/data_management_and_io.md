@@ -72,11 +72,11 @@ As said, the following sequence of sentences will produce the same result:
 
 ##<a name="section3"></a>WebHDFS
 
-WebHDFS is the API for applications aiming to do remote I/O of data. It is a REST API containing all the operation within the File System Shell, thus any standard REST client library available for any programming language will be able to intereact with HDFS. Please refer to the [official documentation](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html) for full details on the API.
+WebHDFS is the API for applications aiming to do remote I/O of data. It is a REST API containing all the operation within the File System Shell, thus any standard REST client library available for any programming language will be able to interact with HDFS. Please refer to the [official documentation](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html) for full details on the API.
 
 Observations:
 
-* WebHDFS needs all the nodes of the cluster are accessible by IP address of FQDN. This is because the writting operations are two-step requests, being the first request sent to the namenode informing a new file is going to be created (or new data is going to be appended to an already existent file), and the second one to the node appearing in the location redirection header wihtin the response to first request. If you cannot ensure all the nodes are accesible by IP address or FQDN, please consider using [HttpFS](#section4).
+* WebHDFS needs all the nodes of the cluster are accessible by IP address of FQDN. This is because the writing operations are two-step requests, being the first request sent to the namenode informing a new file is going to be created (or new data is going to be appended to an already existent file), and the second one to the node appearing in the location redirection header within the response to first request. If you cannot ensure all the nodes are accessible by IP address or FQDN, please consider using [HttpFS](#section4).
 * This REST API may be protected with [OAuth2](http://oauth.net/2/); check how to use such a protected API in the [OAuth2-protected REST APIs usage](#section5) section.
 
 Let's assume I want to save certain local files under a new HDFS folder. The sequence of operations performed through the REST API will be (using `[http://curl.haxx.se/ curl]` as a command-line REST client, but any other REST client could be used; using `python -m json.tool` just for pretty printing purposes):
@@ -105,7 +105,7 @@ First of all, I may list the content of my root HDFS userspace (which matches my
 
 Now, I can create the folder:
 
-    $ curl -X PUT "http://<services_node>:50070/webhdfs/v1/user/myuserspace/myfolder?op=mkdirs&user.name=myuserspace" | python -m json.tool 
+    $ curl -X PUT "http://<services_node>:50070/webhdfs/v1/user/myuserspace/myfolder?op=mkdirs&user.name=myuserspace" | python -m json.tool
     {
         "boolean": true
     }
@@ -199,7 +199,7 @@ operations point to the same HttpFS server you sent the first request; internall
 
 Observations:
 
-* HttpFS REST API is 100% equals to the WebHDFS one, the only chages are the IP address/FQDN of the HttpFS server, that may be different than the Namenode IP address/FQDN (it depends on the specific deployment), and the TCP port (14000 instead of 50070 used by WebHDFS).
+* HttpFS REST API is 100% equals to the WebHDFS one, the only changes are the IP address/FQDN of the HttpFS server, that may be different than the Namenode IP address/FQDN (it depends on the specific deployment), and the TCP port (14000 instead of 50070 used by WebHDFS).
 * This REST API may be protected with [OAuth2](http://oauth.net/2/); check how to use such a protected API in the [OAuth2-protected REST APIs usage](#section5) section.
 
 [Top](#top)
@@ -214,9 +214,8 @@ In the case of our permanent storage, which is based in HDFS, Cygnus is an excel
 * A memory channel with capacity for, let's say, 1000 events.
 * A OrionHDFSSink properly configured to write the data in the permanent storage, which is HDFS based.
 
-Once the above configuration is done, nothing has to be done with Cygnus in terms of usage or programming. It will automatically start persisting the notified context data in HDFS files; the mapping between the NGSI-like notified data and the HDFS files is described [here](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/OrionMySQLSink.md#mapping-flume-events-to-hdfs-data-structures), but unless the advanced [grouping](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/interceptors.md#groupinginterceptor-interceptor) feature is used, a per-entity HDFS file is created in a path that depends on the [FIWARE Service](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide#Multi_service_tenancy) and [FIWARE Service Path](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide#Entity_service_paths) the entity belogs to, and the entity identifier and type itself.
+Once the above configuration is done, nothing has to be done with Cygnus in terms of usage or programming. It will automatically start persisting the notified context data in HDFS files; the mapping between the NGSI-like notified data and the HDFS files is described [here](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/OrionMySQLSink.md#mapping-flume-events-to-hdfs-data-structures), but unless the advanced [grouping](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/interceptors.md#groupinginterceptor-interceptor) feature is used, a per-entity HDFS file is created in a path that depends on the [FIWARE Service](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide#Multi_service_tenancy) and [FIWARE Service Path](http://forge.fiware.org/plugins/mediawiki/wiki/fiware/index.php/Publish/Subscribe_Broker_-_Orion_Context_Broker_-_User_and_Programmers_Guide#Entity_service_paths) the entity belongs to, and the entity identifier and type itself.
 
 The HDFS files created and fed by Cygnus are regular HDFS files (with an internal data representation in JSON format) that can be queried through Hive (a JSON serialized-deserializer is needed) and processed with custom NGSI-like MapReduce applications.
 
 [Top](#top)
-

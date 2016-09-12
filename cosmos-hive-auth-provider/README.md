@@ -32,29 +32,31 @@ Of course, this library has no sense if no [Hive](https://hive.apache.org/) serv
 Start by cloning the `fiware-cosmos` repository at Github:
 
     $ git clone https://github.com/telefonicaid/fiware-cosmos.git
-   
-That will create a `fiware-cosmos` folder. Then, the library is built by runing the following `mvn` command under `fiware-cosmos/cosmos-hive-auth-provider`:
+
+That will create a `fiware-cosmos` folder. Then, the library is built by running the following commands:
+
+    $ cd fiware-cosmos/cosmos-hive-auth-provider
+    $ git checkout release/x.y.z
+    $ mvn clean compile assembly:single
 
 ```
-$ cd fiware-cosmos/cosmos-hive-auth-provider
-$ mvn clean compile assembly:single
 [INFO] Scanning for projects...
 [INFO]                                                                         
 [INFO] ------------------------------------------------------------------------
 [INFO] Building cosmos-hive-auth-provider 0.0.0-SNAPSHOT
 [INFO] ------------------------------------------------------------------------
-[INFO] 
+[INFO]
 [INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ cosmos-hive-auth-provider ---
 [INFO] Deleting /home/fiware-portal/fiware-cosmos/cosmos-hive-auth-provider/target
-[INFO] 
+[INFO]
 [INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ cosmos-hive-auth-provider ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
 [INFO] skip non existing resourceDirectory /home/fiware-portal/fiware-cosmos/cosmos-hive-auth-provider/src/main/resources
-[INFO] 
+[INFO]
 [INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ cosmos-hive-auth-provider ---
 [INFO] Changes detected - recompiling the module!
 [INFO] Compiling 2 source files to /home/fiware-portal/fiware-cosmos/cosmos-hive-auth-provider/target/classes
-[INFO] 
+[INFO]
 [INFO] --- maven-assembly-plugin:2.2-beta-5:single (default-cli) @ cosmos-hive-auth-provider ---
 ...
 ...
@@ -94,22 +96,22 @@ $ mvn test -Duser=frb -Dtoken=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 [INFO] ------------------------------------------------------------------------
 [INFO] Building cosmos-hive-auth-provider 0.0.0-SNAPSHOT
 [INFO] ------------------------------------------------------------------------
-[INFO] 
+[INFO]
 [INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ cosmos-hive-auth-provider ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
 [INFO] skip non existing resourceDirectory /home/fiware-portal/fiware-cosmos/cosmos-hive-auth-provider/src/main/resources
-[INFO] 
+[INFO]
 [INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ cosmos-hive-auth-provider ---
 [INFO] Nothing to compile - all classes are up to date
-[INFO] 
+[INFO]
 [INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ cosmos-hive-auth-provider ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
 [INFO] skip non existing resourceDirectory /home/fiware-portal/fiware-cosmos/cosmos-hive-auth-provider/src/test/resources
-[INFO] 
+[INFO]
 [INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ cosmos-hive-auth-provider ---
 [INFO] Changes detected - recompiling the module!
 [INFO] Compiling 1 source file to /home/fiware-portal/fiware-cosmos/cosmos-hive-auth-provider/target/test-classes
-[INFO] 
+[INFO]
 [INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ cosmos-hive-auth-provider ---
 [INFO] Surefire report directory: /home/fiware-portal/fiware-cosmos/cosmos-hive-auth-provider/target/surefire-reports
 
@@ -185,7 +187,7 @@ This is a library directly used by Hive. In order HiveServer2 knows about it, re
 [Top](#top)
 
 ##<a name="section5"></a>Usage
-The comsos-hive-auth-provider library is used when a HiveServer2 client connects and pass a user and a OAuth2 token. For instance, let's assume we are using any of Hive clients given with [Cygnus](https://github.com/telefonicaid/fiware-cygnus/tree/master/resources/hiveclients) tool:
+The cosmos-hive-auth-provider library is used when a HiveServer2 client connects and pass a user and a OAuth2 token. For instance, let's assume we are using any of Hive clients given with [Cygnus](https://github.com/telefonicaid/fiware-cygnus/tree/master/resources/hiveclients) tool:
 
 ```
 $ pwd
@@ -196,11 +198,11 @@ $ mvn exec:java -Dexec.args="computing.cosmos.lab.fiware.org 10000 default frb x
 [INFO] ------------------------------------------------------------------------
 [INFO] Building hiveserver2-client 0.0.0-SNAPSHOT
 [INFO] ------------------------------------------------------------------------
-[INFO] 
+[INFO]
 [INFO] >>> exec-maven-plugin:1.2.1:java (default-cli) > validate @ hiveserver2-client >>>
-[INFO] 
+[INFO]
 [INFO] <<< exec-maven-plugin:1.2.1:java (default-cli) < validate @ hiveserver2-client <<<
-[INFO] 
+[INFO]
 [INFO] --- exec-maven-plugin:1.2.1:java (default-cli) @ hiveserver2-client ---
 Connecting to jdbc:hive2://computing.cosmos.lab.fiware.org:10000/default?user=frb&password=XXXXXXXXXX
 remotehive> show tables;
@@ -253,13 +255,13 @@ javax.security.sasl.SaslException: Error validating the login [Caused by javax.s
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cosmos` tag.
-* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
+* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [fermin.galanmarquez@telefonica.com](mailto:fermin.galanmarquez@telefonica.com) **[Contributor]**
     * [german.torodelvalle@telefonica.com](mailto:german.torodelvalle@telefonica.com) **[Contributor]**
     * [pablo.coellovillalba@telefonica.com](mailto:pablo.coellovillalba@telefonica.com) **[Contributor]**
 
-**NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personally emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)

@@ -18,7 +18,7 @@ Sinfonier supports three types of modules. Spouts and Bolts from Storm model, an
 
 Before you start to create modules on Sinfonier check you fulfill these requirements:
 
-* Have a Github [http://github.com] account and know how to createa Gist.
+* Have a Github [http://github.com] account and know how to create a Gist.
 
 * Have greats ideas and know how to implement them.
 
@@ -48,7 +48,7 @@ Creating a module consists of a simple two step process: Declare it and Ask for 
 * Write a good **description**
 	* Description helps other users to know your module features
 * **Add fields** if needed
-	* Fields are your inputs. Typical example is an API-Key param. 
+	* Fields are your inputs. Typical example is an API-Key param.
 	* See "Playing with Field" above to know more about that.
 * Last but not least tell Sinfonier if you need additional **libraries**
 	* You can check current libraries in Package section.
@@ -80,18 +80,18 @@ Did you improve your module? Just update your Gist code and notify us using "Upd
 
 **Delete a module**
 
-It is possible to delete a module for the owner of a module by clicking the "Delete" button in the detail of the module.Be aware that if you delete it, it will not be available at your “My tools” list anymore, however, it will remain functional enought in your already implemented topologies.
+It is possible to delete a module for the owner of a module by clicking the "Delete" button in the detail of the module.Be aware that if you delete it, it will not be available at your “My tools” list anymore, however, it will remain functional enough in your already implemented topologies.
 
 
 ----
-Do you want to see it in action? 
+Do you want to see it in action?
 
 *Creating a python bolt from the scratch. This bolt sends an email address to http://hesidohackeado.com via API and returns the response.*
 
 ----
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=k96XDmWnIj0
-" target="_blank"><img src="http://img.youtube.com/vi/k96XDmWnIj0/0.jpg" 
+" target="_blank"><img src="http://img.youtube.com/vi/k96XDmWnIj0/0.jpg"
 alt="Python Bolt from the scratch in Sinfonier" width="600" height="400" border="5" /></a>
 
 ----
@@ -131,7 +131,7 @@ In order to make easier develop and test modules Sinfonier Team, using code deve
 * Use “sinfonier” to login password
 * Start creating modules using Eclipse
 
-Eclipse include sinfonier-dev-tool as a project created from Github repository. 
+Eclipse include sinfonier-dev-tool as a project created from Github repository.
 
 [Tool to build modules for Sinfonier project.](https://github.com/sinfonier-project/sinfonier-dev-tool)
 
@@ -139,15 +139,15 @@ Eclipse include all plugins needed to edit python files, use maven repositories 
 
 ![Figure 3 - Sinfonier Virtual Machine Eclipse](images/sinfonier_dev_module_template_vm.png "Figure 3 - Sinfonier Virtual Machine Eclipse")
 
-If your module, Spout, Bolt or Drain needs an external library you can add it using Maven dependecies manager included in Eclipse.
+If your module, Spout, Bolt or Drain needs an external library you can add it using Maven dependencies manager included in Eclipse.
 
 Eclipse show you your current dependencies:
 
-![Figure 4 - Sinfonier Virtual Machine Dependecies 1](images/sinfonier_dev_module_dependencies_add_1.png "Figure 4 - Sinfonier Virtual Machine Dependecies 1")
+![Figure 4 - Sinfonier Virtual Machine Dependencies 1](images/sinfonier_dev_module_dependencies_add_1.png "Figure 4 - Sinfonier Virtual Machine Dependencies 1")
 
 And allow you to add new one using a simple form:
 
-![Figure 5 - Sinfonier Virtual Machine Dependecies 2](images/sinfonier_dev_module_dependencies_add_2.png "Figure 5 - Sinfonier Virtual Machine Dependecies 2")
+![Figure 5 - Sinfonier Virtual Machine Dependencies 2](images/sinfonier_dev_module_dependencies_add_2.png "Figure 5 - Sinfonier Virtual Machine Dependencies 2")
 
 However you can search dependencies in [Maven Repository](http://mvnrepository.com/) and add them directly into pom.xml file.
 
@@ -177,7 +177,7 @@ As a result Eclipse creates a new class with al methods to be rewritten and Sinf
 	*   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 	*   copies of the Software, and to permit persons to whom the Software is
 	*   furnished to do so, subject to the following conditions:
-	* 
+	*
 	*   The above copyright notice and this permission notice shall be included in
 	*   all copies or substantial portions of the Software.
 	*
@@ -306,14 +306,14 @@ http://drawer.sinfonier-project.net/modules/DummyPython
 	        basesinfonierspout.BaseSinfonierSpout().__init__()
 
 	    def useropen(self):
-	        
+
 	        # Using deque as a queue
 	        self.queue = deque()
-	        
+
 	        self.keylist = self.getParam("keylist")
 	        self.valuelist = self.getParam("valuelist")
 	        self.interval = int(self.getParam("frequency"))        
-	        
+
 	        # This scheduler launches self.job function every X seconds
 	        self.sched = BackgroundScheduler()
 	        self.sched.add_job(self.job, "interval", seconds=self.interval, id="dummyspout")
@@ -327,9 +327,9 @@ http://drawer.sinfonier-project.net/modules/DummyPython
 	            self.emit()
 	        else:
 	            time.sleep(0.5)
-	        
+
 	    def job(self):
-	    
+
 	        try:
 	          keysandvalues = dict(zip(self.keylist, self.valuelist))
 	          for key,value in keysandvalues.items():
@@ -337,8 +337,8 @@ http://drawer.sinfonier-project.net/modules/DummyPython
 	              self.queue.append(item)
 	        except:
 	            self.queue.append({"dummypythonerror","Must have the same number of keys and values"})
-	        
-	        
+
+
 	DummyPython().run()
 
 ts operation is very simple. In the function "useropen" we have to initialize variables. We get the 'keylist' and 'valuelist' parameters (both type list) and start the scheduler.

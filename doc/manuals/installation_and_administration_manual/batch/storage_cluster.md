@@ -54,7 +54,7 @@ Of course, you can achieve the same goals by exposing those services in one of t
 
 The different managers/installers developed by the Hadoop distributions do most of the work for you regarding the configuration. Simply follow their "next-next" wizards and you will be done.
 
-Nevertheless, for further reference, these are the configutration files used by Hadoop:
+Nevertheless, for further reference, these are the configuration files used by Hadoop:
 
 * Read-only default configurations, when no site-specific ones are given:
     * `/etc/hadoop/conf/[http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/core-default.xml core-default.xml]`
@@ -69,7 +69,7 @@ Nevertheless, for further reference, these are the configutration files used by 
 
 HttpFS must be configured as stated in the [official documentation](http://hadoop.apache.org/docs/current/hadoop-hdfs-httpfs/ServerSetup.html).
 
-The ssh server could be used with the default configuration. More relevant is the creation of an administrative Unix user with sudo permissions and creating a public-private key pair for that user; the public key must be installed. This user is required by the Cosmos GUI in order to run centain administration commands on the computing cluster. See annex A for more details about doing it.
+The ssh server could be used with the default configuration. More relevant is the creation of an administrative Unix user with sudo permissions and creating a public-private key pair for that user; the public key must be installed. This user is required by the Cosmos GUI in order to run certain administration commands on the computing cluster. See annex A for more details about doing it.
 
 [Top](#top)
 

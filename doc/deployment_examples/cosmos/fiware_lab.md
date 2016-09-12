@@ -29,7 +29,7 @@ Content:
 ##<a name="section1"></a>Introduction
 This document describes how Cosmos has been deployed in [FIWARE Lab](https://account.lab.fiware.org/).
 
-As will be see, among all the possibilities regarding the deploymnet of Cosmos the shared Hadoop cluster version has been chosen. In fact, not a single cluster has been deployed but two different clusters have been installed: one exclusively addressed for storage purposes, and another one suited for computing services. A detailed section related to the architecture can be checked next.
+As will be see, among all the possibilities regarding the deployment of Cosmos the shared Hadoop cluster version has been chosen. In fact, not a single cluster has been deployed but two different clusters have been installed: one exclusively addressed for storage purposes, and another one suited for computing services. A detailed section related to the architecture can be checked next.
 
 For each Hadoop cluster, storage and computing, the main characteristics are given (number of nodes, role of the nodes, storage or computing capabilities) together with a per-node list of characteristics.
 
@@ -125,7 +125,7 @@ wilma     2464     1  0 09:06 pts/0    00:00:00 node server.js
 This process has been added to `wilma`'s crontab in order to start it on reboot:
 
 ```
-$ cat /home/wilma/crontab_lines 
+$ cat /home/wilma/crontab_lines
 @reboot /usr/bin/nohup /usr/local/bin/node /home/wilma/fiware-pep-proxy/server.js > /home/wilma/fiware-pep-proxy/wilma.log &
 $ crontab -l
 @reboot /usr/bin/nohup /usr/local/bin/node /home/wilma/fiware-pep-proxy/server.js > /home/wilma/fiware-pep-proxy/wilma.log &
@@ -148,11 +148,11 @@ $ sudo iptables -t nat -A POSTROUTING -p tcp -d 10.95.76.87 --dport 8020 -j SNAT
 $ sudo iptables -t nat -L
 Chain PREROUTING (policy ACCEPT)
 target     prot opt source               destination         
-DNAT       tcp  --  anywhere             anywhere            tcp dpt:intu-ec-svcdisc to:10.95.76.87:8020 
+DNAT       tcp  --  anywhere             anywhere            tcp dpt:intu-ec-svcdisc to:10.95.76.87:8020
 
 Chain POSTROUTING (policy ACCEPT)
 target     prot opt source               destination         
-SNAT       tcp  --  anywhere             dev-fiwr-bignode-01.hi.inet tcp dpt:intu-ec-svcdisc to:10.95.76.89 
+SNAT       tcp  --  anywhere             dev-fiwr-bignode-01.hi.inet tcp dpt:intu-ec-svcdisc to:10.95.76.89
 
 Chain OUTPUT (policy ACCEPT)
 target     prot opt source               destination
@@ -233,7 +233,7 @@ Installation path is at `/home/cosmos-tidoop/fiware-cosmos/cosmos-tidoop-api`.
 This process has been added to `cosmos-tidoop`'s crontab in order to start it on reboot:
 
 ```
-$ cat /home/cosmos-tidoop/crontab_lines 
+$ cat /home/cosmos-tidoop/crontab_lines
 @reboot /usr/bin/nohup /usr/local/bin/npm start &
 $ crontab -l
 @reboot /usr/bin/nohup /usr/local/bin/npm start &
@@ -256,7 +256,7 @@ wilma     5084     1  0 12:02 ?        00:00:00 /usr/local/bin/node /home/wilma/
 This process has been added to `wilma`'s crontab in order to start it on reboot:
 
 ```
-$ cat /home/wilma/crontab_lines 
+$ cat /home/wilma/crontab_lines
 @reboot /usr/bin/nohup /usr/local/bin/node /home/wilma/fiware-pep-proxy/server.js > /home/wilma/fiware-pep-proxy/wilma.log &
 $ crontab -l
 @reboot /usr/bin/nohup /usr/local/bin/node /home/wilma/fiware-pep-proxy/server.js > /home/wilma/fiware-pep-proxy/wilma.log &
@@ -290,11 +290,11 @@ $ sudo iptables -t nat -A POSTROUTING -p tcp -d 10.95.76.91 --dport 10000 -j SNA
 $ sudo iptables -t nat -L
 Chain PREROUTING (policy ACCEPT)
 target     prot opt source               destination         
-DNAT       tcp  --  anywhere             anywhere            tcp dpt:ndmp to:10.95.76.91:10000 
+DNAT       tcp  --  anywhere             anywhere            tcp dpt:ndmp to:10.95.76.91:10000
 
 Chain POSTROUTING (policy ACCEPT)
 target     prot opt source               destination         
-SNAT       tcp  --  anywhere             dev-fiwr-bignode-11.hi.inet tcp dpt:ndmp to:10.95.76.81:10000 
+SNAT       tcp  --  anywhere             dev-fiwr-bignode-11.hi.inet tcp dpt:ndmp to:10.95.76.81:10000
 
 Chain OUTPUT (policy ACCEPT)
 target     prot opt source               destination    
@@ -348,13 +348,13 @@ To be done.
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cygnus` tag.
-* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
+* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [fermin.galanmarquez@telefonica.com](mailto:fermin.galanmarquez@telefonica.com) **[Contributor]**
     * [german.torodelvalle@telefonica.com](german.torodelvalle@telefonica.com) **[Contributor]**
     * [ivan.ariasleon@telefonica.com](mailto:ivan.ariasleon@telefonica.com) **[Quality Assurance]**
 
-**NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personally emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)

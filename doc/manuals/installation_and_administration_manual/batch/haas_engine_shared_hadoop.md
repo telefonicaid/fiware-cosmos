@@ -67,7 +67,7 @@ Finally, you may want to install certain development tools such as Maven, git an
 
 The different managers/installers developed by the Hadoop distributions do most of the work for you regarding the configuration. Simply follow their "next-next" wizards and you will be done.
 
-Nevertheless, for further reference, these are the configutration files used by Hadoop:
+Nevertheless, for further reference, these are the configuration files used by Hadoop:
 
 * Read-only default configurations, when no site-specific ones are given:
     * `/etc/hadoop/conf/[http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/core-default.xml core-default.xml]`
@@ -84,7 +84,7 @@ Nevertheless, for further reference, these are the configutration files used by 
 
 ###<a name="section=2.2"></a>Configuring the services node
 
-Hive and Oozie will be usually installed by your distribution manager (if you enable them), and thus they will be ready to be used. Nevertheless, for further reference, these are the configutration files used:
+Hive and Oozie will be usually installed by your distribution manager (if you enable them), and thus they will be ready to be used. Nevertheless, for further reference, these are the configuration files used:
 
 * Read-only default configurations, when no site-specific ones are given:
     * `/etc/hadoop/conf/hive-default.xml`
@@ -95,7 +95,7 @@ Hive and Oozie will be usually installed by your distribution manager (if you en
 
 More details on Hive configuration can be found [here](http://cwiki.apache.org/confluence/display/Hive/GettingStarted#GettingStarted-ConfigurationManagementOverview). The same for [Oozie](http://oozie.apache.org/docs/4.2.0/AG_Install.html#Oozie_Configuration).
 
-The ssh server could be used with the default configuration. More relevant is the creation of an administrative Unix user with sudo permissions and creating a public-private key pair for that user; the public key must be installed. This user is required by the Cosmos GUI in order to run centain administration commands on the storage cluster. See annex A for more details about doing it.
+The ssh server could be used with the default configuration. More relevant is the creation of an administrative Unix user with sudo permissions and creating a public-private key pair for that user; the public key must be installed. This user is required by the Cosmos GUI in order to run certain administration commands on the storage cluster. See annex A for more details about doing it.
 
 [Top](#top)
 
