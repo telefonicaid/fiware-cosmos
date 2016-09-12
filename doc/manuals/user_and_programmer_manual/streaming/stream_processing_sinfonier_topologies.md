@@ -18,7 +18,7 @@ Sinfonier is based on a simple four step way.
 
 After you are logged on Sinfonier it's very simple to start the creation of a new topology, just go to the editor or click the button “New topology” placed in the topologies section, it will redirect you to the editor. Once there, you can start to create a new topology.
 
-You can see all your topologies and **Public** topolgies on "Topologies" section.
+You can see all your topologies and **Public** topologies on "Topologies" section.
 
 ![Figure 1 - Sinfonier Topologies List](images/sinfonier_topologies_list.png "Figure 1 - Sinfonier Topologies List")
 
@@ -28,13 +28,13 @@ All modules on Sinfonier should be publish sometime but not topologies. Topologi
 
 **Why to publish a topolgy?** Just to help community users to create new topologies easily.
 **What is sharing on my topology?** When your topology is shared only includes how modules are connected. Templates not include modules params.
-**When I use "Use as Template" on my topologies all modules params are included** Sure! If you are using your own template your params are included. This feature allow you to fork your work easily. (We didn't use "fork" word in order to be friendly with nont technnical users.)
+**When I use "Use as Template" on my topologies all modules params are included** Sure! If you are using your own template your params are included. This feature allow you to fork your work easily. (We didn't use "fork" word in order to be friendly with non technical users.)
 
 ##<a name="section2"></a>First Topology
 
 ##<a name="section3"></a>Modules
 
-As you read on modules section, **Modules** are the core of Sinfonier. Each one makes a job, join together makes a complex processing system... and shared they are an collective intelligence.	
+As you read on modules section, **Modules** are the core of Sinfonier. Each one makes a job, join together makes a complex processing system... and shared they are an collective intelligence.
 
 ###<a name="section3.1"></a>Add modules to MyTools
 
@@ -67,7 +67,7 @@ RSS is a lightweight, multi purpose, extensible metadata description and syndica
 	 <lastBuildDate>Mon, 06 Sep 2010 00:01:00 +0000 </lastBuildDate>
 	 <pubDate>Sun, 06 Sep 2009 16:20:00 +0000</pubDate>
 	 <ttl>1800</ttl>
-	 
+
 	 <item>
 	  <title>Entry title</title>
 	  <description>Here is some text containing an interesting description.</description>
@@ -75,7 +75,7 @@ RSS is a lightweight, multi purpose, extensible metadata description and syndica
 	  <guid isPermaLink="false">7bd204c6-1655-4c27-aeee-53f933c5395f</guid>
 	  <pubDate>Sun, 06 Sep 2009 16:20:00 +0000</pubDate>
 	 </item>
-	 
+
 	</channel>
 	</rss>
 
@@ -90,7 +90,7 @@ Sinfonier can get data from RSS and Atom Feeds using some spouts. As we know Sin
 ----
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=XhW7AOPTBH0
-" target="_blank"><img src="http://img.youtube.com/vi/XhW7AOPTBH0/0.jpg" 
+" target="_blank"><img src="http://img.youtube.com/vi/XhW7AOPTBH0/0.jpg"
 alt="Consume Twitter Stream" width="600" height="400" border="5" /></a>
 
 ----
@@ -109,7 +109,7 @@ MongoDB is a NoSQL database document-oriented database. MongoDB eschews the trad
 
 MongoDB stores data using a flexible document data model that is similar to JSON. Documents contain one or more fields, including arrays, binary data and sub-documents. Fields can vary from document to document. This flexibility allows development teams to evolve the data model rapidly as their application requirements change.
 
-As Sinfonier implements data model based on JSON documents and creating a sandbox database in Mongolab is too easy: to integrate with MongoDB databases is extremely simple. 
+As Sinfonier implements data model based on JSON documents and creating a sandbox database in Mongolab is too easy: to integrate with MongoDB databases is extremely simple.
 
 **Creating an Account**
 
@@ -153,7 +153,7 @@ Time to use our database. Use a mongo database with Sinfonier is as easy as get 
 
 ####<a name="section3.5.1"></a>TOR Onionoo
 
-Onionoo is a web-based protocol to learn about currently running Tor relays and bridges. 
+Onionoo is a web-based protocol to learn about currently running Tor relays and bridges.
 
 Onionoo itself was not designed as a service for human beings—at least not directly. Onionoo provides the data for other applications and websites which in turn present Tor network status information to humans.
 
@@ -175,7 +175,7 @@ Sinfonier Instapush Drain allow users sending notifications associated to a spec
 
 Fields description:
 
-* **Traker Fields** are used to create your message. Sinfonier fill each traker with the content from Tuple fields received.
+* **Traker Fields** are used to create your message. Sinfonier fill each tracker with the content from Tuple fields received.
 * **Event** identifies your event defined by application.
 * **AppSecre** contents your API Secret Value.
 * **AppID** identifies your application in InstaPush.

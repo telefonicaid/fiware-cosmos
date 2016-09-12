@@ -20,7 +20,7 @@
 * [Annexes](#annexes)
     * [Annex A: Creating and installing a RSA identity](#annexa)
     * [Annex B: Creating a self-signed certificate](#annexb)
-    * [Annex C: Binding the GUI to a port under TCP/1024](#annexc) 
+    * [Annex C: Binding the GUI to a port under TCP/1024](#annexc)
 * [Reporting issues and contact information](#contact)
 
 ##<a name="whatis"></a>What is cosmos-gui
@@ -49,7 +49,7 @@ This is a software written in JavaScript, specifically suited for [Node.js](http
 ###<a name="prerequisites"></a>Prerequisites
 This GUI has no sense if there is no storage and computing clusters to be managed.
 
-A couple of sudoer users, one within the storage cluster and another one wihtin the computing clusters, are required. Through these users the cosmos-gui will remotely run certain administration commands such as new users creation, HDFS userspaces provision, etc. The access through these sudoer users will be authenticated by means of private keys. Please, see the [Annex A](#annexa) in order to know how to create a sudoer user, and how to install its RSA identity for ssh operation.
+A couple of sudoer users, one within the storage cluster and another one within the computing clusters, are required. Through these users the cosmos-gui will remotely run certain administration commands such as new users creation, HDFS userspaces provision, etc. The access through these sudoer users will be authenticated by means of private keys. Please, see the [Annex A](#annexa) in order to know how to create a sudoer user, and how to install its RSA identity for ssh operation.
 
 The Cosmos users management is done by means of a [MySQL](https://www.mysql.com/) database, thus install it in the same node the GUI runs, or a remote but accessible machine.
 
@@ -66,7 +66,7 @@ Start by creating, if not yet created, a Unix user named `cosmos-gui`; it is nee
 
     $ sudo useradd cosmos-gui
     $ sudo passwd cosmos-gui <choose_a_password>
-    
+
 While you are a sudoer user, create a folder for saving the cosmos-gui log traces under a path of your choice, typically `/var/log/cosmos/cosmos-gui`, and set `cosmos-gui` as the owner:
 
     $ sudo mkdir -p /var/log/cosmos/cosmos-gui
@@ -75,26 +75,27 @@ While you are a sudoer user, create a folder for saving the cosmos-gui log trace
 Now, change to the new fresh `cosmos-gui` user:
 
     $ su - cosmos-gui
-    
-Before continuing, remember to add the RSA key fingerprints of the Namenodes accessed by the GUI. This fingerprints are automatically added to `/home/cosmos-gui/.ssh/known_hosts` if you try a ssh access to the Namenodes for the first time. 
+
+Before continuing, remember to add the RSA key fingerprints of the Namenodes accessed by the GUI. This fingerprints are automatically added to `/home/cosmos-gui/.ssh/known_hosts` if you try a ssh access to the Namenodes for the first time.
 
     $ ssh somesudoeruser@my.storage.namenode.com
     The authenticity of host 'my.storage.namenode.com (192.168.12.1)' can't be established.
     RSA key fingerprint is 96:c4:0b:8c:09:ce:d4:09:91:a2:b2:9c:40:71:9b:c6.
     Are you sure you want to continue connecting (yes/no)? yes
     Warning: Permanently added 'my.storage.namenode.com,192.168.12.1' (RSA) to the list of known hosts.
-    
+
 Please observe `somesudoeruser` is the (ficticious) sudoer user required for the storage cluster, as stated in the [Prerequisites](#prerequisites) section. Do the same for the computing cluster.
 
 Then, clone the Cosmos repository somewhere of your ownership:
 
     $ git clone https://github.com/telefonicaid/fiware-cosmos.git
-    
+
 cosmos-gui code is located at `fiware-cosmos/cosmos-gui`. Change to that directory and execute the installation command:
 
-    $ cd fiware-cosmos/comsos-gui
+    $ cd fiware-cosmos/cosmos-gui
+    $ git checkout release/x.y.z
     $ npm install
-    
+
 That must download all the dependencies under a `node_modules` directory.
 
 [Top](#top)
@@ -105,11 +106,11 @@ The user management for the storage cluster is done through a MySQL database, `c
 Simply log into your MySQL deployment and execute the sentence within the file above:
 
     mysql> resources/mysql_db_and_tables.sql
-    
+
 Alternatively, you can copy&paste the SQL sentences and execute them:
 
     $ mysql -u <user> -p
-    Enter password: 
+    Enter password:
     Welcome to the MySQL monitor.  Commands end with ; or \g.
     Your MySQL connection id is 1640
     Server version: 5.1.73 Source distribution
@@ -146,7 +147,7 @@ You are visiting this section since you already installed Cosmos GUI 0.1.0 and w
 Cosmos GUI 0.2.0 adds some columns to the `cosmos_user` table, and many others are modified. In order to do the upgrade, please execute the `resources/mysql_upgrade_0.1.0-0.2.0.sql` file:
 
     mysql> SOURCE resources/mysql_upgrade_0.1.0-0.2.0.sql
-    
+
 Or type the sentences within that file into a mysql shell:
 
     mysql> USE cosmos;
@@ -174,7 +175,7 @@ Please observe moving from 0.2.0 to 0.3.0 implies a hard change of behaviour reg
 Both changes have direct implications on the database, where the `idm_username` and `username` are replaced by `email` and `id`, respectively. In order to do the upgrade, please execute the `resources/mysql_upgrade_0.2.0-0.3.0.sql` file:
 
     mysql> SOURCE resources/mysql_upgrade_0.2.0-0.3.0.sql
-    
+
 Or type the sentences within that file into a mysql shell:
 
     mysql> USE cosmos;
@@ -208,7 +209,7 @@ cosmos-gui is now registered:
 
 ![](doc/images/register_cosmos_gui__result.png)
 
-An important result of the registration process are the OAuth2 credentials that can be inspected by cliking on the apropriate button. These credentials must be configured in cosmos-gui as shown later.
+An important result of the registration process are the OAuth2 credentials that can be inspected by clicking on the appropriate button. These credentials must be configured in cosmos-gui as shown later.
 
 [Top](#top)
 
@@ -270,19 +271,19 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
 The GUI implemented by cosmos-gui is run as (assuming your current directory is `fiware-cosmos/cosmos-gui`):
 
     $ npm start
-    
+
 This command invokes the start script within `package.josn`:
 
     "scripts": {
         "start": "sudo node ./src/cosmos_gui.js"
     }
 
-Please observe the usage of `sudo`. This is because the GUI must be able to execute certain priviledged Unix and Hadoop commands when setting up Cosmos accounts. **Never run cosmos-gui (nor any other service) as the `root` user.**
+Please observe the usage of `sudo`. This is because the GUI must be able to execute certain privileged Unix and Hadoop commands when setting up Cosmos accounts. **Never run cosmos-gui (nor any other service) as the `root` user.**
 
 If everything goes well, you should be able to see in a web browser the login page (`http://<node_hosting_cosmos_gui>:<port>`):
 
 ![](doc/images/cosmos_gui__init.png)
-    
+
 cosmos-gui typically listens in the TCP/443 port (TLS encryption), but you can change it by editing `conf/cosmos-gui.conf`.
 
 [Top](#top)
@@ -312,9 +313,9 @@ Please observe when the storage and computing clusters are the same (it is not t
 [Top](#top)
 
 ###<a name="dashboard"></a>Dashboard
-Current version of cosmos-gui has no functionlality exposed in the dashboard, thus cosmos-gui can be seen as a Cosmos account provisioning tool.
+Current version of cosmos-gui has no functionality exposed in the dashboard, thus cosmos-gui can be seen as a Cosmos account provisioning tool.
 
-Next coming versions of the GUI will allow the users to explore their HDFS space and run predefinied MapReduce jobs from this dashboard. Stay tuned!
+Next coming versions of the GUI will allow the users to explore their HDFS space and run predefined MapReduce jobs from this dashboard. Stay tuned!
 
 The only option for the time being is to access to the profile page (see next section).
 
@@ -344,12 +345,12 @@ Logging traces, typically saved under `/var/log/cosmos/cosmos-gui`, are the main
 Logging levels follow this hierarchy:
 
     debug < info < warn < error < fatal
-    
+
 Within the log it is expected to find many `info` messages, and a few of `warn` or `error` types. Of special interest are the errors:
 
 * ***There was some error when connecting to MySQL database. The server will not be run***: This message may appear when starting the GUI. Most probably the MySQL endpoint is not correct, the MySQL user is not allowed to remotely connect, of there is some network error like a port filtering.
-* ***There was some error when getting user information from the database***: This message may appear when a user gets the main page and his/her session has not yet expired; then, his/her information is retrieved from the database. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful. 
-* ***There was some error when getting user information from the IdM***: This message may appear when a user signs in using his/her Identity Manager (IdM) credentials. Most probably the IdM endpoint is not correct, the client id and secret related to cosmos-gui are not correct or the callback URL has not been propertly set.
+* ***There was some error when getting user information from the database***: This message may appear when a user gets the main page and his/her session has not yet expired; then, his/her information is retrieved from the database. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful.
+* ***There was some error when getting user information from the IdM***: This message may appear when a user signs in using his/her Identity Manager (IdM) credentials. Most probably the IdM endpoint is not correct, the client id and secret related to cosmos-gui are not correct or the callback URL has not been properly set.
 * ***There was some error when adding information in the database for user \<cosmos_user>***: This message may appear when a new fresh user has accessed the GUI for the first time. Most probably some network error is avoiding to get that information, since the initial connection to the database was successful.
 * ***There was an error while adding the Unix user \<unix_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
 * ***There was an error while creating the HDFS folder for user \<cosmos_user\>***: This message may appear once the user has successfully signed in and the GUI starts provisioning his/her Cosmos account. Most probably, the user configured for the storage or computing cluster is not a sudoer, or there is some network error with the ssh access.
@@ -361,10 +362,10 @@ Within the log it is expected to find many `info` messages, and a few of `warn` 
 
 ###<a name="database"></a>Database
 
-Information regarding registered users in Cosmos can be found in a MySQL table named `cosmos_user` within a database named `comsos_gui` in the MySQL deployment you did when installing the GUI. Such a table contains the IdM username, the Cosmos username, the password and the registration time.
+Information regarding registered users in Cosmos can be found in a MySQL table named `cosmos_user` within a database named `cosmos_gui` in the MySQL deployment you did when installing the GUI. Such a table contains the IdM username, the Cosmos username, the password and the registration time.
 
     $ mysql -u cb -p
-    Enter password: 
+    Enter password:
     Welcome to the MySQL monitor.  Commands end with ; or \g.
     ...
     Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
@@ -413,24 +414,24 @@ For this guide we will assume there is a server machine `server_vm` needed to be
 First of all, log into the server machine as any other sudoer user and create the `cosmos-sudo` user:
 
     $ sudo useradd cosmos-sudo
-    
+
 Do not add a password to the `cosmos-sudo` user since only the ssh keypair will be used for authentication.
 
 Add this user to the sudoers group:
 
     $ visudo
-    
+
 Add the following line to the appropriate section:
 
     cosmos  ALL=(ALL)       ALL
 
 Now, log as `cosmos-sudo` and create the ssh keypair; when prompted for the passphrase, leave it empty; use the default `id_rsa` name for the private key (`id_rsa.pub` will be the public counterpart):
- 
+
     $ su - cosmos-sudo
     $ ssh-keygen
-    
+
 Despite the empty passphrase, it is necessary to remove it (it exists, but it is empty):
-    
+
     $ openssl rsa -in ./ssh/id_rsa -out ./ssh/id_rsa2
 
 Then, change the permissions of the private key, the default ones are too open:
@@ -444,7 +445,7 @@ The private key must be copied somewhere the GUI running in the client machine m
 Copy the public key to the `authorized_keys` file as well; this file is read by ssh when authenticating as the `cosmos-sudo` user:
 
     $ cat /home/cosmos-sudo/.ssh/id_rsa.pub >> /home/cosmos-sudo/.ssh/authorized_keys
-    
+
 Finally, you can check the access from the client machine:
 
     $ su - cosmos-gui
@@ -457,15 +458,15 @@ Finally, you can check the access from the client machine:
 First of all, create a private key; it may not be necessary if you already have one:
 
     $ openssl genrsa -out private-key.pem 1024
-    
-Second, create a Certificate Signing Request (CSR) using the privte key:
+
+Second, create a Certificate Signing Request (CSR) using the private key:
 
     $ openssl req -new -key private-key.pem -out csr.pem
 
 Finally, create the self-signed certificate:
 
     $ openssl x509 -req -in csr.pem -signkey private-key.pem -out public-cert.pem -days 1000
-    
+
 Please observe a duration of 1000 days for the certificate has been specified.
 
 [Top](#top)
@@ -476,13 +477,13 @@ This GUI may run in any port the user configures. Nevertheless, most of the Unix
 In order to solve this, there are several possibilities. One of them is setting the `cap_net_bind_service` <i>capability</i>:
 
     $ setcap cap_net_bind_service=+ep /path/to/cosmos-gui
-    
+
 Nevertheless, the above shows some caveats, for instance, it is only valid for kernels over 2.6.24, and Linux will disable `LD_LIBRARY_PATH` on any program that has elevated privileges like `setcap` or `suid`.
-    
+
 Another one option (the preferred one) is to use port forwarding. By using this technique, the GUI is run on a port over 1024 (e.g. `9090`) and an `iptables` rule is configured this way:
 
     $ iptables -A PREROUTING -t nat -p tcp --dport 443 -j REDIRECT --to-port 9090
-    
+
 Which means all the traffic sent to the TCP/443 port will be forwarded to real binding port, TCP/9090.
 
 [Top](#top)
@@ -491,13 +492,13 @@ Which means all the traffic sent to the TCP/443 port will be forwarded to real b
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cosmos` tag.
-* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
+* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [fermin.galanmarquez@telefonica.com](mailto:fermin.galanmarquez@telefonica.com) **[Contributor]**
     * [pablo.coellovillalba@telefonica.com](mailto:pablo.coellovillalba@telefonica.com) **[Contributor]**
     * [german.torodelvalle@telefonica.com](german.torodelvalle@telefonica.com) **[Contributor]**
 
-**NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personally emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)

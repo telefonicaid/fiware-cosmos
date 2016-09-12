@@ -20,7 +20,7 @@ Why emphasize in <i>a shared Hadoop environment</i>? Because shared Hadoops requ
 
 The key point is to relate all the MapReduce operations (run, kill, retrieve status, etc) to the user space in HDFS. This way, simple but effective authorization policies can be stablished per user space (in the most basic approach, allowing only a user to access it own user space). This can be easily combined with authentication mechanisms such as [OAuth2](http://oauth.net/2/).
 
-Finally, it is important to remark cosmos-tidoop is being designed to run in a computing cluster, but in charge of analyzing the data within a storage cluster. Sometimes, of course, both storage and computing cluster may be the same, but they could be splited and this software is ready for that.
+Finally, it is important to remark cosmos-tidoop is being designed to run in a computing cluster, but in charge of analyzing the data within a storage cluster. Sometimes, of course, both storage and computing cluster may be the same, splitted software is ready for that.
 
 [Top](#top)
 
@@ -41,12 +41,12 @@ Start by creating, if not yet created, a Unix user named `cosmos-tidoop`; it is 
 
     $ sudo useradd cosmos-tidoop
     $ sudo passwd cosmos-tidoop <choose_a_password>
-    
+
 While you are a sudoer user, create a folder for saving the cosmos-tidoop-api log traces under a path of your choice, typically `/var/log/cosmos/cosmos-tidoop-api`, and set `cosmos-tidoop` as the owner:
 
     $ sudo mkdir -p /var/log/cosmos/cosmos-tidoop-api
     $ sudo chown -R cosmos-tidoop:cosmos-tidoop /var/log/cosmos
-    
+
 Now it is time to enable the `cosmos-tidoop` user to run Hadoop commands as the requesting user. This can be done in two ways:
 
 * Adding the `cosmos-tidoop` user to the sudoers list. This is the easiest way, but the most dangerous one.
@@ -59,12 +59,13 @@ Once , change to the new fresh `cosmos-tidoop` user:
 Then, clone the fiware-cosmos repository somewhere of your ownership:
 
     $ git clone https://github.com/telefonicaid/fiware-cosmos.git
-    
+
 cosmos-tidoop-api code is located at `fiware-cosmos/cosmos-tidoop-api`. Change to that directory and execute the installation command:
 
     $ cd fiware-cosmos/cosmos-tidoop-api
+    $ git checkout release/x.y.z
     $ npm install
-    
+
 That must download all the dependencies under a `node_modules` directory.
 
 [Top](#top)
@@ -78,7 +79,7 @@ To be done.
 cosmos-tidoop-api is configured through a JSON file (`conf/cosmos-tidoop-api.json`). These are the available parameters:
 
 * **host**: FQDN or IP address of the host running the service. Do not use `localhost` unless you want only local clients may access the service.
-* **port**: TCP listening port for incomming API methods invocation. 12000 by default.
+* **port**: TCP listening port for incoming API methods invocation. 12000 by default.
 * **storage_cluster**:
     * **namenode_host**: FQDN or IP address of the Namenode of the storage cluster.
     * **namenode_ipc_port**: TCP listening port for Inter-Process Communication used by the Namenode of the storage cluster. 8020 by default.
@@ -92,12 +93,12 @@ cosmos-tidoop-api is configured through a JSON file (`conf/cosmos-tidoop-api.jso
 The Http server implemented by cosmos-tidoop-api is run as (assuming your current directory is `fiware-cosmos/cosmos-tidoop-api`):
 
     $ npm start
-    
+
 If everything goes well, you should be able to remotely ask (using a web browser or `curl` tool) for the version of the software:
 
     $ curl -X GET "http://<host_running_the_api>:12000/tidoop/v1/version"
     {"version": "0.1.1"}
-    
+
 cosmos-tidoop-api typically listens in the TCP/12000 port, but you can change if by editing `conf/cosmos-tidoop-api.conf` as seen above.
 
 [Top](#top)
@@ -121,7 +122,7 @@ Response example:
 HTTP/1.1 200 OK
 
 {
-    "success": "true", 
+    "success": "true",
     "version": "0.2.0-next"
 }
 ```
@@ -260,7 +261,7 @@ Logging traces, typically saved under `/var/log/cosmos/cosmos-tidoop-lib`, are t
 Logging levels follow this hierarchy:
 
     debug < info < warn < error < fatal
-    
+
 Within the log it is expected to find many `info` messages, and a few of `warn` or `error` types. Of special interest are the errors:
 
 * ***Some error occurred during the starting of the Hapi server***: This message may appear when starting the API. Most probably the configured host IP address/FQDN does not belongs to the physical machine the service is running, or the configured port is already used.
@@ -268,7 +269,7 @@ Within the log it is expected to find many `info` messages, and a few of `warn` 
 [Top](#top)
 
 ###<a name="section6.2"></a>Submitted jobs
-As an administrator, information regarding submitted jobs can be retrieved via the `hadoop job` command (it must be said such a command is the underlying mechanism the REST API uses in order to return information regarding MapReduce jobs). A complete reference for this command can be found in the official [Hadoop documentation](https://hadoop.apache.org/docs/r1.2.1/commands_manual.html#job). 
+As an administrator, information regarding submitted jobs can be retrieved via the `hadoop job` command (it must be said such a command is the underlying mechanism the REST API uses in order to return information regarding MapReduce jobs). A complete reference for this command can be found in the official [Hadoop documentation](https://hadoop.apache.org/docs/r1.2.1/commands_manual.html#job).
 
 [Top](#top)
 
@@ -276,12 +277,12 @@ As an administrator, information regarding submitted jobs can be retrieved via t
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cosmos` tag.
-* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
+* Use [ask.fiware.org](https://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [german.torodelvalle@telefonica.com](mailto:german.torodelvalle@telefonica.com) **[Contributor]**
     * [pablo.coellovillalba@telefonica.com](mailto:pablo.coellovillalba@telefonica.com) **[Contributor]**
 
-**NOTE**: Please try to avoid personaly emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personally emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](https://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)

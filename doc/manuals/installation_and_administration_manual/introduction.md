@@ -49,12 +49,12 @@ There are several channels suited for reporting issues and asking for doubts in 
    * fiware-cygnus
    * fiware-sinfonier
    * storm (please observe in this case we are not the main supporters of Apache Storm)
-* Use [ask.fiware.org](http://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelarator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
+* Use [ask.fiware.org](http://ask.fiware.org/questions/) for general questions about FIWARE, e.g. how many cities are using FIWARE, how can I join the accelerator program, etc. Even for general questions about this software, for instance, use cases or architectures you want to discuss.
 * Personal email:
     * <francisco.romerobueno@telefonica.com> (Cosmos Ecosystem)
     * <franciscojesus.gomezrodriguez@telefonica.com> (Sinfonier)
 
-**NOTE**: Please try to avoid personaly emailing the GE owners unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](http://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personally emailing the GE owners unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](http://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)
 
