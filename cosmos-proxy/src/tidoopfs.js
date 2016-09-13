@@ -30,12 +30,13 @@ function isEmptyFile() {
 } // isEmptyFile
 
 function fileExists() {
-    try {
-        fs.accessSync(pathToFile);
+    var file = fs.readFileSync(pathToFile);
+
+    if (file) {
         return true;
-    } catch (e) {
+    } else {
         return false;
-    } // try catch
+    } // if else
 } // fileExists
 
 module.exports = {
