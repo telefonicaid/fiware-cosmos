@@ -58,7 +58,7 @@ function updateCacheFile() {
 } // updateFileCache
 
 function loadCacheData() {
-    return JSON.parse(fs.readFileSync(pathToFile, 'utf8'));
+    cache = JSON.parse(fs.readFileSync(pathToFile, 'utf8'));
 } // loadCacheData
 
 function pushNewEntry(newValue) {
