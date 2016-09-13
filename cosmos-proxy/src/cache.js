@@ -33,21 +33,13 @@ function isCacheEmpty() {
     return (cache == null || cache.length == undefined || cache.length == 0);
 } // isCacheEmpty
 
-function isUsersToken(reqUser, token) {
+function isCacheAuthenticated(reqUser, token) {
     if (!isCacheEmpty()) {
         for (var i = 0; i < cache.length; i++) {
             if ((cache[i]['user'] === reqUser) && (cache[i]['token'] === token)) {
                 return true;
             } // if
         } // for
-    } // if
-
-    return false;
-} // isInCache
-
-function isCacheAuthenticated(reqUser, token) {
-    if (isUsersToken(reqUser, token)) {
-        return true;
     } // if
 
     return false;
