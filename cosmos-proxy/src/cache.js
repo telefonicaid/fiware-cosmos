@@ -22,7 +22,7 @@
  */
 
 var fs = require('fs'),
-    cache = [],
+    cache = JSON.parse("[]"),
     pathToFile = require('../conf/cosmos-proxy.json').cache_file;
 
 function createEmptyFileCache() {
@@ -36,17 +36,22 @@ function isCacheEmpty() {
 function isCacheAuthenticated(reqUser, token) {
     if (!isCacheEmpty()) {
         for (var i = 0; i < cache.length; i++) {
-            if ((cache[i]['user'] === reqUser) && (cache[i]['token'] === token)) {
-                return true;
+            if (cache[i].user === reqUser) {
+                if (cache[i].token === token) {
+                    return 1; // 1
+                } else {
+                    return 2; // 2
+                } // if else
             } // if
         } // for
-    } // if
-
-    return false;
+        return 0;
+    } else {
+        return 0;
+    } // if else
 } // isCacheAuthenticated
 
 function updateCacheFile() {
-    fs.writeFileSync(pathToFile,'[' + cache + ']');
+    fs.writeFileSync(pathToFile, JSON.stringify(cache), 'utf-8');
 } // updateFileCache
 
 function loadCacheData() {
@@ -58,12 +63,27 @@ function pushNewEntry(newValue) {
     updateCacheFile(pathToFile);
 } // pushNewEntry
 
+function updateEntry(user, token) {
+    for (var i = 0; i < cache.length; i++) {
+        if (cache[i].user === user) {
+            cache[i].token = token;
+            updateCacheFile(pathToFile);
+            break;
+        } // if
+    } // for
+} // updateEntry
+
+function toString() {
+    return JSON.stringify(cache);
+} // toString
+
 module.exports = {
     isCacheAuthenticated: isCacheAuthenticated,
-    updateCacheFile: updateCacheFile,
     createEmptyFileCache: createEmptyFileCache,
     loadCacheData: loadCacheData,
     isCacheEmpty: isCacheEmpty,
-    pushNewEntry: pushNewEntry
+    pushNewEntry: pushNewEntry,
+    updateEntry: updateEntry,
+    toString: toString
 } // module.exports
 
