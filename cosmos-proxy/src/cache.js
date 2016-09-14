@@ -38,9 +38,9 @@ function isCacheAuthenticated(reqUser, token) {
         for (var i = 0; i < cache.length; i++) {
             if (cache[i].user === reqUser) {
                 if (cache[i].token === token) {
-                    return 1; // 1
+                    return 1;
                 } else {
-                    return 2; // 2
+                    return 2;
                 } // if else
             } // if
         } // for
@@ -51,7 +51,7 @@ function isCacheAuthenticated(reqUser, token) {
 } // isCacheAuthenticated
 
 function updateCacheFile() {
-    fs.writeFileSync(pathToFile, JSON.stringify(cache), 'utf-8');
+    fs.writeFileSync(pathToFile, JSON.stringify(cache), 'utf8');
 } // updateFileCache
 
 function loadCacheData() {
