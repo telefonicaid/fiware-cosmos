@@ -80,10 +80,11 @@ http.createServer(function (req, res) {
     var path = url.parse(req.url).pathname;
     var reqUser = url.parse(req.url, true).query['user.name'];
     var token = req.headers['x-auth-token'];
+    var cacheCode = cache.isCacheAuthenticated(reqUser, token);
 
     logger.info(reqUser + ' is trying to access to ' + path + ' with the token ' + token);
 
-    if (cache.isCacheAuthenticated(reqUser, token)) {
+    if (cacheCode == 1) {
         if (isAuthorized(reqUser, path)) {
             logger.info('Authorization OK: user ' + reqUser + ' is allowed to access ' + path);
             logger.info('Redirecting to http://' + conf.target.host + ':' + conf.target.port);
@@ -94,10 +95,10 @@ http.createServer(function (req, res) {
             res.end('Authorization error: user ' + reqUser + ' cannot access ' + path);
         } // if else
     } else {
-        idm.authenticate(token, function(error, result) {
+        idm.authenticate(token, function (error, result) {
             if (error) {
                 logger.error('Authentication error: ' + error);
-                res.writeHead(400, { 'Content-Type': 'text/plain' });
+                res.writeHead(400, {'Content-Type': 'text/plain'});
                 res.end('Authentication error: ' + error);
             } else {
                 var json = JSON.parse(result);
@@ -105,23 +106,29 @@ http.createServer(function (req, res) {
                 if (json['error']) {
                     // Changing the message due to idm returns a 'Unauthorized' in a authentication check
                     var jsonString = JSON.stringify(result);
-                    var newResult = JSON.parse(jsonString.replace('Unauthorized','Not authenticated'));
+                    var newResult = JSON.parse(jsonString.replace('Unauthorized', 'Not authenticated'));
                     logger.error('Authentication error: ' + newResult);
-                    res.writeHead(400, { 'Content-Type': 'text/plain' });
+                    res.writeHead(400, {'Content-Type': 'text/plain'});
                     res.end('Authentication error: ' + newResult);
                 } else {
                     var idmUser = json['id'];
-                    
+
                     if (idmUser !== reqUser) {
-                        var errorMsg =  JSON.stringify('{\"error\": {\"message\": \"User doesn\'t match the provided ' +
+                        var errorMsg = JSON.stringify('{\"error\": {\"message\": \"User doesn\'t match the provided ' +
                             'token\",\"code\": 404, \"title\": \"Not authenticated\"}}');
                         logger.error('Authentication error: ' + JSON.parse(errorMsg));
-                        res.writeHead(400, { 'Content-Type': 'text/plain' });
+                        res.writeHead(400, {'Content-Type': 'text/plain'});
                         res.end('Authentication error: ' + JSON.parse(errorMsg));
                     } else {
                         logger.info('Authentication OK: ' + result);
-                        var newValue = '{"user":"' + idmUser + '","token":"' + token + '"}';
-                        cache.pushNewEntry(newValue);
+                        if (cacheCode == 0) {
+                            var newValue = {"user": idmUser, "token": token};
+                            cache.pushNewEntry(newValue);
+                        } else if (cacheCode == 2) {
+                            cache.updateEntry(idmUser, token);
+                        } else {
+                            // Unreachable statement
+                        } // if else if
 
                         if (isAuthorized(idmUser, path)) {
                             logger.info('Authorization OK: user ' + idmUser + ' is allowed to access ' + path);
@@ -136,5 +143,5 @@ http.createServer(function (req, res) {
                 } // if else
             } // if else
         });
-    } // if else
+    } // if else if
 }).listen(conf.port);
