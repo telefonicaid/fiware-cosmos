@@ -23,8 +23,8 @@
  */
 
 // Module dependencies
-var config = require('../conf/cosmos-proxy.json');
-var winston = require('winston');
+var config = require('../conf/cosmos-proxy.json'),
+    winston = require('winston');
 
 // Global variables
 var logFileName = config.log.file_name;

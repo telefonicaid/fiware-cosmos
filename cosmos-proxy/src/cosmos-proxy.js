@@ -25,10 +25,18 @@ var http = require('http'),
     httpProxy = require('http-proxy'),
     url = require('url'),
     idm = require('./idm.js'),
-    logger = require('./logger.js'),
-    conf = require('../conf/cosmos-proxy.json');
-    cache = require('./cache.js');
-    tidoopfs = require('./tidoopfs.js');
+    conf = require('../conf/cosmos-proxy.json'),
+    cache = require('./cache.js'),
+    tidoopfs = require('./tidoopfs.js'),
+    helper = require('./conf_helper'),
+    logger = require('./logger.js');
+
+var validConfig = helper.checkConfFile();
+
+if (!validConfig) {
+    process.stdout.write('Unable to start the proxy: Configuration file has missing information.\n');
+    process.exit();
+} // if
 
 logger.info('Starting cosmos-proxy in ' + conf.host + ':' + conf.port);
 var proxy = httpProxy.createProxyServer({});
