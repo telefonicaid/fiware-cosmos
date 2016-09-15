@@ -41,5 +41,5 @@ function fileExists() {
 
 module.exports = {
     isEmptyFile: isEmptyFile,
-    fileExists: fileExists,
+    fileExists: fileExists
 } // module.exports

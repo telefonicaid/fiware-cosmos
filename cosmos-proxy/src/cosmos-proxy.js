@@ -28,7 +28,7 @@ var http = require('http'),
     conf = require('../conf/cosmos-proxy.json'),
     cache = require('./cache.js'),
     tidoopfs = require('./tidoopfs.js'),
-    helper = require('./conf_helper');
+    helper = require('./conf_helper'),
     logger = require('./logger.js');
 
 var validConfig = helper.checkConfFile();
