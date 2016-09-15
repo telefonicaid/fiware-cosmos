@@ -25,6 +25,7 @@
 
 // Module dependencies
 var spawn = require('child_process').spawn;
+var fs = require('fs');
 
 function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJarsInHDFS, input, output, otherArgs, callback) {
     // Copy the jar from the HDFS user space
@@ -52,6 +53,8 @@ function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJar
             var jobId = null;
             var stderrTraces = '';
             var stdoutTraces = '';
+            var stderrFile = '';
+            var stdoutFile = '';
 
             // This function catches the stderr as it is being produced (console logs are printed in the stderr). At the
             // moment of receiving the line containing the job ID, get it and return with no error (no error means the
@@ -68,20 +71,32 @@ function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJar
                     var command = spawn('sudo', params);
                     var params = ['-u', userId, 'rm', '/home/' + userId + '/' + libJarsName];
                     var command = spawn('sudo', params);
+                    stderrFile = './' + jobId + '.stderr';
+                    fs.closeSync(fs.openSync(stderrFile, 'w'));
+                    stdoutFile = './' + jobId + '.stdout';
+                    fs.closeSync(fs.openSync(stdoutFile, 'w'));
                     return callback(null, jobId);
+                } // if
+
+                if (jobId !== null) {
+                    fs.writeFileSync(stderrFile, JSON.stringify(stderrTraces));
                 } // if
             });
 
             command.stdout.on('data', function (data) {
                 var dataStr = data.toString();
                 stdoutTraces += dataStr;
+
+                if (jobId !== null) {
+                    fs.writeFileSync(stdoutFile, JSON.stringify(stdoutTraces));
+                } // if
             });
 
             // This function catches the moment the command finishes. Return the error code if the job ID was never got
             command.on('close', function (code) {
                 if (jobId === null) {
-                    return callback('{"stderr":"' + stderrTraces.replace('"', '\"')
-                        + '","stdout":"' + stdoutTraces.replace('"', '\"') + '"}', null);
+                    return callback('{"stderr":' + JSON.stringify(stderrTraces)
+                        + ',"stdout":' + JSON.stringify(stdoutTraces) + '}', null);
                 } // if
             });
         });
@@ -91,12 +106,11 @@ function runHadoopJar(userId, jarName, jarInHDFS, className, libJarsName, libJar
 function runHadoopJobList(userId, callback) {
     var params = ['job', '-list', 'all'];
     var command = spawn('hadoop', params);
-    var jobInfos = null;
+    var jobInfos = '[';
+    var firstJobInfo = true;
 
     command.stdout.on('data', function (data) {
         var dataStr = data.toString();
-        jobInfos = '[';
-        var firstJobInfo = true;
         var lines = dataStr.split("\n");
 
         for (i in lines) {
@@ -105,6 +119,7 @@ function runHadoopJobList(userId, callback) {
 
                 if (fields.length > 3 && fields[3].replace(/ /g,'') === userId) {
                     var jobInfo = '{';
+                    var jobId = null;
 
                     for (j in fields) {
                         if (fields[j].length > 0) {
@@ -112,6 +127,7 @@ function runHadoopJobList(userId, callback) {
 
                             if (j == 0) {
                                 jobInfo += '"job_id":"' + value + '"';
+                                jobId = value;
                             } else if (j == 1) {
                                 jobInfo += ',"state":"' + value + '"';
                             } else if (j == 2) {
@@ -121,6 +137,38 @@ function runHadoopJobList(userId, callback) {
                             } // if else
                         } // if
                     } // for
+
+                    if (verbose === 'true' && jobId !== null) {
+                        var stderrFile = './' + jobId + '.stderr';
+
+                        try {
+                            fs.statSync(stderrFile);
+                            var stderrTraces = fs.readFileSync(stderrFile);
+
+                            if (stderrTraces.length === 0) {
+                                stderrTraces = '""';
+                            } // if
+
+                            jobInfo += ',"stderr":' + stderrTraces;
+                        } catch (ex) {
+                            jobInfo += ',"stderr":""';
+                        } // if else
+
+                        var stdoutFile = './' + jobId + '.stdout';
+
+                        try {
+                            fs.statSync(stdoutFile);
+                            var stdoutTraces = fs.readFileSync(stdoutFile);
+
+                            if (stdoutTraces.length === 0) {
+                                stdoutTraces = '""';
+                            } // if
+
+                            jobInfo += ',"stdout":' + stdoutTraces;
+                        } catch (ex) {
+                            jobInfo += ',"stdout":""';
+                        } // if else
+                    } // if
 
                     jobInfo += '}';
 
@@ -133,17 +181,13 @@ function runHadoopJobList(userId, callback) {
                 } // if
             } // if
         } // for
-
-        jobInfos += ']';
-        return callback(null, jobInfos);
     });
 
     // This function catches the moment the command finishes. Return the error code if the jobs information was never
     // got
     command.on('close', function (code) {
-        if (jobInfos === null) {
-            return callback(code, null);
-        } // if
+        jobInfos += ']';
+        return callback(null, jobInfos);
     });
 } // runHadoopJobList
 
