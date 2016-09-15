@@ -219,10 +219,14 @@ HTTP/1.1 200 OK
 		"job_id": "job_1460639183882_0005",
 		"state": "SUCCEEDED",
 		"start_time": "1460963556383",
-		"user_id": "frb"
+		"user_id": "frb",
+		"stderr": "...",
+		"stdout": "..."
 	}
 }
 ```
+
+Please observe when getting details about a specific job, the `stderr` and `stdout` traces are returned.
 
 [Top](#top)
 

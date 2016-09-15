@@ -125,7 +125,7 @@ server.route({
 
         logger.info('Request: GET /tidoop/v1/user/' + userId + '/jobs');
 
-        cmdRunner.runHadoopJobList(userId, function (error, result) {
+        cmdRunner.runHadoopJobList(userId, false, function (error, result) {
             if (error) {
                 var response = '{"success":"false","error":"The user ID does not exist"}';
                 logger.info(response);
@@ -148,7 +148,7 @@ server.route({
 
         logger.info('Request: GET /tidoop/v1/user/' + userId + '/jobs/' + jobId);
 
-        cmdRunner.runHadoopJobList(userId, function (error, result) {
+        cmdRunner.runHadoopJobList(userId, true, function (error, result) {
             if (error) {
                 var response = '{"success":"false","error":"The user ID does not exist"}';
                 logger.info(response);

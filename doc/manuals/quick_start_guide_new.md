@@ -181,7 +181,7 @@ As you can see, another REST API has been used, in this case the Tidoop REST API
 
 ```
 $ curl -X GET "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/jobs/job_1460639183882_0001" -H "X-Auth-Token: 3azH09G1PdaGmgBNODLOtxy52f5a00"
-{"success":"true","job":{"job_id":"job_1460639183882_0001","state":"SUCCEEDED","start_time":"1461060258427","user_id":"frb"}}
+{"success":"true","job":{"job_id":"job_1460639183882_0001","state":"SUCCEEDED","start_time":"1461060258427","user_id":"frb","stderr":"...","stdout":"..."}}
 ```
 
 [Top](#top)
