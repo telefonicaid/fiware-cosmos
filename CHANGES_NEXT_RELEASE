@@ -7,3 +7,4 @@
 - [cosmos-proxy][hardening] Add public paths list in configuration (#187)
 - [cosmos-proxy][feature] Add configurable superuser (#188)
 - [cosmos-proxy][hardening] Add a cache for auth tokens (#189)
+- [cosmos-tidoop-apo][feature] Return stderr and stdout when retrieving jobs info (#200)
