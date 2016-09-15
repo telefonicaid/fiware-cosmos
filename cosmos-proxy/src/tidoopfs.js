@@ -22,9 +22,7 @@
  */
 
 var fs = require('fs'),
-    pathToFile = require('../conf/cosmos-proxy.json').cache_file,
-    conf = require('../conf/cosmos-proxy.json');
-    logger = require('./logger.js');
+    pathToFile = require('../conf/cosmos-proxy.json').cache_file;
 
 function isEmptyFile() {
     var contentFile = fs.readFileSync(pathToFile);
@@ -41,88 +39,7 @@ function fileExists() {
     } // if else
 } // fileExists
 
-function checkConfFile() {
-    var validConfFile = true;
-
-    if (conf.host === undefined) {
-        logger.error('\'host\' is undefined.');
-        validConfFile = false;
-    } // if
-
-    if (conf.port === undefined) {
-        logger.error('\'port\' is undefined.');
-        validConfFile = false;
-    } // if
-
-    if (conf.target !== undefined) {
-        if (conf.target.host === undefined) {
-            logger.error('\'target.host\' is undefined.');
-            validConfFile = false;
-        } // if
-
-        if (conf.target.port === undefined) {
-            logger.error('\'target.port\' is undefined.');
-            validConfFile = false;
-        } // if
-    } else {
-        logger.error('\'target\' is undefined.');
-        validConfFile = false;
-    } // if else
-
-    if (conf.idm !== undefined) {
-        if (conf.idm.host === undefined) {
-            logger.error('\'idm.host\' is undefined.');
-            validConfFile = false;
-        } // if
-
-        if (conf.idm.port === undefined) {
-            logger.error('\'idm.port\' is undefined.');
-            validConfFile = false;
-        } // if
-    } else {
-        logger.error('\'idm\' is undefined.');
-        validConfFile = false;
-    } // if else
-
-    if (conf.public_paths_list === undefined) {
-        logger.error('\'public_path_list\' is undefined.');
-        validConfFile = false;
-    } // if
-
-    if (conf.superuser === undefined) {
-        logger.error('\'superuser\' is undefined.');
-        validConfFile = false;
-    } // if
-
-    if (conf.log !== undefined) {
-        if (conf.log.date_pattern === undefined) {
-            logger.error('\'log.date_pattern\' is undefined.');
-            validConfFile = false;
-        } // if
-
-        if (conf.log.file_name === undefined) {
-            logger.error('\'log.file_name\' is undefined.');
-            validConfFile = false;
-        } // if
-    } else {
-        logger.error('\'log\' is undefined.');
-        validConfFile = false;
-    } // if else
-
-    if (conf.cache_file === undefined) {
-        logger.error('\'cache_file\' is undefined.');
-        validConfFile = false;
-    } // if
-
-    if (!validConfFile) {
-        logger.error('Please, check your configuration file and fix errors.');
-    } // if
-
-    return validConfFile;
-} // checkConfFile
-
 module.exports = {
     isEmptyFile: isEmptyFile,
     fileExists: fileExists,
-    checkConfFile: checkConfFile,
 } // module.exports

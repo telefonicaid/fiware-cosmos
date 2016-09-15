@@ -27,34 +27,30 @@ var config = require('../conf/cosmos-proxy.json');
     winston = require('winston');
 
 // Global variables
-try {
-    var logFileName = config.log.file_name;
-    var logDatePattern = config.log.data_pattern;
+var logFileName = config.log.file_name;
+var logDatePattern = config.log.data_pattern;
 
-    // Winston configuration
-    winston.add(winston.transports.DailyRotateFile, {
-        filename: logFileName,
-        datePattern: logDatePattern
-    });
+// Winston configuration
+winston.add(winston.transports.DailyRotateFile, {
+    filename: logFileName,
+    datePattern: logDatePattern
+});
 
-    function info(message) {
-        winston.info(message);
-    } // info
+function info(message) {
+    winston.info(message);
+} // info
 
-    function error(message) {
-        winston.error(message);
-    } // error
+function error(message) {
+    winston.error(message);
+} // error
 
-    function warn(message) {
-        winston.warn(message);
-    } // warn
+function warn(message) {
+    winston.warn(message);
+} // warn
 
-    function debug(message) {
-        winston.debug(message);
-    } // debug
-} catch (e) {
-    // Reached only if any log parameter is missing. Logs shown in the general method 'tidoopfs.checkConfFile'
-} // try catch
+function debug(message) {
+    winston.debug(message);
+} // debug
 
 module.exports = {
     info: info,

@@ -25,15 +25,16 @@ var http = require('http'),
     httpProxy = require('http-proxy'),
     url = require('url'),
     idm = require('./idm.js'),
-    logger = require('./logger.js'),
     conf = require('../conf/cosmos-proxy.json'),
-    cache = require('./cache.js');
-    tidoopfs = require('./tidoopfs.js');
+    cache = require('./cache.js'),
+    tidoopfs = require('./tidoopfs.js'),
+    helper = require('./conf_helper');
+    logger = require('./logger.js');
 
-var validConfig = tidoopfs.checkConfFile();
+var validConfig = helper.checkConfFile();
 
 if (!validConfig) {
-    logger.error('Unable to start the proxy: Configuration file has missing information.\n');
+    process.stdout.write('Unable to start the proxy: Configuration file has missing information.\n');
     process.exit();
 } // if
 
