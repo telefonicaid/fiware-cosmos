@@ -8,3 +8,4 @@
 - [cosmos-proxy][feature] Add configurable superuser (#188)
 - [cosmos-proxy][hardening] Add a cache for auth tokens (#189)
 - [cosmos-tidoop-apo][feature] Return stderr and stdout when retrieving jobs info (#200)
+- [cosmos-proxy][doc] Update apiary file and documentation about cosmos-proxy installation and configuration (#204)

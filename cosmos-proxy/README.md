@@ -51,6 +51,7 @@ While you are a sudoer user, create a folder for saving the cosmos-proxy log tra
 Additionally, while you are a sudo user, create a folder for store the cache file that will provide the pairs `user:token` if proxy shutdown.
 
     $ sudo mkdir -p /etc/cosmos/cosmos-proxy
+    $ sudo chown cosmos-proxy:cosmos-proxy /etc/cosmos/cosmos-proxy
 
 Now, change to the new fresh `cosmos-proxy` user:
 
@@ -91,6 +92,7 @@ cosmos-proxy is configured through a JSON file. These are the available paramete
 * **log**:
     * **file_name**: path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `cosmos-auth`.
     * **date_pattern**: data pattern to be appended to the log file name when the log file is rotated.
+* **cache_file**: path of the file where the pairs `user:token` will be saved. This file will be used in the case the proxy shutdown.
 
 [Top](#top)
 
@@ -148,6 +150,6 @@ There are several channels suited for reporting issues and asking for doubts in 
     * [francisco.romerobueno@telefonica.com](mailto:francisco.romerobueno@telefonica.com) **[Main contributor]**
     * [pablo.coellovillalba@telefonica.com](mailto:pablo.coellovillalba@telefonica.com) **[Contributor]**
 
-**NOTE**: Please try to avoid personally emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](stackoverflow.com) or [fiware-tech-help@lists.fi-ware.org](mailto:fiware-tech-help@lists.fi-ware.org). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
+**NOTE**: Please try to avoid personally emailing the contributors unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [fiware-tech-help@lists.fi-ware.org](mailto:fiware-tech-help@lists.fi-ware.org). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)
