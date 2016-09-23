@@ -73,7 +73,10 @@ function isWhiteListed(list, path) {
 function isAuthorized(username, path) {
     var whiteListed = isWhiteListed(conf.public_paths_list, path);
 
-    if (whiteListed) {
+    if (path === '/webhdfs/v1' || path === '/webhdfs/v1/' || path === '/webhdfs/v1/user'
+        || path === '/webhdfs/v1/user/') {
+        return false;
+    } else if (whiteListed) {
         return true;
     } else {
         if (username === conf.superuser) {
@@ -81,7 +84,7 @@ function isAuthorized(username, path) {
         } else {
             return (path.indexOf('/webhdfs/v1/user/' + username) === 0);
         } // if else
-    } // if else
+    } // if else if
 } // isAuthorized
 
 http.createServer(function (req, res) {
