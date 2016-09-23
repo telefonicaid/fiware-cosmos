@@ -82,8 +82,6 @@ function isAuthorized(username, path) {
         if (username === conf.superuser) {
             return true;
         } else {
-            logger.info('/webhdfs/v1/user/' + username);
-            logger.info('/webhdfs/v1/user/' + username + '/');
             return (path === '/webhdfs/v1/user/' + username
                 || path.indexOf('/webhdfs/v1/user/' + username + '/') === 0);
         } // if else
