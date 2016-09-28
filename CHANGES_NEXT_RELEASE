@@ -11,3 +11,4 @@
 - [cosmos-proxy][doc] Update apiary file and documentation about cosmos-proxy installation and configuration (#204)
 - [cosmos-proxy][hardening] Add certaing base paths restrictions in cosmos-proxy (#206)
 - [cosmos-proxy][bug] Add an access restriction to accounts made by prefixes of original users (#207)
+- [cosmos][doc] Update mkdocs.yml with the google analytics ID (#210)
