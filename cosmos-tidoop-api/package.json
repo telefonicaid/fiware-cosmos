@@ -1,7 +1,7 @@
 {
   "name": "cosmos-tidoop-api",
   "description": "Node.js app exposing the Tidoop REST API",
-  "version": "1.0.0",
+  "version": "1.0.0-next",
   "repository": {
     "type": "git",
     "url": "https://github.com/telefonicaid/fiware-cosmos.git"
