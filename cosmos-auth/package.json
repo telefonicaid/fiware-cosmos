@@ -1,7 +1,7 @@
 {
   "name": "cosmos-auth",
   "description": "Node.js app exposing Cosmos Auth API",
-  "version": "0.3.0-next",
+  "version": "1.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/telefonicaid/fiware-cosmos.git"
