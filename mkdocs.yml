@@ -15,7 +15,7 @@ pages:
   - 'Installation and Administration manual':
       - 'Introduction': 'installation_and_administration_manual/introduction.md'
       - 'Some words about Cosmos and its ecosystem': 'installation_and_administration_manual/some_words_about_cosmos_and_ecosystem.md'
-      - 'HAAS engine (Shara version)': 'installation_and_administration_manual/haas_engine_sahara.md'
+      - 'HAAS engine (Sahara version)': 'installation_and_administration_manual/haas_engine_sahara.md'
       - 'HAAS engine (shared Hadoop version)': 'installation_and_administration_manual/haas_engine_shared_hadoop.md'
       - 'Storage cluster': 'installation_and_administration_manual/storage_cluster.md'
       - 'GUI': 'installation_and_administration_manual/gui.md'

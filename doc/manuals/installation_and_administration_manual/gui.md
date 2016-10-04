@@ -22,7 +22,6 @@ Content:<br>
     * [Annex C: Binding the GUI to a port under TCP/1024](#section6.3)
 
 ##<a name="section1"></a>Introduction
-
 There is a GUI governing both the storage and the computing cluster (in future releases, it will be fully integrated with Sahara's dashboard as well). Through this GUI the users will be able to create an account, i.e. a HDFS userspace for storing data, and access to the computing resources for running MapReduce applications.
 
 Fully detailed information about Cosmos GUI can be found at [Github](http://github.com/telefonicaid/fiware-cosmos/tree/develop/cosmos-gui).
@@ -420,7 +419,7 @@ In order to solve this, there are several possibilities. One of them is setting 
 
     $ setcap cap_net_bind_service=+ep /path/to/cosmos-gui
 
-Nevertheless, the above shows some caveats, for instance, it is only valid for kernels over 2.6.24, and Linux will disable `LD_LIBRARY_PATH` on any program that has elevated privileges like `setcap` or `suid`.
+Nevertheless, the above shows some problems, for instance, it is only valid for kernels over 2.6.24, and Linux will disable `LD_LIBRARY_PATH` on any program that has elevated privileges like `setcap` or `suid`.
 
 Another one option (the preferred one) is to use port forwarding. By using this technique, the GUI is run on a port over 1024 (e.g. `9090`) and an `iptables` rule is configured this way:
 
