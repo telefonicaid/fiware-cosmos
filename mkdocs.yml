@@ -24,8 +24,6 @@ pages:
       - 'OAuth2 proxy': 'installation_and_administration_manual/oauth2_proxy.md'
       - 'Sanity Check Procedures': 'installation_and_administration_manual/sanity_check_procedures.md'
       - 'Diagnosis Procedures': 'installation_and_administration_manual/diagnosis_procedures.md'
-      - 'Annex A: Creating a public-private key pair and installing the public key': 'installation_and_administration_manual/annex_a_create_and_install_keypair.md'
-      - 'Annex B: Get a keystone auth token': 'installation_and_administration_manual/annex_b_get_keystone_auth_token.md'
   - 'User and Programmer manual':
       - 'Introduction': 'user_and_programmer_manual/introduction.md'
       - 'Using the GUI': 'user_and_programmer_manual/using_gui.md'
