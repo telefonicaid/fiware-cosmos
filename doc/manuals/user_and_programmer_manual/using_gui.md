@@ -9,11 +9,11 @@ Content:
 ##<a name="section1"></a>Login
 Once installed and run, you can visit `http://<node_hosting_cosmos_gui>:<port>` (adapt the port if you changed it). This page basically prompts the user to login.
 
-![](cosmos-gui/doc/images/cosmos_gui__init.png)
+![](../../../cosmos-gui/doc/images/cosmos_gui__init.png)
 
 The login procedure delegates in FIWARE Identity Manager. This means cosmos-gui does not perform <i>any propietary user management</i> from the GUI point of view (as it will be seen, cosmos-gui performs a propietary user management for accessing the Hadoop cluster; that is, particularly, its purpose). Thus, once clicked the login button, we are redirected to `https://account.lab.fiware.org`:
 
-![](cosmos-gui/doc/images/cosmos_gui__auth.png)
+![](../../../cosmos-gui/doc/images/cosmos_gui__auth.png)
 
 [Top](#top)
 
@@ -36,7 +36,7 @@ Next coming versions of the GUI will allow the users to explore their HDFS space
 
 The only option for the time being is to access to the profile page (see next section).
 
-![](cosmos-gui/doc/images/cosmos_gui__dashboard.png)
+![](../../../cosmos-gui/doc/images/cosmos_gui__dashboard.png)
 
 [Top](#top)
 
@@ -45,6 +45,6 @@ The profile section shows the user account details and certain statistics, such 
 
 This is useful in order to know the credentials the user has in the Cosmos platform.
 
-![](cosmos-gui/doc/images/cosmos_gui__profile.png)
+![](../../../cosmos-gui/doc/images/cosmos_gui__profile.png)
 
 [Top](#top)
