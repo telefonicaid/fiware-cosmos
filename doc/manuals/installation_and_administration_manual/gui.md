@@ -176,23 +176,23 @@ Please observe the user management for accessing the GUI or any other FIWARE com
 
 Registration must be done one and only once. As an already registered user in the Identity Manager, login (this user will be the admin user). You should be able to see an applications panel, in addition to an organizations panel, in your home tab:
 
-![](doc/images/register_cosmos_gui__apps_panel.png)
+![](cosmos-gui/doc/images/register_cosmos_gui__apps_panel.png)
 
 Click in the <i>register</i> button of the applications panel and give a name, a description, a URL and a callback URL for the new application. For instance:
 
-![](doc/images/register_cosmos_gui__data.png)
+![](cosmos-gui/doc/images/register_cosmos_gui__data.png)
 
 Then choose an image for the application, this will be shown as an icon for future users:
 
-![](doc/images/register_cosmos_gui__icon.png)
+![](cosmos-gui/doc/images/register_cosmos_gui__icon.png)
 
 Finally, manage the roles for this application. If you do not expect to add more roles than the default ones, or you simply do not know about roles, skip this step and finish the user registration:
 
-![](doc/images/register_cosmos_gui__roles.png)
+![](cosmos-gui/doc/images/register_cosmos_gui__roles.png)
 
 cosmos-gui is now registered:
 
-![](doc/images/register_cosmos_gui__result.png)
+![](cosmos-gui/doc/images/register_cosmos_gui__result.png)
 
 An important result of the registration process are the OAuth2 credentials that can be inspected by clicking on the appropriate button. These credentials must be configured in cosmos-gui as shown later.
 
@@ -267,7 +267,7 @@ Please observe the usage of `sudo`. This is because the GUI must be able to exec
 
 If everything goes well, you should be able to see in a web browser the login page (`http://<node_hosting_cosmos_gui>:<port>`):
 
-![](doc/images/cosmos_gui__init.png)
+![](cosmos-gui/doc/images/cosmos_gui__init.png)
 
 cosmos-gui typically listens in the TCP/443 port (TLS encryption), but you can change it by editing `conf/cosmos-gui.conf`.
 
