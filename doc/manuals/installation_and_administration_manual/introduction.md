@@ -20,7 +20,7 @@ If you don't relay on [FIWARE LAB](http://account.lab.fiware.org/) global instan
 
 If you still have doubts, we have built the flow diagram below in order to help you identifying which kind of Big Data user you are (if any):
 
-![Figure 1 - Which kind of Big Data user am I?](./big_data_installation_guide_figure_1.png)
+![Figure 1 - Which kind of Big Data user am I?](../images/big_data_installation_guide_figure_1.png)
 
 [Top](#top)
 
@@ -57,4 +57,3 @@ There are several channels suited for reporting issues and asking for doubts in 
 **NOTE**: Please try to avoid personally emailing the GE owners unless they ask for it. In fact, if you send a private email you will probably receive an automatic response enforcing you to use [stackoverflow.com](http://stackoverflow.com) or [ask.fiware.org](http://ask.fiware.org/questions/). This is because using the mentioned methods will create a public database of knowledge that can be useful for future users; private email is just private and cannot be shared.
 
 [Top](#top)
-
