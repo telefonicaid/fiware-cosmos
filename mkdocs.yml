@@ -12,18 +12,6 @@ google_analytics: ['UA-84812269-1', 'fiware-cosmos.readthedocs.io']
 pages:
   - Home: index.md
   - 'Quick Start Guide': 'quick_start_guide_new.md'
-  - 'Installation and Administration manual':
-      - 'Introduction': 'installation_and_administration_manual/introduction.md'
-      - 'Some words about Cosmos and its ecosystem': 'installation_and_administration_manual/some_words_about_cosmos_and_ecosystem.md'
-      - 'HAAS engine (Sahara version)': 'installation_and_administration_manual/haas_engine_sahara.md'
-      - 'HAAS engine (shared Hadoop version)': 'installation_and_administration_manual/haas_engine_shared_hadoop.md'
-      - 'Storage cluster': 'installation_and_administration_manual/storage_cluster.md'
-      - 'GUI': 'installation_and_administration_manual/gui.md'
-      - 'Tidoop': 'installation_and_administration_manual/tidoop.md'
-      - 'Auth server': 'installation_and_administration_manual/auth_server.md'
-      - 'OAuth2 proxy': 'installation_and_administration_manual/oauth2_proxy.md'
-      - 'Sanity Check Procedures': 'installation_and_administration_manual/sanity_check_procedures.md'
-      - 'Diagnosis Procedures': 'installation_and_administration_manual/diagnosis_procedures.md'
   - 'User and Programmer manual':
       - 'Introduction': 'user_and_programmer_manual/introduction.md'
       - 'Using the GUI': 'user_and_programmer_manual/using_gui.md'
