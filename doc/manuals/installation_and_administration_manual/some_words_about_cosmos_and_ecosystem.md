@@ -35,7 +35,7 @@ The ecosystem raises when Cosmos is completed/complemented with certain manageme
 * [Hadoop extensions](http://github.com/telefonicaid/fiware-tidoop/tree/master/tidoop-hadoop-ext) for using non HDFS data.
 * [Wilma PEP Proxy](http://github.com/ging/fi-ware-pep-proxy) together with [OAuth2 Tokens Generator](http://github.com/telefonicaid/fiware-cosmos/tree/develop/cosmos-auth) if wanting to implement OAuth2-based authentication and authorization in your REST APIs.
 
-![Figure 2 - Big Data architecture reminder](big_data_installation_guide_figure_2.png "Figure 2 - Big Data architecture reminder")
+![Figure 2 - Big Data architecture reminder](../images/big_data_installation_guide_figure_2.png "Figure 2 - Big Data architecture reminder")
 
 [Top](#top)
 
@@ -45,7 +45,7 @@ Since the above solution may require a very large infrastructure (for instance, 
 
 Indeed, this is the version currently deployed in FIWARE Lab.
 
-![Figure 3 - Light-version Big Data architecture](big_data_installation_guide_figure_3.png "Figure 3 - Light-version Big Data architecture")
+![Figure 3 - Light-version Big Data architecture](../images/big_data_installation_guide_figure_3.png "Figure 3 - Light-version Big Data architecture")
 
 ##<a name="section3"></a>What is mandatory and optional
 
