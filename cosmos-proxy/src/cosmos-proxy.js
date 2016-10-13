@@ -145,7 +145,11 @@ http.createServer(function (req, res) {
                         if (isAuthorized(idmUser, path)) {
                             logger.info('Authorization OK: user ' + idmUser + ' is allowed to access ' + path);
                             logger.info('Redirecting to http://' + conf.target.host + ':' + conf.target.port);
-                            proxy.web(req, res, {target: 'http://' + conf.target.host + ':' + conf.target.port});
+                            try {
+                                proxy.web(req, res, {target: 'http://' + conf.target.host + ':' + conf.target.port});
+                            } catch (err) {
+                                logger.error('Unable to forward to http:/' + conf.target.host + ':' + conf.target.port);
+                            } // try catch
                         } else {
                             logger.error('Authorization error: user ' + idmUser + ' is not allowed to access ' + path);
                             res.writeHead(400, {'Content-Type': 'text/plain'});
