@@ -47,24 +47,31 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
      * Constructor.
      */
     public OAuth2AuthenticationProviderImpl() {
-        // get the cnfigured Identity Manager endpoint
+        // Get the configured Identity Manager endpoint
         HiveConf conf = null;
         
         try {
             conf = new HiveConf();
+            LOGGER.info("Hive configuration read");
         } catch (Exception e) {
-            LOGGER.info("Unable to read the Hive configuration, using default values");
+            LOGGER.debug("Unable to read the Hive configuration, using default values");
         } finally {
             if (conf == null) {
                 idmEndpoint = "https://account.lab.fiware.org";
+                LOGGER.debug("Using hardcoded Identity Manager endpoint: https://account.lab.fiware.org");
             } else {
                 idmEndpoint = conf.get("com.telefonica.iot.idm.endpoint", "https://account.lab.fiware.org");
+                LOGGER.debug("com.telefonica.iot.idm.endpoint=" + idmEndpoint);
+                LOGGER.debug("hive.server2.enable.doAs=" + conf.get("hive.server2.enable.doAs"));
+                LOGGER.debug("hive.server2.authentication=" + conf.get("hive.server2.authentication"));
+                LOGGER.debug("hive.server2.custom.authentication.class="
+                        + conf.get("hive.server2.custom.authentication.class"));
+                LOGGER.debug("hadoop.proxyuser.hive.groups=" + conf.get("hadoop.proxyuser.hive.groups"));
+                LOGGER.debug("hadoop.proxyuser.hive.hosts=" + conf.get("hadoop.proxyuser.hive.hosts"));
             } // if else
-            
-            LOGGER.info("Identity Manager endpoint: " + idmEndpoint);
         } // try catch finally
         
-        // create a factory of Http clients
+        // Create a factory of Http clients
         if (idmEndpoint.startsWith("https")) {
             httpClientFactory = new HttpClientFactory(true);
         } else {
