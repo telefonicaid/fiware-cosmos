@@ -1,4 +1,4 @@
-#<a name="top"></a>Tidoop
+#<a name="top"></a>Tidoop REST API
 Content:
 
 * [Introduction](#section1)
@@ -13,31 +13,29 @@ Content:
     * [Submitted jobs](#section5.2)
 
 ##<a name="section1"></a>Introduction
-Tidoop is the codename for all the developments about [Hadoop](http://hadoop.apache.org/) made by FIWARE team at Telefónica Investigación y Desarrollo (Telefónica Research and Development, in english), or <i>TID</i> in its abreviated form.
+cosmos-tidoop-api exposes a RESTful API for running MapReduce jobs in a shared Hadoop environment.
 
-Tidoop comprises several different projects:
+Please observe we emphasize in <i>a shared Hadoop environment</i>. This is because shared Hadoops require special management of the data and the analysis processes being run (storage and computation). There are tools like [Oozie](https://oozie.apache.org/) in charge of running MapReduce jobs as well through an API, but they do not take into account the access to the run jobs, their status, results, etc must be controlled. In other words, using Oozie any user may kill a job by knowing its ID; using cosmos-tidoop-api only the owner of the job will be able to.
 
-* API extensions for Hadoop (tidoop-hadoop-ext).
-* MapReduce job library (tidoop-mr-lib).
-* REST API for the above MapReduce job library (tidoop-mr-lib-api).
+The key point is to relate all the MapReduce operations (run, kill, retrieve status, etc) to the user space in HDFS. This way, simple but effective authorization policies can be stablished per user space (in the most basic approach, allowing only a user to access it own user space). This can be easily combined with authentication mechanisms such as [OAuth2](http://oauth.net/2/).
 
-Fully detailed information about Tidoop can be found at [Gihub](http://github.com/telefonicaid/fiware-tidoop).
+Finally, it is important to remark cosmos-tidoop-api is being designed to run in a computing cluster, in charge of analyzing the data within a storage cluster. Sometimes, of course, both storage and computing cluster may be the same; even in that case the software is ready for that.
 
 [Top](#top)
 
 ##<a name="section2"></a>Installation
-This is a software written in JavaScript, specifically suited for [Node.js](https://nodejs.org) (<i>JavaScript on the server side</i>). JavaScript is an interpreted programming language thus it is not necessary to compile it nor build any package; having the source code downloaded somewhere in your machine is enough.
-
 ###<a name="section2.1"></a>Prerequisites
-This REST API has no sense if tidoop-mr-lib is not installed. And tidoop-mr-lib has only sense in a [Hadoop](http://hadoop.apache.org/) cluster, thus both the library and Hadoop are required.
+This REST API has only sense with a [Hadoop](http://hadoop.apache.org/) cluster administrated by the reader.
 
-As said, cosmos-tidoop-api is a Node.js application, therefore install it from the official [download](https://nodejs.org/download/). An advanced alternative is to install [Node Version Manager](https://github.com/creationix/nvm) (nvm) by creationix/Tim Caswell, which will allow you to have several versions of Node.js and switch among them.
+cosmos-tidoop-api is a Node.js application, therefore install it from the official [download](https://nodejs.org/download/). An advanced alternative is to install [Node Version Manager](https://github.com/creationix/nvm) (nvm) by creationix/Tim Caswell, which will allow you to have several versions of Node.js and switch among them.
 
 Of course, common tools such as `git` and `curl` are needed.
 
 [Top](#top)
 
 ###<a name="section2.2"></a>API installation
+This is a software written in JavaScript, specifically suited for [Node.js](https://nodejs.org) (<i>JavaScript on the server side</i>). JavaScript is an interpreted programming language thus it is not necessary to compile it nor build any package; having the source code downloaded somewhere in your machine is enough.
+
 Start by creating, if not yet created, a Unix user named `cosmos-tidoop`; it is needed for installing and running the application. You can only do this as root, or as another sudoer user:
 
     $ sudo useradd cosmos-tidoop

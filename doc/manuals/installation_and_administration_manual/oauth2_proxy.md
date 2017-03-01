@@ -10,18 +10,18 @@ Content:
 * [Administration](#section4)
 
 ##<a name="section1"></a>Installation
-This is a software written in JavaScript, specifically suited for [Node.js](https://nodejs.org) (<i>JavaScript on the server side</i>). JavaScript is an interpreted programming language thus it is not necessary to compile it nor build any package; having the source code downloaded somewhere in your machine is enough.
-
 ###<a name="section1.1"></a>Prerequisites
 This PER proxy has no sense if an Identity Manager (Keyrock implementation can be found [here](http://catalogue.fiware.org/enablers/identity-management-keyrock)) is not installed. The same applies to [Cosmos](http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos).
 
-As said, cosmos-proxy is a Node.js application, therefore install it from the official [download](https://nodejs.org/download/). An advanced alternative is to install [Node Version Manager](https://github.com/creationix/nvm) (nvm) by creationix/Tim Caswell, which will allow you to have several versions of Node.js and switch among them.
+cosmos-proxy is a Node.js application, therefore install it from the official [download](https://nodejs.org/download/). An advanced alternative is to install [Node Version Manager](https://github.com/creationix/nvm) (nvm) by creationix/Tim Caswell, which will allow you to have several versions of Node.js and switch among them.
 
 Of course, common tools such as `git` and `curl` may be needed.
 
 [Top](#top)
 
 ###<a name="section1.2"></a>Installation
+This is a software written in JavaScript, specifically suited for [Node.js](https://nodejs.org) (<i>JavaScript on the server side</i>). JavaScript is an interpreted programming language thus it is not necessary to compile it nor build any package; having the source code downloaded somewhere in your machine is enough.
+
 Start by creating, if not yet created, a Unix user named `cosmos-proxy`; it is needed for installing and running the application. You can only do this as root, or as another sudoer user:
 
     $ sudo useradd cosmos-proxy
@@ -71,7 +71,7 @@ cosmos-proxy is configured through a JSON file. These are the available paramete
 * **idm**:
     * **host**: FQDN or IP address where the Identity Manager runs. Do not write it in URL form!
     * **port**: port where the Identity Manager listens for requests. Typically 443.
-* **public_paths_list**: paths can be reached for all users.
+* **public\_paths\_list**: paths can be reached for all users.
 * **superuser**: superuser authorized to access all the HDFS paths.
 * **log**:
     * **file_name**: path of the file where the log traces will be saved in a daily rotation basis. This file must be within the logging folder owned by the the user `cosmos-auth`.
