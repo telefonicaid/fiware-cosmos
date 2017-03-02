@@ -81,4 +81,50 @@ public class OAuth2CacheTest {
         } // if else
     } // testIsCachedUserAndTokenNotOK
     
+    /**
+     * Tests OAuth2Cache.addToCache, a (user, token) pair must be added when not existing.
+     */
+    @Test
+    public void testAddToCacheWhenNotExisting() {
+        System.out.println("Testing OAuth2Cache.addToCache, a (user, token) pair must be added when not existing");
+        String user = "user";
+        String token = "token";
+        OAuth2Cache cache = new OAuth2Cache("");
+        
+        if (cache.isCached(user, token)) {
+            assertTrue(false);
+        } else {
+            cache.addToCache(user, token);
+
+            if (cache.isCached(user, token)) {
+                assertTrue(true);
+            } else {
+                assertTrue(false);
+            } // if else
+        } // if else
+    } // testAddToCacheWhenNotExisting
+    
+    /**
+     * Tests OAuth2Cache.addToCache, a (user, token) pair must be added when the user already exists (token update).
+     */
+    @Test
+    public void testAddToCacheWhenUserExists() {
+        System.out.println("Testing OAuth2Cache.addToCache, a (user, token) pair must be added when the user already "
+                + "exists (token update)");
+        String user = "user";
+        String token1 = "token1";
+        String token2 = "token2";
+        OAuth2Cache cache = new OAuth2Cache("");
+        cache.addToCache(user, token1);
+        cache.addToCache(user, token2);
+        
+        if (cache.isCached(user, token1)) {
+            assertTrue(false);
+        } else if (cache.isCached(user, token2)) {
+            assertTrue(true);
+        } else {
+            assertTrue(false);
+        } // if else
+    } // testAddToCacheWhenNotExisting
+    
 } // OAuth2CacheTest
