@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright 2016 Telefonica Investigación y Desarrollo, S.A.U
+# Copyright 2015-2017 Telefonica Investigación y Desarrollo, S.A.U
 #
 # This file is part of fiware-cosmos (FI-WARE project).
 #
@@ -33,14 +33,14 @@ dbName = sys.argv[3]
 hadoopUser = sys.argv[4]
 hadoopPassword = sys.argv[5]
 
-# do the connection
+# do the connection
 with pyhs2.connect(host=hiveHost,
                    port=hivePort,
                    authMechanism="PLAIN",
                    user=hadoopUser,
                    password=hadoopPassword,
                    database=dbName) as conn:
-    # get a client
+    # get a client
     with conn.cursor() as client:
         # create a loop attending HiveQL queries
         while (1):
@@ -62,4 +62,3 @@ with pyhs2.connect(host=hiveHost,
 
             except Pyhs2Exception, ex:
                 print ex.errorMessage
-

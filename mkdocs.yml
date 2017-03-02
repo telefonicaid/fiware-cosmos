@@ -22,6 +22,8 @@ pages:
       - 'Tidoop': 'installation_and_administration_manual/tidoop.md'
       - 'Auth server': 'installation_and_administration_manual/auth_server.md'
       - 'OAuth2 proxy': 'installation_and_administration_manual/oauth2_proxy.md'
+      - 'OAuth2 Hive authentication provider': 'installation_and_administration_manual/oauth2_hive_auth_provider.md'
+      - 'Cygnus': 'installation_and_administration_manual/cygnus.md'
       - 'Sanity Check Procedures': 'installation_and_administration_manual/sanity_check_procedures.md'
       - 'Diagnosis Procedures': 'installation_and_administration_manual/diagnosis_procedures.md'
   - 'User and Programmer manual':
