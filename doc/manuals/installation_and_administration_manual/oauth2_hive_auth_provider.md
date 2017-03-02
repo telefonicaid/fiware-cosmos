@@ -9,6 +9,8 @@
 * [Running](#section4)
 * [Usage](#section5)
 * [Administration](#section6)
+    * [Logs](#section6.1)
+    * [Cache](#section6.2)
 * [Reporting issues and contact information](#section7)
 
 ##<a name="section1"></a>What is cosmos-hive-auth-provider
@@ -187,7 +189,7 @@ This is a library directly used by Hive. In order HiveServer2 knows about it, re
 [Top](#top)
 
 ##<a name="section5"></a>Usage
-The cosmos-hive-auth-provider library is used when a HiveServer2 client connects and pass a user and a OAuth2 token. For instance, let's assume we are using any of Hive clients given with [Cygnus](https://github.com/telefonicaid/fiware-cygnus/tree/master/resources/hiveclients) tool:
+The cosmos-hive-auth-provider library is used when a HiveServer2 client connects and pass a user and a OAuth2 token. For instance, let's assume we are using any one of the [Hive clients](../../../resources/hiveclients) distributed within the fiware-cosmos repository:
 
 ```
 $ pwd
@@ -219,9 +221,12 @@ r2d2,robot,15
 remotehive>
 ```
 
+When passing the user credentials, a OAuth2 token is passed instead of a Unix or LDAP password.
+
 [Top](#top)
 
 ##<a name="section6"></a>Administration
+###<a name="section6.1"></a>Logs
 HiveServer2 traces are usually logged within `/var/log/hive/hiveserver2.log`. There, you can find the traces regarding cosmos-hive-auth-provider, for instance, if everything goes well:
 
 ```
@@ -247,7 +252,27 @@ If the token exists but does not match the given user, then something like this 
 2016-01-27 16:12:11,521 INFO  [pool-5-thread-32]: authprovider.HttpClientFactory (OAuth2AuthenticationProviderImpl.java:Authenticate(78)) - Response received: {"organizations": [], "displayName": "frb", "roles": [{"name": "provider", "id": "106"}], "app_id": "8556cc76154f41b3b43d7b31f0699982", "email": "frb@tid.es", "id": "frb"}
 2016-01-27 16:12:11,521 ERROR [pool-5-thread-32]: transport.TSaslTransport (TSaslTransport.java:open(296)) - SASL negotiation failure
 javax.security.sasl.SaslException: Error validating the login [Caused by javax.security.sasl.AuthenticationException: The given token does not match the given user]
+``` 
+
+[Top](#top)
+
+###<a name="section6.2"></a>Cache
+It is important to note this authentication provider caches OAuth2 tokens. Caching tokens is useful because it saves queries to the Identity Manager, and because it allows using expired tokens from clients not implementing the refreshing mechanism (e.g. Cygnus).
+
+This is done transparenty to the user, nevertheless from the administration point of view this is relevant regarding certain logs may appear, and the backup file for the cache.
+
+Logs are about cache usage, possibilities are:
+
 ```
+17/03/02 09:14:20 INFO authprovider.OAuth2AuthenticationProviderImpl: User was not cached or token did not match, thus querying the IdM
+...
+17/03/02 09:14:20 INFO authprovider.OAuth2AuthenticationProviderImpl: User cached
+...
+17/03/02 09:14:29 INFO authprovider.OAuth2AuthenticationProviderImpl: User and token were cached, thus nothing to query to IdM
+...
+```
+
+With regards to the backup file for the cache, this is a file saving the cache between runs of HiveServer2, loaded each time the server starts, and saved each time a modification is done in the cache. It is always saved as `/home/hive/oauth2.cache` file (such a path is not currently configurable).
 
 [Top](#top)
 
