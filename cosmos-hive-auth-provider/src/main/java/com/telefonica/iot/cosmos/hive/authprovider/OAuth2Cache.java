@@ -1,5 +1,5 @@
 /**
- * Copyright 2016-2017 Telefonica Investigación y Desarrollo, S.A.U
+ * Copyright 2017 Telefonica Investigación y Desarrollo, S.A.U
  *
  * This file is part of fiware-cosmos (FI-WARE project).
  *
