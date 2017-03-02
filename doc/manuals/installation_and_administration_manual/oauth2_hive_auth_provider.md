@@ -9,6 +9,8 @@
 * [Running](#section4)
 * [Usage](#section5)
 * [Administration](#section6)
+    * [Logs](#section6.1)
+    * [Cache](#section6.2)
 * [Reporting issues and contact information](#section7)
 
 ##<a name="section1"></a>What is cosmos-hive-auth-provider
@@ -270,7 +272,7 @@ Logs are about cache usage, possibilities are:
 ...
 ```
 
-With regards to the backup file for the cache, this is a file saving the cache between runs of HiveServer2, loaded each time the server starts, and saved each time a modification is done in the cache. It is always saved as `/home/hive/oauth2.cache` file.
+With regards to the backup file for the cache, this is a file saving the cache between runs of HiveServer2, loaded each time the server starts, and saved each time a modification is done in the cache. It is always saved as `/home/hive/oauth2.cache` file (such a path is not currently configurable).
 
 [Top](#top)
 
