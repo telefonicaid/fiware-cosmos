@@ -1,5 +1,5 @@
 /**
- * Copyright 2016 Telefonica Investigación y Desarrollo, S.A.U
+ * Copyright 2016-2017 Telefonica Investigación y Desarrollo, S.A.U
  *
  * This file is part of fiware-cosmos (FI-WARE project).
  *
@@ -39,7 +39,8 @@ import org.json.simple.parser.ParseException;
  */
 public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationProvider {
     
-    private static final Logger LOGGER = Logger.getLogger(HttpClientFactory.class);
+    private static final Logger LOGGER = Logger.getLogger(OAuth2AuthenticationProviderImpl.class);
+    private static final OAuth2Cache CACHE = new OAuth2Cache("/home/hive/oauth2.cache");
     private final HttpClientFactory httpClientFactory;
     private final String idmEndpoint;
     
@@ -52,7 +53,7 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
         
         try {
             conf = new HiveConf();
-            LOGGER.info("Hive configuration read");
+            LOGGER.debug("Hive configuration read");
         } catch (Exception e) {
             LOGGER.debug("Unable to read the Hive configuration, using default values");
         } finally {
@@ -81,24 +82,33 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
 
     @Override
     public void Authenticate(String user, String token) throws AuthenticationException {
-        // create the Http client
+        // Check the cache
+        if (CACHE.isCached(user, token)) {
+            LOGGER.info("User and token were cached, thus nothing to query to IdM");
+            return;
+        } // if
+        
+        LOGGER.info("User was not cached or token did not match, thus querying the IdM");
+        
+        // Create the Http client
         HttpClient httpClient = httpClientFactory.getHttpClient(true);
         
-        // create the request
+        // Create the request
         String url = idmEndpoint + "/user?access_token=" + token;
         HttpRequestBase request = new HttpGet(url);
         
-        // do the request
+        // Do the request
         HttpResponse httpRes = null;
         
         try {
             httpRes = httpClient.execute(request);
             LOGGER.debug("Doing request: " + request.toString());
         } catch (IOException e) {
+            LOGGER.error("There was some problem when querying the IdM. Details: " + e.getMessage());
             throw new AuthenticationException(e.getMessage());
         } // try catch
         
-        // get the input streamResponse
+        // Get the input streamResponse
         String streamResponse = "";
         
         try {
@@ -106,33 +116,42 @@ public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationPro
             streamResponse = reader.readLine();
             LOGGER.debug("Response received: " + streamResponse);
         } catch (IOException e) {
+            LOGGER.error("There was some problem when getting the response from the IdM. Details: " + e.getMessage());
             throw new AuthenticationException(e.getMessage());
         } // try catch
         
-        // parse the input streamResponse as a Json
+        // Parse the input streamResponse as a Json
         JSONObject jsonResponse = null;
         
         try {
             JSONParser jsonParser = new JSONParser();
             jsonResponse = (JSONObject) jsonParser.parse(streamResponse);
         } catch (ParseException e) {
+            LOGGER.error("There was some problem when parsing the response from the IdM. Details: " + e.getMessage());
             throw new AuthenticationException(e.getMessage());
         } // try catch
         
-        // check if the given token does not exist
+        // Check if the given token does not exist
         if (jsonResponse.containsKey("error")) {
+            LOGGER.error("The give token does not exist in the IdM");
             throw new AuthenticationException("The given token does not exist");
         } // if
         
-        // check if the obtained user id matches the given user
+        // Check if the obtained user id matches the given user
         if (jsonResponse.containsKey("id") && !jsonResponse.get("id").equals(user)) {
+            LOGGER.error("The given token does not match the given user");
             throw new AuthenticationException("The given token does not match the given user");
         } // if
         
-        // release the connection
+        // Release the connection
         request.releaseConnection();
         
-        LOGGER.debug("User " + user + " authenticated");
+        // User authenticated
+        LOGGER.info("User " + user + " authenticated");
+        
+        // Cache the user
+        CACHE.addToCache(user, token);
+        LOGGER.info("User cached");
     } // Authenticate
     
 } // OAuth2AuthenticationProviderImpl
