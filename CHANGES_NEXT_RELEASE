@@ -1,1 +1,2 @@
 - [cosmos-hive-auth-provider][hardening] Improve logs (#227)
+- [cosmos-hive-auth-provider][feature] Add OAuth2 cache (#225)
