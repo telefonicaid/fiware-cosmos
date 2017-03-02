@@ -17,6 +17,7 @@
  */
 package com.telefonica.iot.cosmos.hive.authprovider;
 
+import static com.telefonica.iot.cosmos.hive.authprovider.utils.Constants.CACHEBACKUPFILE;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,7 +41,7 @@ import org.json.simple.parser.ParseException;
 public class OAuth2AuthenticationProviderImpl implements PasswdAuthenticationProvider {
     
     private static final Logger LOGGER = Logger.getLogger(OAuth2AuthenticationProviderImpl.class);
-    private static final OAuth2Cache CACHE = new OAuth2Cache("/home/hive/oauth2.cache");
+    private static final OAuth2Cache CACHE = new OAuth2Cache(CACHEBACKUPFILE);
     private final HttpClientFactory httpClientFactory;
     private final String idmEndpoint;
     
