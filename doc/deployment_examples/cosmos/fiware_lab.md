@@ -1,4 +1,4 @@
-#<a name="top"></a>FIWARE Lab deployment of Cosmos
+# <a name="top"></a>FIWARE Lab deployment of Cosmos
 Content:
 
 * [Introduction](#section1)
@@ -26,7 +26,7 @@ Content:
 * [GUI](#section5)
 * [Reporting issues and contact information](#section6)
 
-##<a name="section1"></a>Introduction
+## <a name="section1"></a>Introduction
 This document describes how Cosmos has been deployed in [FIWARE Lab](https://account.lab.fiware.org/).
 
 As will be see, among all the possibilities regarding the deployment of Cosmos the shared Hadoop cluster version has been chosen. In fact, not a single cluster has been deployed but two different clusters have been installed: one exclusively addressed for storage purposes, and another one suited for computing services. A detailed section related to the architecture can be checked next.
@@ -37,13 +37,13 @@ Among all the cluster nodes, there is a special node in charge of exposing stora
 
 [Top](#top)
 
-##<a name="section2"></a>Architecture
+## <a name="section2"></a>Architecture
 To be done.
 
 [Top](#top)
 
-##<a name="section3"></a>Storage cluster
-###<a name="section3.1"></a>Characteristics
+## <a name="section3"></a>Storage cluster
+### <a name="section3.1"></a>Characteristics
 
 * Number of nodes: 11
     * Service Nodes: 1
@@ -71,9 +71,9 @@ To be done.
 
 [Top](#top)
 
-###<a name="section3.2"></a>Services node details
+### <a name="section3.2"></a>Services node details
 
-####<a name="section3.2.1"></a>Some tools version
+#### <a name="section3.2.1"></a>Some tools version
 ```
 $ node -v
 v0.10.41
@@ -87,7 +87,7 @@ g++ (GCC) 4.7.2 20121015 (Red Hat 4.7.2-5)
 
 [Top](#top)
 
-####<a name="section3.2.2"></a>Opened ports summary
+#### <a name="section3.2.2"></a>Opened ports summary
 |From|To|Comment|
 |---|---|---|
 |Internet|storage.cosmos.lab.fiware.org:14000|WebHDFS/HttpFS|
@@ -98,7 +98,7 @@ g++ (GCC) 4.7.2 20121015 (Red Hat 4.7.2-5)
 
 [Top](#top)
 
-####<a name="section3.2.3"></a>HttpFS gateway
+#### <a name="section3.2.3"></a>HttpFS gateway
 It is running on port TCP/41000, user `httpfs`:
 
 ```
@@ -112,7 +112,7 @@ Port TCP/41000 is not publicly exposed, but TCP/14000. Wilma PEP proxy is in cha
 
 [Top](#top)
 
-#####<a name="section3.2.3.1"></a>FIWARE PEP Proxy (Wilma)
+##### <a name="section3.2.3.1"></a>FIWARE PEP Proxy (Wilma)
 It is running on port TCP/14000, user `wilma`, for OAuth2-based authentication and authorization about the HttpFS gateway connections (see above).
 
 ```
@@ -133,7 +133,7 @@ $ crontab -l
 
 [Top](#top)
 
-####<a name="section3.2.4"></a>Hadoop Inter-Process Communication forward
+#### <a name="section3.2.4"></a>Hadoop Inter-Process Communication forward
 <i>NOTE: Planned, not actually working.</i>
 
 Port TCP/8020 for Hadoop Inter-Process Communication (IPC) opened and forwarded to `dev-fiwr-bignode-01.hi.inet:8020` (Active Namenode):
@@ -162,8 +162,8 @@ $ sudo bash -c "echo 'iptables-restore < /etc/iptables.conf' >> /etc/rc.local"
 
 [Top](#top)
 
-##<a name="section4"></a>Computing cluster
-###<a name="section4.1"></a>Characteristics
+## <a name="section4"></a>Computing cluster
+### <a name="section4.1"></a>Characteristics
 
 * Number of nodes: 14 (1 Service Node + 2 Namenodes + 11 Datanodes)
 * Total computing capacity: to be done.
@@ -193,8 +193,8 @@ $ sudo bash -c "echo 'iptables-restore < /etc/iptables.conf' >> /etc/rc.local"
 
 [Top](#top)
 
-###<a name="section4.2"></a>Services node details
-####<a name="section4.2.1"></a>Some tools version:
+### <a name="section4.2"></a>Services node details
+#### <a name="section4.2.1"></a>Some tools version:
 
 ```
 $ node -v
@@ -207,7 +207,7 @@ $ cc --version | grep cc
 cc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-11)
 ```
 
-####<a name="section4.2.2"></a>Opened ports summary
+#### <a name="section4.2.2"></a>Opened ports summary
 |From|To|Comment|
 |---|---|---|
 |Internet|computing.cosmos.lab.fiware.org:10000|HiveServer2|
@@ -218,7 +218,7 @@ cc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-11)
 
 [Top](#top)
 
-####<a name="section4.2.3"></a>Tidoop API
+#### <a name="section4.2.3"></a>Tidoop API
 It is running on port TCP/21000, user `cosmos-tidoop`:
 
 ```
@@ -243,7 +243,7 @@ Port TCP/21000 is not publicly exposed, but TCP/12000. Wilma PEP proxy is in cha
 
 [Top](#top)
 
-#####<a name="section4.2.3.1"></a>FIWARE PEP Proxy (Wilma)
+##### <a name="section4.2.3.1"></a>FIWARE PEP Proxy (Wilma)
 It is running on port TCP/12000, user `wilma`, for OAuth2-based authentication and authorization about the Tidoop API connections (see above).
 
 ```
@@ -264,7 +264,7 @@ $ crontab -l
 
 [Top](#top)
 
-####<a name="section4.2.4"></a>Cosmos Authentication server (cosmos-auth)
+#### <a name="section4.2.4"></a>Cosmos Authentication server (cosmos-auth)
 It is running on port TCP/13000, user `cosmos-auth`:
 
 ```
@@ -276,8 +276,8 @@ cosmos-auth      8733  8727  0 12:58 ?        00:00:00 node ./src/server.js
 
 Installation path is at `/home/cosmos-tidoop/fiware-cosmos/cosmos-ath`.
 
-####<a name="section4.2.5"></a>Hive
-#####<a name="section4.2.5.1"></a>HiveServer2 forward
+#### <a name="section4.2.5"></a>Hive
+##### <a name="section4.2.5.1"></a>HiveServer2 forward
 Port TCP/10000 for HiveServer2 opened and forwarded to `dev-fiwr-bignode-11.hi.inet:10000` (Active Namenode):
 
 ```
@@ -302,7 +302,7 @@ target     prot opt source               destination
 
 [Top](#top)
 
-#####<a name="section4.2.5.2"></a>Hive configuration for OAuth2 provider
+##### <a name="section4.2.5.2"></a>Hive configuration for OAuth2 provider
 
 The following properties has been added to `hive-site.xml` in order to enable a custom authentication provider, i.e. cosmos-hive-auth-provider and its `OAuth2AuthenticationProviderImpl` class:
 
@@ -329,7 +329,7 @@ This other property has been modified in order to enable impersonation (on the c
 
 [Top](#top)
 
-#####<a name="section4.2.5.3"></a>OAuth2 provider installation
+##### <a name="section4.2.5.3"></a>OAuth2 provider installation
 The cosmos-hive-auth-provider jar containing the `OAuth2AuthenticationProviderImpl` class has been copied into the installation directory of Hive:
 
 ```
@@ -339,12 +339,12 @@ cosmos-hive-auth-provider-0.0.0-SNAPSHOT-jar-with-dependencies.jar
 
 [Top](#top)
 
-##<a name="section5"></a>GUI
+## <a name="section5"></a>GUI
 To be done.
 
 [Top](#top)
 
-##<a name="section6"></a>Reporting issues and contact information
+## <a name="section6"></a>Reporting issues and contact information
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cygnus` tag.
