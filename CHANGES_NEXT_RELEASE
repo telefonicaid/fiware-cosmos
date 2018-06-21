@@ -1,2 +1,4 @@
 - [cosmos-hive-auth-provider][hardening] Improve logs (#227)
 - [cosmos-hive-auth-provider][feature] Add OAuth2 cache (#225)
+- [cosmos-auth][vulnerability] Upgrade hapi to 11.1.3 
+- [cosmos-tidoop-api][vulnerability] Upgrade hapi to 11.1.3 
