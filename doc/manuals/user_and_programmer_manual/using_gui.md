@@ -1,4 +1,4 @@
-#<a name="usage"></a>Using Cosmos GUI
+# <a name="usage"></a>Using Cosmos GUI
 Content:
 
 * [Login](#section1)
@@ -6,7 +6,7 @@ Content:
 * [Dashboard](#section3)
 * [Profile](#section4)
 
-##<a name="section1"></a>Login
+## <a name="section1"></a>Login
 Once installed and run, you can visit `http://<node_hosting_cosmos_gui>:<port>` (adapt the port if you changed it). This page basically prompts the user to login.
 
 ![](../images/cosmos_gui__init.png)
@@ -17,7 +17,7 @@ The login procedure delegates in FIWARE Identity Manager. This means cosmos-gui 
 
 [Top](#top)
 
-##<a name="section2"></a>Cosmos account provision
+## <a name="section2"></a>Cosmos account provision
 After authentication (using your email and password registered at the Identity Manager), there are two possibilities:
 
 * You are an already registered user in Cosmos. In this case, you are directly redirected to the dashboard of the GUI.
@@ -29,7 +29,7 @@ Please observe when the storage and computing clusters are the same (it is not t
 
 [Top](#top)
 
-##<a name="section3"></a>Dashboard
+## <a name="section3"></a>Dashboard
 Current version of cosmos-gui has no functionality exposed in the dashboard, thus cosmos-gui can be seen as a Cosmos account provisioning tool.
 
 Next coming versions of the GUI will allow the users to explore their HDFS space and run predefined MapReduce jobs from this dashboard. Stay tuned!
@@ -40,7 +40,7 @@ The only option for the time being is to access to the profile page (see next se
 
 [Top](#top)
 
-##<a name="section4"></a>Profile
+## <a name="section4"></a>Profile
 The profile section shows the user account details and certain statistics, such as the HDFS quota usage.
 
 This is useful in order to know the credentials the user has in the Cosmos platform.
