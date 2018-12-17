@@ -1,4 +1,4 @@
-#<a name="top"></a>Cosmos
+# <a name="top"></a>Cosmos
 [![License Badge](https://img.shields.io/badge/license-AGPL-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
 [![Documentation Status](https://readthedocs.org/projects/fiware-cosmos/badge/?version=latest)](http://fiware-cosmos.readthedocs.org/en/latest/?badge=latest)
 
@@ -15,7 +15,7 @@ This project is part of [FIWARE](http://fiware.org).
 
 [Top](#top)
 
-##If you want to use Cosmos Global Instance in FIWARE Lab
+## If you want to use Cosmos Global Instance in FIWARE Lab
 If you are looking for information regarding the specific deployment of Cosmos Global Instance in FIWARE Lab, a HaaS ready to use, please check this documentation:
 
 * [Quick Start Guide](./doc/manuals/quick_start_guide_new.md) for Cosmos users.
@@ -27,12 +27,12 @@ If you are looking for information regarding the specific deployment of Cosmos G
 
 [Top](#top)
 
-##If you want to deploy and use your own private Hadoop instance
+## If you want to deploy and use your own private Hadoop instance
 This is the case you don't rely on the Global Instance of Cosmos in FIWARE Lab. In this case, you'll have to install, configure and manage your own Hadoop private instance. The Internet is plenty of documentation that will help you.
 
 [Top](#top)
 
-##If you want to deploy your own public Cosmos instance
+## If you want to deploy your own public Cosmos instance
 In the (extremly rare) case you are not interested in using the Global Instance of Cosmos or a private instance of Hadoop, but you want to become a Big Data service provider, and you want to base on Cosmos software, you may be interested in the following links:
 
 * [Deployment details](doc/deployment_examples/cosmos/fiware_lab.md) for administrators trying to replicate Cosmos Global Instance in FIWARE Lab.
@@ -40,7 +40,7 @@ In the (extremly rare) case you are not interested in using the Global Instance 
 
 [Top](#top)
 
-##Reporting issues and contact information
+## Reporting issues and contact information
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cosmos` tag.
