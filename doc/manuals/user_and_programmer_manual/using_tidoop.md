@@ -1,4 +1,4 @@
-#Using Tidoop REST API
+# Using Tidoop REST API
 Content:
 
 * [`GET /tidoop/v1/version`](#section1)
@@ -9,7 +9,7 @@ Content:
 
 NOTE: A `X-Auth-Token` header has been included in all the requests assuming the API is protected by means of some kind of token-based authentication mechanism, such as [OAUth2](http://oauth.net/2/).
 
-##<a name="section1"></a>`GET /tidoop/v1/version`
+## <a name="section1"></a>`GET /tidoop/v1/version`
 Gets the running version of cosmos-tidoop.
 
 Request example:
@@ -32,7 +32,7 @@ HTTP/1.1 200 OK
 
 [Top](#top)
 
-##<a name="section2"></a>`POST /tidoop/v1/user/{userId}/jobs`
+## <a name="section2"></a>`POST /tidoop/v1/user/{userId}/jobs`
 Runs a MapReduce job given the following parameters:
 
 * Java jar containing the desired MapReduce application.
@@ -68,7 +68,7 @@ HTTP/1.1 200 OK
 
 [Top](#top)
 
-##<a name="section3"></a>`GET /tidoop/v1/user/{userId}/jobs`
+## <a name="section3"></a>`GET /tidoop/v1/user/{userId}/jobs`
 Gets the details for all the MapReduce jobs run by the given user ID.
 
 Request example:
@@ -101,7 +101,7 @@ HTTP/1.1 200 OK
 
 [Top](#top)
 
-##<a name="section4"></a>`GET /tidoop/v1/user/{userId}/jobs/{jobId}`
+## <a name="section4"></a>`GET /tidoop/v1/user/{userId}/jobs/{jobId}`
 Gets the details for the given MapReduce job run by the given user ID.
 
 Request example:
@@ -133,7 +133,7 @@ Please observe when getting details about a specific job, the `stderr` and `stdo
 
 [Top](#top)
 
-##<a name="section5"></a>`DELETE /tidoop/v1/user/{userId}/jobs/{jobId}`
+## <a name="section5"></a>`DELETE /tidoop/v1/user/{userId}/jobs/{jobId}`
 Deletes the given MapReduce job run by the given user ID.
 
 Request example:
