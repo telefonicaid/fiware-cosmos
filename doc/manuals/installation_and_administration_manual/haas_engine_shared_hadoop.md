@@ -1,4 +1,4 @@
-#<a name="top"></a>HAAS engine (shared Hadoop version)
+# <a name="top"></a>HAAS engine (shared Hadoop version)
 
 Content:<br>
 
@@ -11,9 +11,9 @@ Content:<br>
 * [Running](#section3)
 * [Administration](#section4)
 
-##<a name="section1"></a>Installation
+## <a name="section1"></a>Installation
 
-###<a name="section1.1"></a>Installing the cluster
+### <a name="section1.1"></a>Installing the cluster
 
 You can setup a Hadoop cluster by following the [official guidelines](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/ClusterSetup.html), which are pretty detailed (and probably complex for a newbie), or you
 can use a Hadoop distribution with an installation manager that will make your life easier. Well known distributions are:
@@ -44,7 +44,7 @@ This is a complete Hadoop cluster, thus it is mandatory to install HDFS, YARN an
 
 [Top](#top)
 
-###<a name="section=1.2"></a>Installing the services node
+### <a name="section=1.2"></a>Installing the services node
 
 In addition to the Hadoop cluster, it is highly recommended to deploy a special node not being part of the cluster (i.e. not hosting any Hadoop daemon) but having installed the Hadoop libraries and a copy of all the configuration files of the cluster. The reason is this node may work as the unique endpoint for the computing services, hiding the details of the cluster and thus saving a lot of public IP addresses (this node is the only one exposing a public one).
 
@@ -61,9 +61,9 @@ Finally, you may want to install certain development tools such as Maven, git an
 
 [Top](#top)
 
-##<a name="section2"></a>Configuration
+## <a name="section2"></a>Configuration
 
-###<a name="section2.1"></a>Configuring the cluster
+### <a name="section2.1"></a>Configuring the cluster
 
 The different managers/installers developed by the Hadoop distributions do most of the work for you regarding the configuration. Simply follow their "next-next" wizards and you will be done.
 
@@ -82,7 +82,7 @@ Nevertheless, for further reference, these are the configuration files used by H
 
 [Top](#top)
 
-###<a name="section=2.2"></a>Configuring the services node
+### <a name="section=2.2"></a>Configuring the services node
 
 Hive and Oozie will be usually installed by your distribution manager (if you enable them), and thus they will be ready to be used. Nevertheless, for further reference, these are the configuration files used:
 
@@ -99,7 +99,7 @@ The ssh server could be used with the default configuration. More relevant is th
 
 [Top](#top)
 
-##<a name="section3"></a>Running
+## <a name="section3"></a>Running
 
 Once again, the usage of a manager within any of the existent distributions makes everything easier. These managers usually expose very simple and intuitive means of starting and stopping a cluster.
 
@@ -111,7 +111,7 @@ Nevertheless, for further reference, these are the commands that start/stop each
 
 [Top](#top)
 
-##<a name="section4"></a>Administration
+## <a name="section4"></a>Administration
 
 To be done.
 
