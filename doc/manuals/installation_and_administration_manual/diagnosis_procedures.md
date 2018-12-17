@@ -1,4 +1,4 @@
-#<a name="top"></a>Diagnosis procedures
+# <a name="top"></a>Diagnosis procedures
 
 Content:<br>
 
@@ -7,25 +7,25 @@ Content:<br>
 * [Resource consumption](#section3)
 * [I/O flows](#section4)
 
-##<a name="section1"></a>Resource availability
+## <a name="section1"></a>Resource availability
 
 Please refer to the end to end testing section.
 
 [Top](#top)
 
-##<a name="section2"></a>Remote service access
+## <a name="section2"></a>Remote service access
 
 Please refer to the end to end testing section.
 
 [Top](#top)
 
-##<a name="section3"></a>Resource consumption
+## <a name="section3"></a>Resource consumption
 
 To be done.
 
 [Top](#top)
 
-##<a name="section4"></a>I/O flows
+## <a name="section4"></a>I/O flows
 
 To be done.
 
