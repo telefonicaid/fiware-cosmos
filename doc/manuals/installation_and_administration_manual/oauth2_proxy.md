@@ -1,4 +1,4 @@
-#<a name="section=top"></a>Custom Http PEP proxy for Cosmos
+# <a name="section=top"></a>Custom Http PEP proxy for Cosmos
 Content:
 
 * [Installation](#section1)
@@ -9,8 +9,8 @@ Content:
 * [Running](#section3)
 * [Administration](#section4)
 
-##<a name="section1"></a>Installation
-###<a name="section1.1"></a>Prerequisites
+## <a name="section1"></a>Installation
+### <a name="section1.1"></a>Prerequisites
 This PER proxy has no sense if an Identity Manager (Keyrock implementation can be found [here](http://catalogue.fiware.org/enablers/identity-management-keyrock)) is not installed. The same applies to [Cosmos](http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos).
 
 cosmos-proxy is a Node.js application, therefore install it from the official [download](https://nodejs.org/download/). An advanced alternative is to install [Node Version Manager](https://github.com/creationix/nvm) (nvm) by creationix/Tim Caswell, which will allow you to have several versions of Node.js and switch among them.
@@ -19,7 +19,7 @@ Of course, common tools such as `git` and `curl` may be needed.
 
 [Top](#top)
 
-###<a name="section1.2"></a>Installation
+### <a name="section1.2"></a>Installation
 This is a software written in JavaScript, specifically suited for [Node.js](https://nodejs.org) (<i>JavaScript on the server side</i>). JavaScript is an interpreted programming language thus it is not necessary to compile it nor build any package; having the source code downloaded somewhere in your machine is enough.
 
 Start by creating, if not yet created, a Unix user named `cosmos-proxy`; it is needed for installing and running the application. You can only do this as root, or as another sudoer user:
@@ -55,12 +55,12 @@ That must download all the dependencies under a `node_modules` directory.
 
 [Top](#top)
 
-###<a name="section1.3"></a>Unit tests
+### <a name="section1.3"></a>Unit tests
 To be done.
 
 [Top](#top)
 
-##<a name="section2"></a>Configuration
+## <a name="section2"></a>Configuration
 cosmos-proxy is configured through a JSON file. These are the available parameters:
 
 * **host**: FQDN or IP address of the host running the proxy.
@@ -80,7 +80,7 @@ cosmos-proxy is configured through a JSON file. These are the available paramete
 
 [Top](#top)
 
-##<a name="section3"></a>Running
+## <a name="section3"></a>Running
 The PEP proxy implemented by cosmos-proxy is run as (assuming your current directory is `cosmos-proxy`):
 
     $ npm start
@@ -91,7 +91,7 @@ If everything goes well, you should be able to see in the logs at `/var/log/cosm
 
 [Top](#top)
 
-##<a name="section4"></a>Administration
+## <a name="section4"></a>Administration
 Within cosmos-proxy there is a single source of information useful for administrating it: the logs.
 
 Logging traces are typically saved under `/var/log/cosmos/cosmos-proxy`. These traces are written in JSON format, having the following fields: level, message and timestamp. For instance:
