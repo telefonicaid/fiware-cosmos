@@ -1,4 +1,4 @@
-#<a name="top"></a>Cosmos GUI
+# <a name="top"></a>Cosmos GUI
 
 Content:<br>
 
@@ -21,17 +21,17 @@ Content:<br>
     * [Annex B: Creating a self-signed certificate](#section6.2)
     * [Annex C: Binding the GUI to a port under TCP/1024](#section6.3)
 
-##<a name="section1"></a>Introduction
+## <a name="section1"></a>Introduction
 There is a GUI governing both the storage and the computing cluster (in future releases, it will be fully integrated with Sahara's dashboard as well). Through this GUI the users will be able to create an account, i.e. a HDFS userspace for storing data, and access to the computing resources for running MapReduce applications.
 
 Fully detailed information about Cosmos GUI can be found at [Github](http://github.com/telefonicaid/fiware-cosmos/tree/develop/cosmos-gui).
 
-##<a name="section2"></a>Installation
+## <a name="section2"></a>Installation
 This is a software written in JavaScript, specifically suited for [Node.js](https://nodejs.org) (<i>JavaScript on the server side</i>). JavaScript is an interpreted programming language thus it is not necessary to compile it nor build any package; having the source code downloaded somewhere in your machine is enough.
 
 [Top](#top)
 
-###<a name="section2.1"></a>Prerequisites
+### <a name="section2.1"></a>Prerequisites
 This GUI has no sense if there is no storage and computing clusters to be managed.
 
 A couple of sudoer users, one within the storage cluster and another one within the computing clusters, are required. Through these users the cosmos-gui will remotely run certain administration commands such as new users creation, HDFS userspaces provision, etc. The access through these sudoer users will be authenticated by means of private keys. Please, see the [Annex A](#annexa) in order to know how to create a sudoer user, and how to install its RSA identity for ssh operation.
@@ -44,7 +44,7 @@ Of course, common Unix tools such as `git` and `curl` are needed.
 
 [Top](#top)
 
-###<a name="section2.2"></a>Installating the GUI
+### <a name="section2.2"></a>Installating the GUI
 cosmos-gui must be installed in a machine having ssh access both to the storage and computing clusters the GUI is going to manage. This ssh access may be limited to the Namenode (or Namenodes, if HA is enabled) of each cluster, and it is necessary since certain administration commands are remotely run through ssh.
 
 Start by creating, if not yet created, a Unix user named `cosmos-gui`; it is needed for installing and running the application. You can only do this as root, or as another sudoer user:
@@ -85,7 +85,7 @@ That must download all the dependencies under a `node_modules` directory.
 
 [Top](#top)
 
-###<a name="section2.3"></a>Installing the database
+### <a name="section2.3"></a>Installing the database
 The user management for the storage cluster is done through a MySQL database, `cosmos`. The commands for creating this database and the `cosmos_user` table can be found at `resources/mysql_db_and_tables.sql`. Please observe <b>if you already installed a database for a previous version of the GUI, please ignore this section and visit the specific upgrading section</b>.
 
 Simply log into your MySQL deployment and execute the sentence within the file above:
@@ -124,7 +124,7 @@ Alternatively, you can copy&paste the SQL sentences and execute them:
 
 [Top](#top)
 
-####<a name="section2.3.1"></a>Upgrading from 0.1.0 to 0.2.0
+#### <a name="section2.3.1"></a>Upgrading from 0.1.0 to 0.2.0
 **NOTE**: It is highly recommended you backup your `cosmos` database before performing any upgrade operation.
 
 You are visiting this section since you already installed Cosmos GUI 0.1.0 and want to upgrade to 0.2.0. If you never installed the GUI before, please go to the <i>[Installing the database](#database)</i> section.
@@ -147,7 +147,7 @@ Or type the sentences within that file into a mysql shell:
 
 [Top](#top)
 
-####<a name="section2.3.2"></a>Upgrading from 0.2.0 to 0.3.0
+#### <a name="section2.3.2"></a>Upgrading from 0.2.0 to 0.3.0
 **NOTE**: It is highly recommended you backup your `cosmos` database before performing any upgrade operation.
 
 You are visiting this section since you already installed Cosmos GUI 0.2.0 and want to upgrade to 0.3.0. If you never installed the GUI before, please go to the <i>[Installing the database](#database)</i> section.
@@ -169,7 +169,7 @@ Or type the sentences within that file into a mysql shell:
 
 [Top](#top)
 
-###<a name="section2.4"></a>Registering the application in the Identity Manager
+### <a name="section2.4"></a>Registering the application in the Identity Manager
 Authentication in cosmos-gui is done through a FIWARE's Identity Manager (for instance, FIWARE LAB one is `https://account.lab.fiware.org`). By using this kind of authentication the cosmos-gui is integrated in a fully common experience together with many other enablers of the FIWARE ecosystem, instead of performing a propietary user management.
 
 Please observe the user management for accessing the GUI or any other FIWARE component is not related to the Hadoop user management performed, particularly, by this GUI.
@@ -213,7 +213,7 @@ The tests are running by invoking the `make` command:
 
 [Top](#top)
 
-##<a name="section3"></a>Configuration
+## <a name="section3"></a>Configuration
 cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a JSON document with six main *sections*:
 
 * **gui**:
@@ -252,7 +252,7 @@ cosmos-gui is configured through `conf/cosmos-gui.json`. There you will find a J
 
 [Top](#top)
 
-##<a name="section4"></a>Running
+## <a name="section4"></a>Running
 The GUI implemented by cosmos-gui is run as (assuming your current directory is `fiware-cosmos/cosmos-gui`):
 
     $ npm start
@@ -273,12 +273,12 @@ cosmos-gui typically listens in the TCP/443 port (TLS encryption), but you can c
 
 [Top](#top)
 
-##<a name="section5"></a>Administration
+## <a name="section5"></a>Administration
 Two are the sources of data, the logs and the database, useful for an administrator of cosmos-gui.
 
 [Top](#top)
 
-###<a name="section5.1"></a>Logging traces
+### <a name="section5.1"></a>Logging traces
 Logging traces, typically saved under `/var/log/cosmos/cosmos-gui`, are the main source of information regarding the GUI performance. These traces are written in JSON format, having the following fields: level, message and timestamp. For instance:
 
     {"level":"info","message":"cosmos-gui running at http://localhost:9090","timestamp":"2015-07-23T13:25:20.019Z"}
@@ -301,7 +301,7 @@ Within the log it is expected to find many `info` messages, and a few of `warn` 
 
 [Top](#top)
 
-###<a name="section5.2"></a>Database
+### <a name="section5.2"></a>Database
 
 Information regarding registered users in Cosmos can be found in a MySQL table named `cosmos_user` within a database named `cosmos_gui` in the MySQL deployment you did when installing the GUI. Such a table contains the IdM username, the Cosmos username, the password and the registration time.
 
@@ -347,8 +347,8 @@ Information regarding registered users in Cosmos can be found in a MySQL table n
 
 [Top](#top)
 
-##<a name="section6"></a>Annexes
-###<a name="section6.1"></a>Annex A: Creating and installing a RSA identity
+## <a name="section6"></a>Annexes
+### <a name="section6.1"></a>Annex A: Creating and installing a RSA identity
 
 For this guide we will assume there is a server machine `server_vm` needed to be accessed by a client machine `client_vm`.
 
@@ -394,7 +394,7 @@ Finally, you can check the access from the client machine:
 
 [Top](#top)
 
-###<a name="section6.2"></a>Annex B: Creating a self-signed certificate
+### <a name="section6.2"></a>Annex B: Creating a self-signed certificate
 
 First of all, create a private key; it may not be necessary if you already have one:
 
@@ -412,7 +412,7 @@ Please observe a duration of 1000 days for the certificate has been specified.
 
 [Top](#top)
 
-###<a name="section6.3"></a>Annex C: Binding the GUI to a port under TCP/1024
+### <a name="section6.3"></a>Annex C: Binding the GUI to a port under TCP/1024
 This GUI may run in any port the user configures. Nevertheless, most of the Unix-like systems avoid non sudoer users to bind applications to ports under 1024. Since the `cosmos-gui` user is not a sudoer one, you won't be able to run the GUI in the typical TCP/443 port, for instance.
 
 In order to solve this, there are several possibilities. One of them is setting the `cap_net_bind_service` <i>capability</i>:

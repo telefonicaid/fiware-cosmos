@@ -1,4 +1,4 @@
-#<a name="top"></a>Introduction
+# <a name="top"></a>Introduction
 
 This document details how to install, configure and administrate Cosmos (and its ecosystem) and Sinfonier, the BigData Analysis Generic Enabler (BigData Analysis GE) reference implementations (GEri).
 
@@ -11,7 +11,7 @@ Nevertheless, and according to the current versions of the software, please obse
 
 [Top](#top)
 
-##<a name="section1"></a>Intended audience
+## <a name="section1"></a>Intended audience
 This document is mainly addressed to those **service providers aiming to expose a BigData Analysis GE-like services**. For those service providers, **the data analysis is not a goal itself but providing ways others can perform such data analysis**. This especially applies to Openstack's Sahara and Sinfonier installation.
 
 If you are a data scientist willing to get some insights on certain data; or you are a software engineer in charge of productizing an application based on a previous data scientist analysis, then please visit the User and Programmer Guide; and/or go directly to the [FIWARE Lab](http://account.lab.fiware.org/) global instance of Cosmos, there you will find an already deployed infrastructure ready to be used through the different APIs.
@@ -24,13 +24,13 @@ If you still have doubts, we have built the flow diagram below in order to help 
 
 [Top](#top)
 
-##<a name="section2"></a>Structure of the document
+## <a name="section2"></a>Structure of the document
 
 Apart from this introduction, this Installation and Administration Guide contains two main sections, one for batch and another one for stream analysis. Within each main section, there are specific topics regarding the tools involved; in addition, sanity check procedures (useful to know wether the installation was successful or not) and diagnosis procedures (a set of tips aiming to help when an issue arises) are provided as well.
 
 [Top](#top)
 
-##<a name="section3"></a>Reference repositories in Github
+## <a name="section3"></a>Reference repositories in Github
 
 Apart from this repository (<http://github.com/telefonicaid/fiware-cosmos>), the following ones will be linked constantly through the whole document; hey are listed here for a clear reference:
 
@@ -39,7 +39,7 @@ Apart from this repository (<http://github.com/telefonicaid/fiware-cosmos>), the
 
 [Top](#top)
 
-##<a name="section4"></a>Reporting issues and contact information
+## <a name="section4"></a>Reporting issues and contact information
 
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 

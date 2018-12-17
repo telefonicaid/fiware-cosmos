@@ -1,4 +1,4 @@
-#<a name="top"></a>HAAS engine (Sahara version)
+# <a name="top"></a>HAAS engine (Sahara version)
 
 Content:<br>
 
@@ -7,7 +7,7 @@ Content:<br>
 * [Running](#section3)
 * [Administration](#section4)
 
-##<a name="section1"></a>Installation
+## <a name="section1"></a>Installation
 
 Being another service for Openstack, [Sahara](http://wiki.openstack.org/wiki/Sahara) has no sense without other Openstack services such as Nova, Horizon or Keystone. Despite it is not the goal of this guide to show you how to install Openstack, here are some pointers:
 
@@ -34,7 +34,7 @@ As you may observe, two Openstack users (admin and demo) have been created. The 
 
 [Top](#top)
 
-##<a name="section2"></a>Configuration
+## <a name="section2"></a>Configuration
 
 Please refer to the [configuration](http://docs.openstack.org/developer/devstack/guides/multinode-lab.html#configure-cluster-controller) section of Devstack if setting up a multi-node deployment.
 
@@ -42,7 +42,7 @@ Please refer to the [configuration](http://docs.openstack.org/developer/devstack
 
 [Top](#top)
 
-##<a name="section3"></a>Running
+## <a name="section3"></a>Running
 
 Sahara (and all the other Openstack services) starts once installed with `stack.sh`. Running `unstack.sh` will shut down all the Openstack services, freeing up any resource they may have been consuming; in order to restart the environment, do not stack again, but run `rejoin-stack.sh` instead.
 
@@ -52,7 +52,7 @@ You can navigate through the parent screen by using `ctrl + a + n` (next) or `ct
 
 [Top](#top)
 
-##<a name="section4"></a>Administration
+## <a name="section4"></a>Administration
 
 The best option for administrating Openstack (including Sahara) is to install the different [command-line clients](http://docs.openstack.org/cli-reference/content/section_cli_overview.html). These are Python-based CLIs wrapping the Openstack REST APIs, thus Python and some other tools (setuptools and PIP) must be installed if you plan to use the CLIs; all the details can be found [here](http://docs.openstack.org/cli-reference/content/install_clients.html). For instance, if you want to install the CLI for Sahara, do the following:
 

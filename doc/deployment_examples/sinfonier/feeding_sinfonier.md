@@ -1,4 +1,4 @@
-#<a name="top"></a>Sinfonier deployment of Cosmos
+# <a name="top"></a>Sinfonier deployment of Cosmos
 Content:
 
 * [Introduction](#section1)
@@ -18,13 +18,13 @@ Content:
 * [General procedure step-by-step](#section7)
 * [Reporting issues and contact information](#section8)
 
-##<a name="section1"></a>Introduction
+## <a name="section1"></a>Introduction
 This document describes how Sinfonier can consume historic context information handled by [Orion](https://github.com/telefonicaid/fiware-orion) and stored by [Cygnus](https://github.com/telefonicaid/fiware-cygnus).
 
 The purpose is consuming information with Sinfonier. Orion has context information that could be useful, but we need a way to connect both elements. The deployment of Cygnus and Kafka, for translating and storing the information in a data structure, implements the connection between Orion and Sinfonier.
 
 [Top](#top)
-##<a name="section2"></a>Architecture
+## <a name="section2"></a>Architecture
 The architecture for feeding Sinfonier needs some elements as shown in next image:
 
 ![architecture][Architecture]
@@ -37,7 +37,7 @@ There are two ways to run the architecture:
 
 [Top](#top)
 
-##<a name="section3"></a>Orion contextBroker
+## <a name="section3"></a>Orion contextBroker
 First of all, [Orion](https://github.com/telefonicaid/fiware-orion/blob/develop/doc/manuals/admin/install.md) must be installed in the system. In addition, Orion needs MongoDB for storage, so must be installed too.
 
 Orion contextBroker must be running in `multiservice` mode with the command:
@@ -250,8 +250,8 @@ curl -X GET http://localhost:1026/v2/subscriptions
 
 [Top](#top)
 
-##<a name="section4"></a>Cygnus
-####<a name=”section4.1></a>Configuration
+## <a name="section4"></a>Cygnus
+#### <a name=”section4.1></a>Configuration
 [Cygnus](https://github.com/telefonicaid/fiware-cygnus) is a connector in charge of persisting Orion context data in certain configured third-party storages, creating a historical view of such data. In other words, Orion only stores the last value regarding an entity's attribute, and if an older value is required then you will have to persist it in other storage, value by value, using Cygnus.
 
 In this architecture Cygnus do the translation between Orion and Kafka. First of all you have to follow a [quick start guide](https://github.com/telefonicaid/fiware-cygnus/blob/master/doc/quick_start_guide.md#installing-cygnus) for install it. Next step is create a properly agent for Kafka. Every agent has to configure three main elements:
@@ -298,7 +298,7 @@ Some important details:
 
 Running properly all the structure (See [general procedure step-by-step](#section7) for do it properly) and updating some values in our `Entity` you can see how Cygnus persist the information.
 
-####<a name=”section4.2></a>Running
+#### <a name=”section4.2></a>Running
 Cygnus is run through this command:
 ```
 /path/to/flume/folder/bin/flume-ng agent --conf /path/to/flume/folder/conf -f /path/to/flume/folder/conf/your_kafka_agent.conf -n cygnusagent -Dflume.root.logger=INFO,console
@@ -318,7 +318,7 @@ As you can see, the information is persisted in a `topic` "Book1_Book" with `att
 
 [Top](#top)
 
-##<a name="section5"></a>Kafka
+## <a name="section5"></a>Kafka
 [Apache Kafka](http://kafka.apache.org/documentation.html#quickstart) is a distributed, partitioned, replicated commit log service. It provides the functionality of a messaging system, but with a unique design.
 The use of Kafka for that purpose have two main pieces: Zookeeper and `brokers` (or servers, both names are correct). Kafka is needed for storing the context information handled by the combination of Orion and Cygnus.
 
@@ -328,8 +328,8 @@ An important detail is that Zookeeper must be running before `brokers`. Commands
 
 [Top](#top)
 
-###<a name="section5.1"></a>Zookeeper
-####<a name=”section5.1.1></a>Configuration
+### <a name="section5.1"></a>Zookeeper
+#### <a name=”section5.1.1></a>Configuration
 Zookeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. The connections to Zookeeper use the port 2181 and provides the link between itself and brokers. Using the API we can create and ask for information about topics, produce some messages and consume, but the most of the actions are done automatically by Cygnus. The only action required for this architecture is to consume, that will carry out Sinfonier.
 
 Zookeeper is configured through the following parameters:
@@ -344,7 +344,7 @@ Zookeeper configuration must be stored in a file called `zookeeper.properties`
 
 [Top](#top)
 
-####<a name=”section5.1.2></a>Running
+#### <a name=”section5.1.2></a>Running
 Zookeeper is run through this command:
 ```
 bin/zookeeper-server-start.sh config/zookeeper.properties
@@ -356,8 +356,8 @@ nohup bin/zookeeper-server-start.sh config/zookeeper.properties &
 
 [Top](#top)
 
-###<a name="section5.2"></a>Brokers
-####<a name=”section5.2.1></a>Configuration
+### <a name="section5.2"></a>Brokers
+#### <a name=”section5.2.1></a>Configuration
 `Brokers` are used to distribute the information stored in Kafka and you can use one or several of them. This example use three `brokers` and its configuration is described in this section. `Brokers` are implemented into Zookeeper, each one with its own port, i.e, a `Broker` with port 9092, another broker with port 9093, etc.
 A single `Broker` is configured through the following parameters:
 
@@ -375,7 +375,7 @@ A “multibroker” configuration can be configured by creating different files,
 
 `Brokers` configurations must be stored in files like `serverx.properties`, being "x" the `broker.id` of each `Broker`.
 
-####<a name=”section5.2.2></a>Running
+#### <a name=”section5.2.2></a>Running
 A single server is run through this command:
 ```
 bin/kafka-server-start.sh config/server1.properties
@@ -393,14 +393,14 @@ nohup bin/kafka-server-start.sh config/server1.properties &
 
 [Top](#top)
 
-##<a name="section6"></a>Sinfonier
+## <a name="section6"></a>Sinfonier
 Finally we reach the last element of our architecture: The consumer of the stored data. Sinfonier works as consumer, asking Kafka for information coming from Orion.
 
 Kafka works as a queue, receiving data from the producers and sending it to the consumers. Regarding this particular architecture, Cygnus works as a producer, while Sinfonier works as a consumer.
 
 [Top](#top)
 
-##<a name="section7"></a>General procedure step-by-step
+## <a name="section7"></a>General procedure step-by-step
 The following steps will help you to run all the procedure properly. A specific order is required because the architecture need some services running before the others:
   1. Orion context broker: First step in order to create the subscriptions and receive the entity updates, that will be redirected to Cygnus. `Mongo` must be running too.
   2. Kafka: Zookeeper and `brokers`, and consequently:
@@ -411,7 +411,7 @@ The following steps will help you to run all the procedure properly. A specific 
 
 [Top](#top)
 
-##<a name="section3"></a> Reporting issues and contact information
+## <a name="section3"></a> Reporting issues and contact information
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cygnus` tag.

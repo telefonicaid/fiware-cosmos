@@ -1,4 +1,4 @@
-#Tidoop REST API
+# Tidoop REST API
 cosmos-tidoop-api exposes a RESTful API for running MapReduce jobs in a shared Hadoop environment.
 
 Please observe we emphasize in <i>a shared Hadoop environment</i>. This is because shared Hadoops require special management of the data and the analysis processes being run (storage and computation). There are tools like [Oozie](https://oozie.apache.org/) in charge of running MapReduce jobs as well through an API, but they do not take into account the access to the run jobs, their status, results, etc must be controlled. In other words, using Oozie any user may kill a job by knowing its ID; using cosmos-tidoop-api only the owner of the job will be able to.

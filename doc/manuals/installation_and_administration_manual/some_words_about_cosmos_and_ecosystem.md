@@ -1,4 +1,4 @@
-#<a name="top"></a>Some words about Cosmos and its ecosystem
+# <a name="top"></a>Some words about Cosmos and its ecosystem
 
 Content:<br>
 
@@ -6,7 +6,7 @@ Content:<br>
 * [Light version](#section2)
 * [What is mandatory and optional](#section3)
 
-##<a name="section1"></a>Cosmos architecture reminder
+## <a name="section1"></a>Cosmos architecture reminder
 
 As previoously said, Cosmos (and its ecosystem) is part of a platform about providing BigData analysis means for data scientists, avoiding them to deploy any kind of infrastructure nor any kind of software, focusing on the analysis. So, the core idea of Cosmos is the on-demand provision of infrastructure supporting the desired analysis software that, once used, is released in order future users may have the opportunity to request resources as well.
 
@@ -39,7 +39,7 @@ The ecosystem raises when Cosmos is completed/complemented with certain manageme
 
 [Top](#top)
 
-##<a name="section2"></a>Light version
+## <a name="section2"></a>Light version
 
 Since the above solution may require a very large infrastructure (for instance, let’s suppose an operator willing to provide on-demand clusters for at least 1000 users at the same time, having each cluster at least 20 virtual machines… that implies the capability of creating at least 20000 VMs), a light version of the HAAS engine has been developed at the same time, specially addressed for little operators and companies willing to provide this kind of service but not owning large resources. This light version is based on sharing a single Hadoop cluster; this sharing will be controlled by software in charge of limiting the access, distributing the available resources, prioritizing jobs, etc.
 
@@ -47,7 +47,7 @@ Indeed, this is the version currently deployed in FIWARE Lab.
 
 ![Figure 3 - Light-version Big Data architecture](../images/big_data_installation_guide_figure_3.png "Figure 3 - Light-version Big Data architecture")
 
-##<a name="section3"></a>What is mandatory and optional
+## <a name="section3"></a>What is mandatory and optional
 
 As already seen, this is not a <i>install-a-single-rpm</i> GEri, but a set of many tools (proprietary or third-party ones) that have to be chosen and combined in order to achieve an implementation.
 

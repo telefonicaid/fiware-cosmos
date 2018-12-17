@@ -1,4 +1,4 @@
-#<a name="top"></a>Tidoop REST API
+# <a name="top"></a>Tidoop REST API
 Content:
 
 * [Introduction](#section1)
@@ -12,7 +12,7 @@ Content:
     * [Logging traces](#section5.1)
     * [Submitted jobs](#section5.2)
 
-##<a name="section1"></a>Introduction
+## <a name="section1"></a>Introduction
 cosmos-tidoop-api exposes a RESTful API for running MapReduce jobs in a shared Hadoop environment.
 
 Please observe we emphasize in <i>a shared Hadoop environment</i>. This is because shared Hadoops require special management of the data and the analysis processes being run (storage and computation). There are tools like [Oozie](https://oozie.apache.org/) in charge of running MapReduce jobs as well through an API, but they do not take into account the access to the run jobs, their status, results, etc must be controlled. In other words, using Oozie any user may kill a job by knowing its ID; using cosmos-tidoop-api only the owner of the job will be able to.
@@ -23,8 +23,8 @@ Finally, it is important to remark cosmos-tidoop-api is being designed to run in
 
 [Top](#top)
 
-##<a name="section2"></a>Installation
-###<a name="section2.1"></a>Prerequisites
+## <a name="section2"></a>Installation
+### <a name="section2.1"></a>Prerequisites
 This REST API has only sense with a [Hadoop](http://hadoop.apache.org/) cluster administrated by the reader.
 
 cosmos-tidoop-api is a Node.js application, therefore install it from the official [download](https://nodejs.org/download/). An advanced alternative is to install [Node Version Manager](https://github.com/creationix/nvm) (nvm) by creationix/Tim Caswell, which will allow you to have several versions of Node.js and switch among them.
@@ -33,7 +33,7 @@ Of course, common tools such as `git` and `curl` are needed.
 
 [Top](#top)
 
-###<a name="section2.2"></a>API installation
+### <a name="section2.2"></a>API installation
 This is a software written in JavaScript, specifically suited for [Node.js](https://nodejs.org) (<i>JavaScript on the server side</i>). JavaScript is an interpreted programming language thus it is not necessary to compile it nor build any package; having the source code downloaded somewhere in your machine is enough.
 
 Start by creating, if not yet created, a Unix user named `cosmos-tidoop`; it is needed for installing and running the application. You can only do this as root, or as another sudoer user:
@@ -69,12 +69,12 @@ That must download all the dependencies under a `node_modules` directory.
 
 [Top](#top)
 
-###<a name="section2.3"></a>Unit tests
+### <a name="section2.3"></a>Unit tests
 To be done.
 
 [Top](#top)
 
-##<a name="section3"></a>Configuration
+## <a name="section3"></a>Configuration
 cosmos-tidoop-api is configured through a JSON file (`conf/cosmos-tidoop-api.json`). These are the available parameters:
 
 * **host**: FQDN or IP address of the host running the service. Do not use `localhost` unless you want only local clients may access the service.
@@ -88,7 +88,7 @@ cosmos-tidoop-api is configured through a JSON file (`conf/cosmos-tidoop-api.jso
 
 [Top](#top)
 
-##<a name="section4"></a>Running
+## <a name="section4"></a>Running
 The Http server implemented by cosmos-tidoop-api is run as (assuming your current directory is `fiware-cosmos/cosmos-tidoop-api`):
 
     $ npm start
@@ -102,12 +102,12 @@ cosmos-tidoop-api typically listens in the TCP/12000 port, but you can change if
 
 [Top](#top)
 
-##<a name="section5"></a>Administration
+## <a name="section5"></a>Administration
 Two are the sources of data for administration purposes, the logs and the list of jobs launched.
 
 [Top](#top)
 
-###<a name="section5.1"></a>Logging traces
+### <a name="section5.1"></a>Logging traces
 Logging traces, typically saved under `/var/log/cosmos/cosmos-tidoop-lib`, are the main source of information regarding the GUI performance. These traces are written in JSON format, having the following fields: level, message and timestamp. For instance:
 
     {"level":"info","message":"Connected to http://130.206.81.225:3306/cosmos_gui","timestamp":"2015-07-31T08:44:04.624Z"}
@@ -122,7 +122,7 @@ Within the log it is expected to find many `info` messages, and a few of `warn` 
 
 [Top](#top)
 
-###<a name="section5.2"></a>Submitted jobs
+### <a name="section5.2"></a>Submitted jobs
 As an administrator, information regarding submitted jobs can be retrieved via the `hadoop job` command (it must be said such a command is the underlying mechanism the REST API uses in order to return information regarding MapReduce jobs). A complete reference for this command can be found in the official [Hadoop documentation](https://hadoop.apache.org/docs/r1.2.1/commands_manual.html#job).
 
 [Top](#top)

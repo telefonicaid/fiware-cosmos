@@ -1,4 +1,4 @@
-#<a name="top"></a>Data management and I/O
+# <a name="top"></a>Data management and I/O
 
 Content:<br>
 
@@ -8,12 +8,12 @@ Content:<br>
 * [HttpFS](#section4)
 * [Feeding HDFS with Cygnus](#section5)
 
-##<a name="section1"></a>Introduction
+## <a name="section1"></a>Introduction
 The storage cluster is used for I/O of data. Each Cosmos user will own a HDFS space (limited by quota) where to upload big data for future analysis, or from where to download analysis results. Such a userspace can be managed as any Unix-like file system, i.e. directories and files with ownership and permissions can be created, deleted, renamed or moved.
 
 [Top](#top)
 
-##<a name="section2"></a>File System Shell
+## <a name="section2"></a>File System Shell
 
 If you are enabled to ssh into the storage cluster, you will be able to manage your big data directly form the command line. There exists a complete suite of commands for HDFS named File System Shell allowing you to perform any Unix-like operation. Please refer to the [official documentation](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html) for full details on the available commands.
 
@@ -70,7 +70,7 @@ As said, the following sequence of sentences will produce the same result:
 
 [Top](#top)
 
-##<a name="section3"></a>WebHDFS
+## <a name="section3"></a>WebHDFS
 
 WebHDFS is the API for applications aiming to do remote I/O of data. It is a REST API containing all the operation within the File System Shell, thus any standard REST client library available for any programming language will be able to interact with HDFS. Please refer to the [official documentation](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html) for full details on the API.
 
@@ -192,7 +192,7 @@ Finally, we can list the content of one of the uploaded files:
 
 [Top](#top)
 
-##<a name="section4"></a>HttpFS
+## <a name="section4"></a>HttpFS
 
 HttpFS in an alternative implementation of the WebHDFS REST API. Specifically, the redirection locations in the two-step request
 operations point to the same HttpFS server you sent the first request; internally, the server knows which is the real datanode the second request must be sent, this is why HttpFS is said to be a gateway.
@@ -204,7 +204,7 @@ Observations:
 
 [Top](#top)
 
-##<a name="section5"></a>Feeding HDFS with Cygnus
+## <a name="section5"></a>Feeding HDFS with Cygnus
 
 Once installed and configured, Cygnus works as a connector between [Orion Context Broker](http://catalogue.fiware.org/enablers/publishsubscribe-context-broker-orion-context-broker) and multiple storage backends, HDFS among them, automatically moving NGSI-like context data from one to the other in order to build a historic view of such a data. Within the NGSI model, every concept, object or thing is translated into an *entity*, and its properties are modeled as *attributes*. Since Orion Context Broker is designed to handle just the last value for each entity's attribute, it is necessary a tool like Cygnus in order to create a list of attribute values all along the time.
 

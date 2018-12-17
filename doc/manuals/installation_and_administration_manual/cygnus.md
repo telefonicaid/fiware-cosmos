@@ -1,4 +1,4 @@
-#<a name="top"></a>Cygnus
+# <a name="top"></a>Cygnus
 
 Content:<br>
 
@@ -8,7 +8,7 @@ Content:<br>
 * [Running](#section4)
 * [Administration](#section5)
 
-##<a name="section1"></a>Introduction
+## <a name="section1"></a>Introduction
 
 Cygnus is a connector in charge of persisting [Orion](http://github.com/telefonicaid/fiware-orion) context data in certain configured third-party storages (HDFS among them), creating a historical view of such data. In other words, Orion only stores the last value regarding an entity's attribute, and if an older value is required then you will have to persist it in other storage, value by value, using Cygnus.
 
@@ -20,25 +20,25 @@ Fully detailed information about Cygnus can be found at [Github](http://github.c
 
 [Top](#top)
 
-##<a name="section2"></a>Installation
+## <a name="section2"></a>Installation
 
 Please, refer to the [installation section](http://github.com/telefonicaid/fiware-cygnus/blob/master/README.md#installing-cygnus) of the README at Github.
 
 [Top](#top)
 
-##<a name="section3"></a>Configuration
+## <a name="section3"></a>Configuration
 
 Please, refer to the [configuration section](http://github.com/telefonicaid/fiware-cygnus/blob/master/README.md#running-cygnus) of the README at Github.
 
 [Top](#top)
 
-##<a name="section4"></a>Running
+## <a name="section4"></a>Running
 
 Please, refer to the [running section](http://github.com/telefonicaid/fiware-cygnus/blob/master/README.md#running-cygnus) of the README at Github.
 
 [Top](#top)
 
-##<a name="section5"></a>Administration
+## <a name="section5"></a>Administration
 
 Please, refer to the [Management Interface](http://github.com/telefonicaid/fiware-cygnus/blob/master/doc/design/management_interface.md) specific document at Github.
 

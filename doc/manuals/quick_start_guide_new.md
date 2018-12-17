@@ -1,4 +1,4 @@
-#<a name="top"></a>Cosmos Quick Start Guide
+# <a name="top"></a>Cosmos Quick Start Guide
 Content:
 
 * [Introduction](#section1)
@@ -12,20 +12,20 @@ Content:
     * [Step 6: Download some data](#section3.6)
 * [Reporting issues and contact information](#section4)
 
-##<a name="section1"></a>Introduction
+## <a name="section1"></a>Introduction
 This Quick Start Guide overviews the steps a newbie programmer will have to perform in order to get familiar with Cosmos and its functionality. For a more detailed information, please refer to the official [documentation](http://fiware-cosmos.readthedocs.org/en/latest/) and the Cosmos entry in the [FI-WARE Catalogue](http://catalogue.fi-ware.org/enablers/bigdata-analysis-cosmos).
 
 [Top](#top)
 
-##<a name="section2"></a>Assumptions
+## <a name="section2"></a>Assumptions
 This Quick Start Guide assumes you are going to use the already deployed Global Instance of Cosmos in FIWARE Lab. This is the <b>recommended usage of Cosmos</b>. This global instance runs in a cluster of machines, providing distributed storage (based on Hadoop Distributed File System - HDFS) and distributed computing capabilities (based on Hadoop MapReduce engine and some querying tools such as Hive).
 
 In fact, the Global Instance of Cosmos in FIWARE Lab is not really a single Hadoop cluster, but one cluster in charge of storage governed by the <i>Storage Endpoint</i> (`storage.cosmos.lab.fiware.org`) and another one in charge of computing governed by the <i>Computing Endpoint</i> (`computing.cosmos.lab.fiware.org`).
 
 [Top](#top)
 
-##<a name="section3"></a>Step by step guide
-###<a name="section3.1"></a>Step 1: Get an OAuth2 token
+## <a name="section3"></a>Step by step guide
+### <a name="section3.1"></a>Step 1: Get an OAuth2 token
 All APIs in FIWARE Lab are protected by means of [OAuth2](http://oauth.net/2/) tokens. Cosmos is not an exception, so you will need to request to the <i>Computing Endpoint</i> a valid token for your FIWARE Lab user. `curl` tool can be used for that purpose:
 
     $ curl -k -X POST "https://computing.cosmos.lab.fiware.org:13000/cosmos-auth/v1/token" -H "Content-Type: application/x-www-form-urlencoded" -d "grant_type=password&username=<YOUR_USER_EMAIL>&password=<YOUR_PASSWORD>”
@@ -38,7 +38,7 @@ The `access_token` field is the OAuth2 token.
 
 [Top](#top)
 
-###<a name="section3.2"></a>Step 2: Create a Cosmos account
+### <a name="section3.2"></a>Step 2: Create a Cosmos account
 At the moment of writing, deploying a Cosmos Portal for FIWARE Lab is in the roadmap, but not yet done.
 
 Thus, in order to create an account you will have to send an email to `francisco.romerobueno@telefonica.com` specifying your FIWARE Lab ID.
@@ -55,7 +55,7 @@ The interesting part is the "id" field, in the above example `frb`.
 
 [Top](#top)
 
-###<a name="section3.3"></a>Step 3: Upload some data to HDFS
+### <a name="section3.3"></a>Step 3: Upload some data to HDFS
 You can upload your own data to your HDFS space using the WebHDFS RESTful API listening on TCP/14000 port of the <i>Storage Endpoint</i>.
 
 Let's start by creating a new directory (`testdir`) in our HDFS user space (in this example, `hdfs:///user/frb`). `curl` has been used as REST client:
@@ -160,12 +160,12 @@ NOTES:
 
 [Top](#top)
 
-###<a name="section3.4"></a>Step 4: Query your data
+### <a name="section3.4"></a>Step 4: Query your data
 Coming soon.
 
 [Top](#top)
 
-###<a name="section3.5"></a>Step 5: Run your first MapReduce job
+### <a name="section3.5"></a>Step 5: Run your first MapReduce job
 Several already developed MapReduce examples can be found in every Hadoop distribution, typically in a Java `.jar` file called `hadoop-mapreduce-examples.jar`. This file is copied to the HDFS space a user owns in FIWARE Lab, specifically under the `jars/` folder, so the `frb` user should have it copied to:
 
     hdfs:///user/frb/jars/hadoop-mapreduce-examples.jar
@@ -186,7 +186,7 @@ $ curl -X GET "http://computing.cosmos.lab.fiware.org:12000/tidoop/v1/user/frb/j
 
 [Top](#top)
 
-###<a name="section3.6"></a>Step 6: Download some data
+### <a name="section3.6"></a>Step 6: Download some data
 Finally, the result of the MapReduce execution can be seen at the output HDFS folder (which is automatically created) by using the WebHDFS REST API in the <i>Storage Endpoint</i>:
 
 ```
@@ -203,7 +203,7 @@ yoda,dagobah,jedi,275	1
 
 [Top](#top)
 
-##<a name="section4"></a>Reporting issues and contact information
+## <a name="section4"></a>Reporting issues and contact information
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cygnus` tag.

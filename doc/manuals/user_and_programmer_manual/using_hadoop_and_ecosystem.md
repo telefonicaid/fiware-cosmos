@@ -1,4 +1,4 @@
-#<a name="top"></a>Using Hadoop and its ecosystem
+# <a name="top"></a>Using Hadoop and its ecosystem
 
 Content:<br>
 
@@ -24,9 +24,9 @@ Content:<br>
         * [Java](#section2.2.1)
         * [Python](#section2.2.2)
 
-##<a name="section1"></a>MapReduce
+## <a name="section1"></a>MapReduce
 
-###<a name="section1.1"></a>MapReduce for beginners
+### <a name="section1.1"></a>MapReduce for beginners
 
 MapReduce is the programming paradigm used by Hadoop for large data analysis. It basically applies the divide-and-conquer strategy within a distributed cluster of machines:
 
@@ -36,7 +36,7 @@ MapReduce is the programming paradigm used by Hadoop for large data analysis. It
 
 [Top](#top)
 
-####<a name="section1.1.1"></a>Input split details
+#### <a name="section1.1.1"></a>Input split details
 
 The configured `InputFormat class governs how a large data file is splitted into blocks, and how those blocks are read. By default `FileInputFormat class is used, and an `InputSplit object is created per each stored HDFS data block. A `RecordReader function is given with the `InputSplit object.
 
@@ -51,7 +51,7 @@ Both `InputSplit and `RecordReader are transparent concepts, and the programmer 
 
 [Top](#top)
 
-####<a name="section1.1.2"></a>Mapper details
+#### <a name="section1.1.2"></a>Mapper details
 
 As said, a mapper is in charge of reading and processing a complete `InputSplits`. It is read line by line by invoking the `RecordReader    function, which provides a key-value pair about the relative position of the line within the split (key) and the data line itself (value).
 
@@ -59,7 +59,7 @@ Once performed the transformation or filtering function on the input line, anoth
 
 [Top](#top)
 
-####<a name="section1.1.3"></a>Reducer details
+#### <a name="section1.1.3"></a>Reducer details
 
 The reducers receive each one a list of key-value pairs outputted by the mappers, sharing all the pairs the same key. The list is iterated in order to perform a certain aggregation or joining function, the same with all the reducers, and another key-value pair is returned. As you may guess, the value regards to the computed aggregation, and the key depends on the application logic; it usually is equals to the shared key among the received list of key-value pairs, but it can be a very different one if your application requires it.
 
@@ -67,7 +67,7 @@ The number of reducers is chosen by Hadoop depending on several parameters and c
 
 [Top](#top)
 
-####<a name="section1.1.4"></a>Output details
+#### <a name="section1.1.4"></a>Output details
 
 The configured `OutputFormat    class governs how the reducer results are written into HDFS. By default, `FileOutputFormat    provides a `RecordWriter    function that serializes the key-value pair into a HDFS file using a whitespace between key and value.
 
@@ -81,11 +81,11 @@ Other serialization formats can be used apart from Hadoop ones:
 
 [Top](#top)
 
-####<a name="section1.1.5"></a>Combiners
+#### <a name="section1.1.5"></a>Combiners
 
 [Top](#top)
 
-####<a name="section1.1.6"></a>More details on the key-value pairs
+#### <a name="section1.1.6"></a>More details on the key-value pairs
 
 The key-value pairs exchanged all along the MapReduce process have the following properties:
 
@@ -95,7 +95,7 @@ The key-value pairs exchanged all along the MapReduce process have the following
 
 [Top](#top)
 
-###<a name="section1.2"></a>Programming a MapReduce job
+### <a name="section1.2"></a>Programming a MapReduce job
 
 A MapReduce job in Hadoop consists of:
 
@@ -107,7 +107,7 @@ From here on, Java language will be assumed since it is the native language for 
 
 [Top](#top)
 
-####<a name="section1.2.1"></a>Driver code example
+#### <a name="section1.2.1"></a>Driver code example
 
 The following example, taken from [tidoop-mr-lib](http://github.com/telefonicaid/fiware-tidoop/tree/develop/tidoop-mr-lib), shows the look and feel of a MapReduce driver.
 
@@ -230,7 +230,7 @@ Finally, the input and output paths (it is mandatory these paths are about folde
 
 [Top](#top)
 
-####<a name="1.2.2"></a>Mapper code example
+#### <a name="1.2.2"></a>Mapper code example
 
 A mapper must extend the `Mapper class and override at least the `map method with an implementation of the desired mapping function. In the example below, the mapping function is about filtering or not a text line based on the existence of a certain string (defined through a regular expression) within the text line. Such a regular expression was passed in the `Configuration object, as explained before, and it must be retrieved in an implementation of the `setup method, since the `map    method has not access to the configuration.
 
@@ -293,7 +293,7 @@ Please observe the types for the input and output key-value pairs. A `(Object,Te
 
 [Top](#top)
 
-####<a name="1.2.3"></A>Reducer code example
+#### <a name="1.2.3"></A>Reducer code example
 
 A reducer must extend the `Reducer class and override at least the `reduce method with an implementation of the desired reducing function. In the example below, the reducing function is about emitting to the output all the received pairs.
 
@@ -348,7 +348,7 @@ only one reducer has been setup.
 
 [Top](#top)
 
-####<a name="section1.2.4"></A>Compilation
+#### <a name="section1.2.4"></A>Compilation
 
 Once the above classes have been coded, just compile them and create a *jar* file. Any modern IDE for Java will do that for you. Anyway, and supposing the source files are in a *src* folder, the destination for the compiled classes is *classes* and the destination for the *jar* file is *dist*, the following Java commands should be enough to create everything:
 
@@ -363,7 +363,7 @@ The created *jar* should be automatically distributed by Hadoop to all the clust
 
 [Top](#TOP)
 
-###<a name="section1.3"></a>Uploading and running MapReduce jobs
+### <a name="section1.3"></a>Uploading and running MapReduce jobs
 
 Hadoop MapReduce jobs are written in Java and packaged as Java jar files; this section will explain how to execute those jobs by specifying the folder containing the input data files and the location where the results are expected to be available. Both folders will be placed under the HDFS userspace; the input folder must exist before the execution, but the output folder is created once the job has finished. For instance:
 
@@ -483,19 +483,19 @@ Since the Filter application is setup to run a single reducer (see previous sect
 
 [Top](#top)
 
-###<a name="section1.4"></a>Running a Tidoop MapReduce job
+### <a name="section1.4"></a>Running a Tidoop MapReduce job
 
 Please refer to the [jobs reference](http://github.com/telefonicaid/fiware-tidoop/tree/develop/tidoop-mr-lib#jobs-reference-in-alphabetical-order) section of the README at Github.
 
 [Top](#top)
 
-###<a name="section1.5"></a>Programming a MapReduce job consuming CKAN data
+### <a name="section1.5"></a>Programming a MapReduce job consuming CKAN data
 
 Please refer to the [usage](http://github.com/telefonicaid/fiware-tidoop/tree/develop/tidoop-hadoop-ext#usage) section of the README at Github.
 
 [Top](#top)
 
-##<a name="section2"></a>Hive
+## <a name="section2"></a>Hive
 
 Hive is a data warehouse system for Hadoop that facilitates easy data summarization, ad-hoc SQL-like queries, and the analysis of large datasets stored in Hadoop compatible file systems \[4\]. Using Hive no MapReduce programming is needed, since all the MapReduce stuff is automatically done by Hive.
 
@@ -503,7 +503,7 @@ The way Hive works is by loading all the data in SQL-like tables and then allowi
 
 [Top](#top)
 
-###<a name="section2.1"></a>Hive CLI
+### <a name="section2.1"></a>Hive CLI
 
 Hive CLI \[6\] must be considered only for testing purposes, or remote executions through Oozie. It can be used by sshing the Head Node using
 your credentials and by typing *hive* in a shell:
@@ -534,13 +534,13 @@ your credentials and by typing *hive* in a shell:
 
 [Top](#top)
 
-###<a name="section2.2"></a>Programming a custom Hive client
+### <a name="section2.2"></a>Programming a custom Hive client
 
 Hive server usually runs at the computing services node, and connections from your Hive client will be served in the TCP/10000 port as usual. Please, explore next sections in order to learn how to write your own Hive client in some popular programming languages (Java, Python, etc). Consider this [link](http://cwiki.apache.org/confluence/display/Hive/HiveServer2+Clients) as another useful entry point to write your own Hive clients as well.
 
 [Top](#top)
 
-####<a name="section2.2.1"></a>Java
+#### <a name="section2.2.1"></a>Java
 
 For the example below, we will assume Hive 0.13.0 has been deployed in the computing services node, and the server run is the HiveServer2 version. In addition, we will assume Maven is being used for building the client.
 
@@ -630,7 +630,7 @@ This is the minimum code:
 
 [Top](#top)
 
-####<a name="section2.2.2"></a>Python
+#### <a name="section2.2.2"></a>Python
 
 For the example below, we will assume Hive 0.13.0 has been deployed in the computing services node, and the server run is the HiveServer2
 version. In addition, we will assume [`pip`](http://pypi.python.org/pypi/pip) has been installed as the Python package manager.
