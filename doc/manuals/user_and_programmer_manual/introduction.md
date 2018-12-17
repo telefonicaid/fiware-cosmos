@@ -1,4 +1,4 @@
-#<a name="top"></a>Introduction
+# <a name="top"></a>Introduction
 
 This document details how to use and program with Cosmos Ecosystem and Sinfonier, the BigData Analysis Generic Enabler (BigData Analysis GE) reference implementations (GEri).
 
@@ -11,7 +11,7 @@ Nevertheless, and according to the current versions of the software, please obse
 
 [Top](#top)
 
-##<a name="section1"></a>Intended audience
+## <a name="section1"></a>Intended audience
 
 This document is mainly addressed to those **developers aiming to use already deployed BigData Analysis GE-like services**.
 
@@ -19,7 +19,7 @@ If you are aiming to to expose BigData Analysis GE-like services, then please vi
 
 [Top](#top)
 
-##<a name="section2"></a>Structure of the document
+## <a name="section2"></a>Structure of the document
 
 Apart from this introduction, this User and Programmer Guide contains two main sections, one for batch and another one for stream analysis.
 
@@ -33,7 +33,7 @@ Once the user knows how Sinfonier works we will see some use case and we will se
 
 [Top](#top)
 
-##<a name="section3"></a>Reference repositories in Github
+## <a name="section3"></a>Reference repositories in Github
 
 Apart from this repository (<http://github.com/telefonicaid/fiware-cosmos>), the following ones will be linked constantly through the whole document; hey are listed here for a clear reference:
 
@@ -42,7 +42,7 @@ Apart from this repository (<http://github.com/telefonicaid/fiware-cosmos>), the
 
 [Top](#top)
 
-##<a name="section4"></a>Reporting issues and contact information
+## <a name="section4"></a>Reporting issues and contact information
 
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
