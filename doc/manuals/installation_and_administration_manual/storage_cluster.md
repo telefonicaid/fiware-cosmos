@@ -1,4 +1,4 @@
-#<a name="top"></a>Storage cluster
+# <a name="top"></a>Storage cluster
 
 Content:<br>
 
@@ -13,9 +13,9 @@ Content:<br>
     * [Running the services node](#section3.2)
 * [Administration](#section4)
 
-##<a name="section1"></a>Installation
+## <a name="section1"></a>Installation
 
-###<a name="section1.1"></a>Installing the HDFS-only cluster
+### <a name="section1.1"></a>Installing the HDFS-only cluster
 
 You can setup a HDFS cluster by following the [official guidelines](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/ClusterSetup.html), which are pretty detailed (and probably complex for a newbie), or you can use a Hadoop distribution with an installation manager that will make your life easier. Well known distributions are:
 
@@ -35,7 +35,7 @@ Since this is a storage-only cluster, just install the HDFS service. Do not inst
 
 [Top](#top)
 
-###<a name="section1.2"></a>Installing the services node
+### <a name="section1.2"></a>Installing the services node
 
 In addition to the Hadoop cluster, it is highly recommended to deploy a special node not being part of the cluster (i.e. not hosting any Hadoop daemon) but having installed the Hadoop libraries and a copy of all the configuration files of the cluster. The reason is this node may work as the unique endpoint for the computing services, hiding the details of the cluster and thus saving a lot of public IP addresses (this node is the only one exposing a public one).
 
@@ -48,9 +48,9 @@ Of course, you can achieve the same goals by exposing those services in one of t
 
 [Top](#top)
 
-##<a name="section2"></a>Configuration
+## <a name="section2"></a>Configuration
 
-###<a name="section2.1"></a>Configuring the HDFS-only cluster
+### <a name="section2.1"></a>Configuring the HDFS-only cluster
 
 The different managers/installers developed by the Hadoop distributions do most of the work for you regarding the configuration. Simply follow their "next-next" wizards and you will be done.
 
@@ -65,7 +65,7 @@ Nevertheless, for further reference, these are the configuration files used by H
 
 [Top](#top)
 
-###<a name="section2.2"></a>Configuring the services node
+### <a name="section2.2"></a>Configuring the services node
 
 HttpFS must be configured as stated in the [official documentation](http://hadoop.apache.org/docs/current/hadoop-hdfs-httpfs/ServerSetup.html).
 
@@ -73,9 +73,9 @@ The ssh server could be used with the default configuration. More relevant is th
 
 [Top](#top)
 
-##<a name="section3"></a>Running
+## <a name="section3"></a>Running
 
-###<a name="section3.1"></a>Running the HDFS-only cluster
+### <a name="section3.1"></a>Running the HDFS-only cluster
 
 Once again, the usage of a manager within any of the existent distributions makes everything easier. These managers usually expose very simple and intuitive means of starting and stopping a cluster.
 
@@ -85,7 +85,7 @@ Nevertheless, for further reference, this is the command that start/stop each on
 
 [Top](#top)
 
-###<a name="section3.2"></a>Running the services
+### <a name="section3.2"></a>Running the services
 
 As stated in the [official documentation](http://hadoop.apache.org/docs/current/hadoop-hdfs-httpfs/ServerSetup.html), httpfs is started stopped/restarted by doing:
 
@@ -93,7 +93,7 @@ As stated in the [official documentation](http://hadoop.apache.org/docs/current/
 
 [Top](#top)
 
-##<a name="section4"></a>Administration
+## <a name="section4"></a>Administration
 
 You can use the HDFS [administration commands](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html#Administration_Commands).
 
