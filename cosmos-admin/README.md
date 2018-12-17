@@ -1,4 +1,4 @@
-#<a name="top"></a>Cosmos - Cosmos Admin
+# <a name="top"></a>Cosmos - Cosmos Admin
 
 * [What is cosmos-admin](#whatis)
 * [Scripts](#scripts)
@@ -10,7 +10,7 @@
     * [Log rotation](#logrotation)
 * [Reporting issues and contact information](#contact)
 
-##<a name="whatis"></a>What is cosmos-admin
+## <a name="whatis"></a>What is cosmos-admin
 cosmos-admin is a set of tools designed to administrate a Cosmos deployment, both for the Sahara-based and shared Hadoop-based flavours.
 
 Available tools are:
@@ -21,8 +21,8 @@ Available tools are:
 
 [Top](#top)
 
-##<a name="scripts"></a>Scripts
-###<a name="datacopier"></a>`data_copier.sh`
+## <a name="scripts"></a>Scripts
+### <a name="datacopier"></a>`data_copier.sh`
 This script has been designed for copying HDFS data from one cluster to another. Please observe the data is copied, not moved, i.e. the source data is never deleted by this script, and this is something up to the source cluster administrator.
 
 The underlying data copying mechanism used by `data_copier.sh` is [WebHDFS](http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/WebHDFS.html), the RESTful API from Hadoop for HDFS. This API exposes methods for creating directories, renaming files... and, specially, reading and writing files.
@@ -48,7 +48,7 @@ If for any reason the data copying is interrupted (for instance, the communicati
 
 [Top](#top)
 
-###<a name="getuserstats"></a>`get_user_stats.sh`
+### <a name="getuserstats"></a>`get_user_stats.sh`
 
 This script has been designed to get certain user statistics, these ones:
 
@@ -79,7 +79,7 @@ At the same time, the system log rotation must be done at the same frequency thi
 
 [Top](#top)
 
-###<a name="warnings"></a>`warnings.sh`
+### <a name="warnings"></a>`warnings.sh`
 This script has been designed for detecting certain scenarios the Cosmos administrator must be warned about. Specifically:
 
 * When a HDFS space is close to the quota limit. How much close it is depends on a configurable threshold.
@@ -103,9 +103,9 @@ It is convenient this script is run with a frequency not greater than a day, sin
 
 [Top](#top)
 
-##<a name="osprogramming"></a>OS programming regarding the administrative scripts
+## <a name="osprogramming"></a>OS programming regarding the administrative scripts
 
-###<a name="crontab"></a>Crontab
+### <a name="crontab"></a>Crontab
 `crontab` is the tool used by any Unix-based system to schedule task executions. In this case, we will use this application in order to schedule some of the Cosmos administrative scripts in a periodic fashion.
 
 Scheduling is done through a file that can be edited by typing:
@@ -127,7 +127,7 @@ Please observe the `get_user_stats.sh` script is executed exactly one minute bef
 
 [Top](#top)
 
-###<a name="logrotation"></a>Log rotation
+### <a name="logrotation"></a>Log rotation
 Log rotation is usually performed by the `logrotate` application. Since this should be installed and already running by default in all Unix-based machines (check it by running the command `which logrotate`), most probably you will have the following elements in your file system:
 
 * `/etc/logrotate.conf`. Used to configure the application, typically will contain parameters for a weekly rotation of the system logs in general.
@@ -225,7 +225,7 @@ It is possible the first rotation cycle is not executed at the expected time sin
 
 [Top](#top)
 
-##<a name="contact"></a>Reporting issues and contact information
+## <a name="contact"></a>Reporting issues and contact information
 There are several channels suited for reporting issues and asking for doubts in general. Each one depends on the nature of the question:
 
 * Use [stackoverflow.com](http://stackoverflow.com) for specific questions about this software. Typically, these will be related to installation problems, errors and bugs. Development questions when forking the code are welcome as well. Use the `fiware-cosmos` tag.
