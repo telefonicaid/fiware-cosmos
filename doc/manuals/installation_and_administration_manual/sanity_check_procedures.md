@@ -1,4 +1,4 @@
-#<a name="top"></a>Sanity check procedures
+# <a name="top"></a>Sanity check procedures
 
 Content:<br>
 
@@ -31,9 +31,9 @@ Content:<br>
     * [Tidoop](#section4.5)
     * [Cygnus](#section4.6)
 
-##<a name="section1"></a>End to end testing
+## <a name="section1"></a>End to end testing
 
-###<a name="section1.1"></a>HAAS engine (Sahara-based)
+### <a name="section1.1"></a>HAAS engine (Sahara-based)
 
     $ curl -X GET http://localhost:5000"
     {"versions": {"values": [{"status": "stable", "updated": "2015-03-30T00:00:00Z", "media-types": [{"base": "application/json", "type": "application/vnd.openstack.identity-v3+json"}], "id": "v3.4", "links": [{"href": "http://localhost:5000/v3/", "rel": "self"}]}, {"status": "stable", "updated": "2014-04-17T00:00:00Z", "media-types": [{"base": "application/json", "type": "application/vnd.openstack.identity-v2.0+json"}], "id": "v2.0", "links": [{"href": "http://localhost:5000/v2.0/", "rel": "self"}, {"href": "http://docs.openstack.org/", "type": "text/html", "rel": "describedby"}]}]}}`
@@ -43,7 +43,7 @@ Content:<br>
 
 [Top](#top)
 
-###<a name="section1.2"></a>HAAS engine (shared Hadoop-based)
+### <a name="section1.2"></a>HAAS engine (shared Hadoop-based)
 
 The computing services to be tested are those exposed by the services node.
 
@@ -55,7 +55,7 @@ Regarding ssh, you must be able to connect to the services node as the sudoer us
 
 [Top](#top)
 
-###<a name="section1.3"></a>Storage cluster
+### <a name="section1.3"></a>Storage cluster
 
 The storage services to be tested are those exposed by the services node.
 
@@ -110,7 +110,7 @@ Regarding ssh, you must be able to connect to the services node as the sudoer us
 
 [Top](#top)
 
-###<a name="section1.4"></a>Cosmos GUI
+### <a name="section1.4"></a>Cosmos GUI
 
 The most obvious way of testing the GUI is running is using it. Try connecting with your browser to the GUI (default port TCP/80, unless you have configured another one) and try to register a new user. You should browse the pages documented in the [usage](http://github.com/telefonicaid/fiware-cosmos/blob/develop/cosmos-gui/README.md#usage) section of the README at Github.
 
@@ -124,7 +124,7 @@ Anyway, using `telnet` is a valid method as well:
 
 [Top](#top)
 
-###<a name="section1.5"></a>Tidoop
+### <a name="section1.5"></a>Tidoop
 
 Both the Hadoop extension (tidoop-hadoop-ext) and the MapReduce library (tidoop-mr-lib) are not services that can be tested from an e2e point of view.
 
@@ -143,7 +143,7 @@ Anyway, using `telnet` is a valid method as well:
 
 [Top](#top)
 
-###<a name="section1.6"></a>Cygnus
+### <a name="section1.6"></a>Cygnus
 
 Cygnus listens for incoming NGSI-like notifications in all the configured Http sources. Assuming a single source is configured for listening at TCP/5050 port, you can test it is working by invoking any of the scripts under `resources/ngsi-examples` emulating NGSI notifications:
 
@@ -183,9 +183,9 @@ In addition, a REST-like management interface is setup at TCP/8081 port. Current
 
 [Top](#top)
 
-##<a name="section2"></a>List of running processes
+## <a name="section2"></a>List of running processes
 
-###<a name="section2.1"></a>HAAS engine (Sahara-based)
+### <a name="section2.1"></a>HAAS engine (Sahara-based)
 
 Processes run by the Glance service:
 
@@ -261,7 +261,7 @@ Other services run:
 
 [Top](#top)
 
-###<a name="section2.2"></a>HAAS engine (shared Hadoop-based)
+### <a name="section2.2"></a>HAAS engine (shared Hadoop-based)
 
 Use the `jps` command from Java in order to list the Java processes (yes, Hadoop ones are Java processes). Processes within the Namenode should be:
 
@@ -283,7 +283,7 @@ Please observe `jps` is not distributed with OpenJDK. In that case, you will hav
 
 [Top](#top)
 
-###<a name="section2.3"></a>Storage cluster
+### <a name="section2.3"></a>Storage cluster
 
 Use `jps` command from Java in order to list the Java processes (yes, Hadoop ones are Java processes). Processes within the Namenode should be:
 
@@ -305,7 +305,7 @@ Please observe `jps` is not distributed with OpenJDK. In that case, you will hav
 
 [Top](#top)
 
-###<a name="section2.4"></a>Cosmos GUI
+### <a name="section2.4"></a>Cosmos GUI
 
 Cosmos GUI runs a single Node.js process:
 
@@ -314,7 +314,7 @@ Cosmos GUI runs a single Node.js process:
 
 [Top](#top)
 
-###<a name="section2.5"></a>Tidoop
+### <a name="section2.5"></a>Tidoop
 
 Both the Hadoop extension (tidoop-hadoop-ext) and the MapReduce library (tidoop-mr-lib) are not services that can be tested from the number of processes point of view.
 
@@ -325,7 +325,7 @@ Nevertheless, the REST API for the MapReduce library runs the following Node.js 
 
 [Top](#top)
 
-###<a name="section2.6"></a>Cygnus
+### <a name="section2.6"></a>Cygnus
 
 Cygnus runs a single Java process:
 
@@ -334,9 +334,9 @@ Cygnus runs a single Java process:
 
 [Top](#top)
 
-##<a name="section3"></a>Network interfaces up and open
+## <a name="section3"></a>Network interfaces up and open
 
-###<a name="section3.1"></a>HAAS engine (Sahara-based)
+### <a name="section3.1"></a>HAAS engine (Sahara-based)
 
 Opened port by the Nova service:
 
@@ -387,7 +387,7 @@ Other ports opened by other common services:
 
 [Top](#top)
 
-###<a name="section3.2"></a>HAAS engine (shared Hadoop-based)
+### <a name="section3.2"></a>HAAS engine (shared Hadoop-based)
 
 Opened ports by the HDFS service:
 
@@ -461,7 +461,7 @@ Opened ports by the MapReduce2 service:
 
 [Top](#top)
 
-###<a name="section3.3"></a>Storage cluster
+### <a name="section3.3"></a>Storage cluster
 
 Opened ports by the HDFS service:
 
@@ -496,7 +496,7 @@ Opened port by the HttpFS process:
 
 [Top](#top)
 
-###<a name="section3.4"></a>Cosmos GUI
+### <a name="section3.4"></a>Cosmos GUI
 
 Cosmos GUI opens a single port:
 
@@ -505,7 +505,7 @@ Cosmos GUI opens a single port:
 
 [Top](#top)
 
-###<a name="section3.5"></a>Tidoop
+### <a name="section3.5"></a>Tidoop
 
 Both the Hadoop extension (tidoop-hadoop-ext) and the MapReduce library (tidoop-mr-lib) are not services that can be tested from the open interfaces and ports point of view.
 
@@ -516,7 +516,7 @@ Nevertheless, the REST API for the MapReduce library opens the following port:
 
 [Top](#top)
 
-###<a name="section3.6"></a>Cygnus
+### <a name="section3.6"></a>Cygnus
 
 Cygnus opens a single port:
 
@@ -525,27 +525,27 @@ Cygnus opens a single port:
 
 [Top](#top)
 
-##<a name="section4"></a>Databases
+## <a name="section4"></a>Databases
 
-###<a name="section4.1"></a>HAAS engine (Sahara-based)
-
-N/A
-
-[Top](#top)
-
-###<a name="section4.2"></a>HAAS engine (shared Hadoop-based)
+### <a name="section4.1"></a>HAAS engine (Sahara-based)
 
 N/A
 
 [Top](#top)
 
-###<a name="section4.3"></a>Storage cluster
+### <a name="section4.2"></a>HAAS engine (shared Hadoop-based)
 
 N/A
 
 [Top](#top)
 
-###<a name="section4.4"></a>Cosmos GUI
+### <a name="section4.3"></a>Storage cluster
+
+N/A
+
+[Top](#top)
+
+### <a name="section4.4"></a>Cosmos GUI
 
 The GUI works with a MySQL database named `cosmos` (shared with Tidoop), tracking registered users in a table named `cosmos_user`. Both database and table must have been provisioned while installing the REST API. Check for their existence this way:
 
@@ -585,7 +585,7 @@ The GUI works with a MySQL database named `cosmos` (shared with Tidoop), trackin
 
 [Top](#top)
 
-###<a name="section4.5"></a>Tidoop
+### <a name="section4.5"></a>Tidoop
 
 Both the Hadoop extension (tidoop-hadoop-ext) and the MapReduce library (tidoop-mr-lib) are not services, thus they don't have any interaction with databases.
 
@@ -627,7 +627,7 @@ Nevertheless, the REST API for the MapReduce library works with a MySQL database
 
 [Top](#top)
 
-###<a name="section4.6"></a>Cygnus
+### <a name="section4.6"></a>Cygnus
 
 N/A
 
