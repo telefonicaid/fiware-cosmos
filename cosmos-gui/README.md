@@ -1,4 +1,4 @@
-#Cosmos GUI
+# Cosmos GUI
 This project is part of [FIWARE](http://fiware.org).
 
 [Cosmos](http://catalogue.fiware.org/enablers/bigdata-analysis-cosmos) is the codename for the Reference Implementation of the BigData Generic Enabler of FIWARE. Such a solution is based on the split of storage and computing capabilities:
