@@ -1,11 +1,11 @@
-#<a name="top"></a>Requesting computing resources
+# <a name="top"></a>Requesting computing resources
 
 Content:<br>
 
 * [Sahara version](#section1)
 * [Shared Hadoop version](#section2)
 
-##<a name="section1"></a>Sahara version
+## <a name="section1"></a>Sahara version
 
 On the one hand, please refer to the following APIs in order to request a computing cluster based on Hadoop:
 
@@ -18,7 +18,7 @@ On the other hand, the Sahara Dashboard wraps the above APIs through a user-frie
 
 [Top](#top)
 
-##<a name="section2"></a>Shared Hadoop version
+## <a name="section2"></a>Shared Hadoop version
 
 Current version of the Cosmos GUI does not implements any resources management, i.e. all users have access to the computing cluster with no constraints on terms of time the cluster can be used, and how many computing resources can be used.
 
