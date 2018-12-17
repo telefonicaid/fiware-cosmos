@@ -1,4 +1,4 @@
-#Custom Http PEP proxy for Cosmos
+# Custom Http PEP proxy for Cosmos
 cosmos-proxy is a custom Http proxy acting as a Policy Enforcement Point (PEP). This means:
 
 * cosmos-proxy is deployed before any Cosmos Http service aimed to be protected.
