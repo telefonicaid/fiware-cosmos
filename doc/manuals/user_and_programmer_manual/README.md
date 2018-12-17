@@ -1,4 +1,4 @@
-#<a name="top"></a>Cosmos
+# <a name="top"></a>Cosmos
 
 * Introduction
     * [Intended audience](./introduction.md#section1)
