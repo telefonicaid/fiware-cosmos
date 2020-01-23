@@ -1,4 +1,5 @@
-{
+<script>
+var gui  = {
   "gui": {
     "port": 443,
     "private_key_file": "",
@@ -43,3 +44,4 @@
     "level": "INFO"
   }
 }
+</script>

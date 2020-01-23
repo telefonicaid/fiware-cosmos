@@ -26,8 +26,8 @@
 // Module dependencies
 var Hapi = require('hapi');
 var cmdRunner = require('./cmd_runner.js');
-var packageJson = require('../package.json');
-var config = require('../conf/cosmos-tidoop-api.json');
+var packageJson = require('../package.js');
+var config = require('../conf/cosmos-tidoop-api.js');
 var logger = require('./logger.js');
 
 // Create a Hapi server with a host and port

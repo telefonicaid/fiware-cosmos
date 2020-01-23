@@ -27,7 +27,7 @@
 var boom = require('boom');
 var cmdRunner = require('./cmd_runner.js');
 var logger = require('./logger.js');
-var usersBlacklist = require('../conf/cosmos-gui.json').users_blacklist;
+var usersBlacklist = require('../conf/cosmos-gui.js').users_blacklist;
 
 function provisionCluster(res, clusterPrivKey, clusterUser, clusterEndpoint, hdfsSuperuser, hdfsQuota, username) {
     cmdRunner.run('ssh', ['-tt', '-i', clusterPrivKey, clusterUser + '@' + clusterEndpoint,

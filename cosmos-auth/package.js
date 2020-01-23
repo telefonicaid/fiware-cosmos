@@ -1,4 +1,5 @@
-{
+<script>
+var pkg = {
   "name": "cosmos-auth",
   "description": "Node.js app exposing Cosmos Auth API",
   "version": "1.0.0-next",
@@ -15,3 +16,4 @@
     "start": "node ./src/cosmos_auth.js"
   }
 }
+</script>
