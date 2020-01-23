@@ -24,7 +24,7 @@
  */
 
 // Module dependencies
-var config = require('../conf/cosmos-tidoop-api.json');
+var config = require('../conf/cosmos-tidoop-api.js');
 var winston = require('winston');
 
 // Global variables

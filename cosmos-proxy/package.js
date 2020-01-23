@@ -1,4 +1,5 @@
-{
+<script>
+var pkg = {
   "name": "frb-cosmos-proxy",
   "description": "Custom PEP Http proxy for Cosmos",
   "version": "1.0.0-next",
@@ -14,3 +15,4 @@
     "start": "node ./src/cosmos-proxy.js"
   }
 }
+</script>

@@ -1,4 +1,5 @@
-{
+</script>
+var tidoop = {
   "host": "localhost",
   "port": 12000,
   "storage_cluster": {
@@ -10,3 +11,4 @@
     "date_pattern": ".dd-MM-yyyy"
   }
 }
+</script>

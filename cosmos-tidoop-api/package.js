@@ -1,4 +1,5 @@
-{
+<script>
+var pkg = {
   "name": "cosmos-tidoop-api",
   "description": "Node.js app exposing the Tidoop REST API",
   "version": "1.0.0-next",
@@ -14,3 +15,4 @@
     "start": "node ./src/tidoop_api.js"
   }
 }
+</script>

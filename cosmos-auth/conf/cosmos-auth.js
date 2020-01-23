@@ -1,4 +1,5 @@
-{
+<script>
+var auth = {
   "host": "localhost",
   "port": 13000,
   "private_key_file": "",
@@ -17,3 +18,4 @@
     "date_pattern": ".dd-MM-yyyy"
   }
 }
+</script>

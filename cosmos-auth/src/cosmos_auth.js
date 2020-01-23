@@ -26,8 +26,8 @@
 // Module dependencies
 var Hapi = require('hapi');
 var boom = require('boom');
-var packageJson = require('../package.json');
-var config = require('../conf/cosmos-auth.json');
+var packageJson = require('../package.js');
+var config = require('../conf/cosmos-auth.js');
 var client = require('./client.js');
 var fs = require('fs');
 var logger = require('./logger.js');

@@ -1,4 +1,5 @@
-{
+<script>
+var proxy = {
   "host": "0.0.0.0",
   "port": "14000",
   "target": {
@@ -20,3 +21,4 @@
   },
   "cache_file": "/etc/cosmos/cosmos-proxy/cache-dump.json"
 }
+</script>

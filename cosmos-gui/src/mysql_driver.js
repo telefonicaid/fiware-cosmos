@@ -25,7 +25,7 @@
 
 // Module dependencies
 var mysql = require('mysql');
-var mysqlConfig = require('../conf/cosmos-gui.json').mysql;
+var mysqlConfig = require('../conf/cosmos-gui.js').mysql;
 var logger = require('./logger.js');
 
 // Create a pool of connections to the database

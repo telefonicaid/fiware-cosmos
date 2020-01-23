@@ -1,4 +1,5 @@
-{
+<script>
+var pkg = {
   "name": "cosmos-gui",
   "description": "Node.js GUI for Cosmos (Hadoop-based)",
   "version": "1.0.0-next",
@@ -21,3 +22,4 @@
     "start": "node ./src/cosmos_gui.js"
   }
 }
+</script>

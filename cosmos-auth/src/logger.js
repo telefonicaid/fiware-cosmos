@@ -24,7 +24,7 @@
  */
 
 // Module dependencies
-var config = require('../conf/cosmos-auth.json');
+var config = require('../conf/cosmos-auth.js');
 var winston = require('winston');
 
 // Global variables
